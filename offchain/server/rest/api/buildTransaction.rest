@@ -1,0 +1,14 @@
+
+@datumUnit = d87980
+@amountLovelace = 8000000
+
+POST http://192.168.1.112:{{$dotenv API_PORT}}/api/v1/cardano/transaction/build HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+
+{
+  "walletAddress": "{{$dotenv CARDANO_WALLET_ADDRESS}}",
+  "contractAddress": "{{$dotenv CARDANO_GIFT_ADDRESS}}",
+  "datum": "{{datumUnit}}",
+  "amount": "{{amountLovelace}}"
+}

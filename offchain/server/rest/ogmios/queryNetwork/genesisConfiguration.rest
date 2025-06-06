@@ -1,0 +1,13 @@
+
+POST {{$dotenv PROVIDER_NODE_OGMIOS_URL}}/ HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+
+{
+  "jsonrpc": "2.0",
+  "method": "queryNetwork/genesisConfiguration",
+  "params": {
+    "era": "byron"
+  },
+  "id": 324523453
+}

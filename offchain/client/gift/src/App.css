@@ -1,0 +1,149 @@
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+
+  background-color: #ccc;
+  background-blend-mode: multiply;
+  background-size: cover;
+  height: 99vh;
+  margin: 0.5em;
+  font-family: sans-serif;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+
+  justify-content: space-between;
+  flex: 0 0;
+  background-color: floralwhite;
+  padding: 0.5em;
+  margin: 0.1em;
+}
+
+.header h3 {
+  margin: 0px;
+}
+
+.header tr {
+  font-size: 14px;
+  background-color: floralwhite;
+}
+
+.header th {
+  background-color: rgb(255, 240, 240);
+}
+
+.main-content {
+  flex: 1 1;
+  display: flex;
+  flex-direction: row; /* default row */
+  flex-wrap: nowrap;  /* default nowrap */
+
+  background-color: floralwhite;
+  margin: 0.1em;
+  /* padding: 0; */
+
+  /* justify-content: flex-start; */
+  /* align-items: baseline; */
+
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 250px;
+
+  background-color:floralwhite;
+  border-right: 5px solid #ccc;
+  margin: .5em;
+
+}
+
+.tables-container {
+  display: flex;
+
+  flex-direction: column;
+  flex-grow: 1;
+  flex-shrink: 1;
+
+  background-color: floralwhite;
+}
+
+.form label {
+  display: block;
+  margin-top: 10px;
+  margin-left: 4px;
+}
+
+.form input {
+  display:inline;
+  width: 90%;
+  padding: 8px 4px;
+  margin: 4px;
+  border-radius: 5px;
+}
+
+.form button {
+  padding: 8px 16px;
+  background-color: #007bff9a;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  margin: 4px;
+}
+
+.table-box {
+  padding: 10px;
+  overflow: hidden;
+  background-color: floralwhite;
+  border-bottom: 1px solid #ccc;
+}
+
+.table-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex-basis: content;
+  flex: 1;
+  overflow: hidden;
+  background-color: black;
+}
+
+.table-scroll {
+  overflow: auto;
+  max-height: calc(100vh / 4);
+}
+
+.table-box table {
+  font-size: 10px;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-box tr {
+  background-color: white;
+}
+
+.table-box th,
+.table-box td {
+  border-bottom: 1px solid #ccc;
+  padding: 4px;
+  text-align: left;
+  max-width: 300px;
+  overflow:scroll;
+}
+
+.table-box th {
+  font-size: 14px;
+  background-color: #ccc;  ;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.table-box h3 {
+  margin: .2em;
+}

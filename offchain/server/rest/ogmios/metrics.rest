@@ -1,0 +1,3 @@
+
+GET {{$dotenv PROVIDER_NODE_OGMIOS_URL}}/metrics HTTP/1.1
+Accept: text/plain

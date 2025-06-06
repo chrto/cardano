@@ -1,0 +1,20 @@
+
+POST {{$dotenv PROVIDER_NODE_OGMIOS_URL}}/ HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+
+{
+  "jsonrpc": "2.0",
+  "method": "queryLedgerState/utxo",
+  "params": {
+    "outputReferences": [
+      {
+        "transaction": {
+          "id": "91a73ff95644105b5d023ba6f4597eac78faf0ec04047b556d1b427316f7e28b"
+        },
+        "index": 43
+      }
+    ]
+  },
+  "id": 324523453
+}

@@ -1,0 +1,6 @@
+
+@script = 49480100002221200101
+@type = PlutusV2
+
+GET http://192.168.1.112:{{$dotenv API_PORT}}/api/v1/cardano/script/address?type={{type}}&script={{script}} HTTP/1.1
+Accept: application/json

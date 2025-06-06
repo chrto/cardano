@@ -1,0 +1,15 @@
+
+POST {{$dotenv PROVIDER_NODE_OGMIOS_URL}}/ HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+
+{
+  "jsonrpc": "2.0",
+  "method": "queryLedgerState/utxo",
+  "params": {
+    "addresses": [
+      "addr_test1qpw49ruepm39rgcf57wwkfsujmy74cslt550skuxzv68geudpt2hqjfg6evuze0f4rx3z2evfht487kdvzqq2zflh40qj3dqt7"
+    ]
+  },
+  "id": 324523453
+}

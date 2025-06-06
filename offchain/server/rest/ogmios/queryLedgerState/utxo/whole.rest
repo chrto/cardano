@@ -1,0 +1,12 @@
+
+POST {{$dotenv PROVIDER_NODE_OGMIOS_URL}}/ HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+
+{
+  "jsonrpc": "2.0",
+  "method": "queryLedgerState/utxo",
+  "params": {
+  },
+  "id": 324523453
+}
