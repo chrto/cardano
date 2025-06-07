@@ -18,6 +18,7 @@ logs/
 
 # SQLite storage
 database.sqlite
+**/kupo_db/*.*
 
 # misc
 .DS_Store
