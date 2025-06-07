@@ -1,0 +1,24 @@
+{
+  "apiUrl": "http://localhost:8800/api/v1",
+  "giftScript": {
+    "type": "PlutusV2",
+    "script": "49480.."
+  },
+  "provider": {
+    "use": "blockFrost",
+    "blockFrost": {
+      "url": "https://cardano-preview.blockfrost.io/api/v0",
+      "projectId": ""
+    },
+    "node": {
+      "ogmios": "http://localhost:1337",
+      "kupo": "http://localhost:1442"
+    },
+    "network": "Preview"
+  },
+  "wallet": {
+    "use": "privateKey",
+    "privateKey": "ed25519_..",
+    "api": "lace"
+  }
+}
