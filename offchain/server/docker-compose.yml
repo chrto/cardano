@@ -1,4 +1,3 @@
-version: "3"
 services:
   server:
     image: cardano/server
@@ -40,26 +39,6 @@ services:
       - ./docs:/docs
     command: ["/docs/api/index.yaml"]
 
-  kupo-init-scan:
-    image: cardanosolutions/kupo:latest
-    profiles:
-      - init
-    container_name: kupo-init-scan
-    networks:
-      - cardano-network
-    volumes:
-      - ./storage/kupo_db:/db
-    command: [
-      "--ogmios-host", "${REMOTE_NODE_HOST}",
-      "--ogmios-port", "1337",
-      "--since", "${KUPO_SINCE}",
-      "--match", "${CARDANO_GIFT_ADDRESS}",
-      "--match", "${CARDANO_WALLET_ADDRES_1}",
-      "--match", "${CARDANO_WALLET_ADDRES_2}",
-      "--workdir", "/db",
-      "--defer-db-indexes"
-    ]
-
   kupo:
     image: cardanosolutions/kupo:latest
     container_name: kupo
@@ -97,6 +76,83 @@ services:
     volumes:
       - splunk-var:/opt/splunk/var
       - splunk-etc:/opt/splunk/etc
+
+  kupo-init-scan:
+    image: cardanosolutions/kupo:latest
+    profiles:
+      - init
+    container_name: kupo-init-scan
+    networks:
+      - cardano-network
+    volumes:
+      - ./storage/kupo_db:/db
+    command: [
+      "--ogmios-host", "${REMOTE_NODE_HOST}",
+      "--ogmios-port", "1337",
+      "--since", "${KUPO_SINCE}",
+      "--match", "${CARDANO_GIFT_ADDRESS}",
+      "--match", "${CARDANO_WALLET_ADDRES_1}",
+      "--match", "${CARDANO_WALLET_ADDRES_2}",
+      "--workdir", "/db",
+      "--defer-db-indexes"
+    ]
+
+  # run on remote machine with cardano node
+  ogmios-remote:
+    image: cardanosolutions/ogmios:latest
+    profiles:
+      - remote
+    container_name: ogmios
+    volumes:
+      - ${CARDANO_PATH}/db:/ipc
+    ports:
+      - "1337:1337"
+    command: [
+      "--node-socket", "/ipc/node.socket",
+      "--node-config", "/config/preview/cardano-node/config.json",
+      "--host", "0.0.0.0"
+    ]
+
+  kupo-remote:
+    image: cardanosolutions/kupo:latest
+    profiles:
+      - remote
+    container_name: kupo
+    volumes:
+      - ${KUPO_DB_PATH}:/db
+      - ${CARDANO_PATH}:/cardano/
+    ports:
+      - "1442:1442"
+    command: [
+      "--node-socket", "/cardano/db/node.socket",
+      "--node-config", "/cardano/config.json",
+      "--since", "${KUPO_SINCE}",
+      "--match", "${CARDANO_GIFT_ADDRESS}",
+      "--match", "${CARDANO_WALLET_ADDRES_1}",
+      "--match", "${CARDANO_WALLET_ADDRES_2}",
+      "--workdir", "/db",
+      "--host", "0.0.0.0",
+      "--port", "1442"
+    ]
+
+  kupo-remote-init:
+    image: cardanosolutions/kupo:latest
+    profiles:
+      - remote-init
+    container_name: kupo-remote-init
+    volumes:
+      - ${KUPO_DB_PATH}:/db
+      - ${CARDANO_PATH}:/cardano/
+    command: [
+      "--node-socket", "/cardano/db/node.socket",
+      "--node-config", "/cardano/config.json",
+      "--since", "${KUPO_SINCE}",
+      "--match", "${CARDANO_GIFT_ADDRESS}",
+      "--match", "${CARDANO_WALLET_ADDRES_1}",
+      "--match", "${CARDANO_WALLET_ADDRES_2}",
+      "--workdir", "/db",
+      "--defer-db-indexes"
+    ]
 
 networks:
   cardano-network:
