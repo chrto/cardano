@@ -1,5 +1,5 @@
 import React from 'react';
-import '../App.css';
+import './Table.css';
 
 function Table({ title, headers, values }) {
   const getTxId = (idAndIdx) => idAndIdx.split("#")[0];

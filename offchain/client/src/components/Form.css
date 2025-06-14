@@ -1,0 +1,23 @@
+.form label {
+  display: block;
+  margin-top: 10px;
+  margin-left: 4px;
+}
+
+.form input {
+  display: inline;
+  width: 90%;
+  padding: 8px 4px;
+  margin: 4px;
+  border-radius: 5px;
+}
+
+.form button {
+  padding: 8px 16px;
+  background-color: #007bff9a;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  margin: 4px;
+}

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../App.css';
+import './Form.css';
 import { Data, Constr } from 'lucid-cardano';
 import findUTxO from '../utils/findUTxO';
 import utxoToLucid from '../utils/utxoToLucid';

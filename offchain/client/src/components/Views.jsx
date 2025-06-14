@@ -1,6 +1,6 @@
 import React from 'react';
 import Table from './Table'
-import '../App.css';
+import './Views.css';
 import { Data } from 'lucid-cardano'
 import convertToJs from '../utils/convertToJs'
 
@@ -16,7 +16,7 @@ function Views({ walletUtxos, scriptUtxos }) {
   const filterNoDatum = utxo => !utxo.datumHash && !utxo.datum
 
   return (
-    <div className="tables-container">
+    <div className="views-container">
       <Table title="Wallet Utxo's" headers={['UTXO', 'Value [Lovelace]', 'Value [Ada]']} values={walletUtxos.map(convertWalletUtxos)} />
       <Table title="Script Utxo's with Unit InLine Datum" headers={['UTXO', 'Value [Lovelace]', 'Value [Ada]']} values={scriptUtxos.filter(filterInlineDatumUnit).map(convertUtxos).sort((x, y) => y[2] - x[2])} />
       <Table title="Script Utxo's without Datum" headers={['UTXO', 'Value [Lovelace]', 'Value [Ada]']} values={scriptUtxos.filter(filterNoDatum).map(convertUtxos)} />

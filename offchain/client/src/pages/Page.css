@@ -1,0 +1,39 @@
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+
+  background-color: #ccc;
+  background-blend-mode: multiply;
+  background-size: cover;
+  height: 99vh;
+  margin: 0.5em;
+  font-family: sans-serif;
+}
+
+.main-content {
+  flex: 1 1;
+  display: flex;
+  flex-direction: row; /* default row */
+  flex-wrap: nowrap;  /* default nowrap */
+
+  background-color: floralwhite;
+  margin: 0.1em;
+  /* padding: 0; */
+
+  /* justify-content: flex-start; */
+  /* align-items: baseline; */
+
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 250px;
+
+  background-color:floralwhite;
+  border-right: 5px solid #ccc;
+  margin: .5em;
+
+}
