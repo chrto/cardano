@@ -77,11 +77,11 @@ services:
       - splunk-var:/opt/splunk/var
       - splunk-etc:/opt/splunk/etc
 
-  kupo-init-scan:
+  kupo-init:
     image: cardanosolutions/kupo:latest
     profiles:
       - init
-    container_name: kupo-init-scan
+    container_name: kupo-init
     networks:
       - cardano-network
     volumes:
@@ -102,7 +102,9 @@ services:
     image: cardanosolutions/ogmios:latest
     profiles:
       - remote
-    container_name: ogmios
+    networks:
+      - cardano-network
+    container_name: ogmios-remote
     volumes:
       - ${CARDANO_PATH}/db:/ipc
     ports:
@@ -117,7 +119,9 @@ services:
     image: cardanosolutions/kupo:latest
     profiles:
       - remote
-    container_name: kupo
+    networks:
+      - cardano-network
+    container_name: kupo-remote
     volumes:
       - ${KUPO_DB_PATH}:/db
       - ${CARDANO_PATH}:/cardano/
