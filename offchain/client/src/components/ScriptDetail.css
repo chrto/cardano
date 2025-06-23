@@ -7,19 +7,18 @@
   /* display: block; */
   /* margin: 20px; */
   font-weight: 600;
+  font-size: medium;
 }
 
 textarea {
   width: 100%;
   background-color: floralwhite;
   min-height: fit-content;
-  /* padding: 8px; */
-  /* font: inherit; */
   box-sizing: border-box;
   border: none;
   resize: vertical;
-
   white-space: pre-wrap;
   overflow-wrap: break-word;
   word-break: break-all;
+  font-size: small;
 }

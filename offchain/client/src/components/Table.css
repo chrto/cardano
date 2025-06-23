@@ -20,7 +20,7 @@
 }
 
 .table-box table {
-  font-size: 10px;
+  font-size: small;
   width: 100%;
   border-collapse: collapse;
 }
@@ -39,7 +39,7 @@
 }
 
 .table-box th {
-  font-size: 14px;
+  font-size: small;
   background-color: #ccc;
   ;
   position: sticky;
