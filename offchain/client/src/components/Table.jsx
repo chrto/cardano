@@ -19,7 +19,7 @@ function Table({ title, headers, values }) {
             <tbody>
               {values.map((row) => (<tr key={row[0]}>{row.map((c, i) => (
                 i === 0
-                  ? <td><a href={"https://preview.cardanoscan.io/transaction/" + getTxId(c)}>{getTxId(c)}</a>#{getTxIdx(c)}</td>
+                  ? <td><button onClick={()=> navigator.clipboard.writeText(c)}>Copy</button><a href={"https://preview.cardanoscan.io/transaction/" + getTxId(c)}>{getTxId(c)}</a>#{getTxIdx(c)}</td>
                   : <td>{c}</td>
               ))}</tr>))}
             </tbody>
