@@ -1,28 +1,34 @@
 import './Page.css'
 import React, { useEffect, useState } from 'react';
-import Views from '../components/Views';
+import ViewsGift from '../components/ViewsGift';
 import Header from '../components/Header';
-import FormSend from '../components/FormSend';
-import FormCollect from '../components/FormCollect';
+import FormGiftSend from '../components/FormGiftSend';
+import FormGiftCollect from '../components/FormGiftCollect';
 import getData from '../utils/getDataFromServer';
 import Navbar from '../components/Navbar';
 import dispatchData from '../utils/dispatchData';
 
 const { giftScript } = require("../config.json");
 
-function Gift({lucid, publicKeyHash, walletAddress, walletUtxos}) {
+function Gift({publicKeyHash, walletAddress, walletUtxos}) {
   const [scriptAddress, setScriptAddress] = useState([]);
   const [scriptUtxos, setScriptUtxos] = useState([]);
+  const [selectedScript, setSelectedScript] = useState({name: "giftScript", script: giftScript});
 
   useEffect(() => {
-    Promise.all([
-      getScriptAddress(giftScript)
-        .then(dispatchData(setScriptAddress))
-        .then(getAddressUtxos)
-        .then(dispatchData(setScriptUtxos))
-        .catch((err) => console.error('Fetch error:', err))
-    ])
+    Promise.resolve(getScritptByName("giftScript"))
+      .then(dispatchData(setSelectedScript))
+      .then(selected => selected.script)
+      .then(getScriptAddress)
+      .then(dispatchData(setScriptAddress))
+      .then(getAddressUtxos)
+      .then(dispatchData(setScriptUtxos))
+      .catch((err) => console.error('Fetch error:', err))
   }, []);
+
+  const getScritptByName = (name) => ({
+    name, script: giftScript
+  })
 
   const getAddressUtxos = async address =>
     getData(`cardano/${address}/utxos`)
@@ -41,10 +47,10 @@ function Gift({lucid, publicKeyHash, walletAddress, walletUtxos}) {
       <Header publicKeyHash={publicKeyHash} walletAddress={walletAddress} walletUtxos={walletUtxos} />
       <div className="main-content">
         <aside className="sidebar">
-          <FormSend title="Send Gift" giftAddress={scriptAddress} walletUtxos={walletUtxos} lucid={lucid} />
-          <FormCollect title="Collect Gift" scriptUtxos={scriptUtxos} lucid={lucid} />
+          <FormGiftSend title="Send Gift" scriptAddress={scriptAddress} walletUtxos={walletUtxos} />
+          <FormGiftCollect title="Collect Gift" scriptUtxos={scriptUtxos} validatorScript={ giftScript } />
         </aside>
-        <Views walletUtxos={walletUtxos} scriptUtxos={scriptUtxos} />
+        <ViewsGift walletUtxos={walletUtxos} scriptUtxos={scriptUtxos} scriptAddress={scriptAddress} selectedScript={selectedScript} />
       </div>
     </div>
   );

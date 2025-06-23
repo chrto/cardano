@@ -1,0 +1,14 @@
+.choice {
+  /* display: flex; */
+  /* flex-direction: column; */
+  /* flex: 1; */
+  /* margin-top: 10px; */
+}
+
+.choiceItem {
+  /* display: flex; */
+}
+
+.choice input {
+  margin: 4px;
+}

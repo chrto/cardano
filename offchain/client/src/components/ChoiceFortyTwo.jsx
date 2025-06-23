@@ -1,0 +1,20 @@
+import React, {  } from 'react';
+import './Choice.css';
+
+function ChoiceFortyTwo({ handleChoice, selected }) {
+  return (
+    <div className="choice">
+      <h2>Select script:</h2>
+      <div className='choiceItem'>
+        <input type="radio" id="scriptChoice1" name="contact" value="fortyTwoScript" onChange={handleChoice} checked={selected==="fortyTwoScript"} />
+        <label htmlFor="scriptChoice1">FortyTwo Untyped</label>
+      </div>
+      <div className='choiceItem'>
+        <input type="radio" id="scriptChoice2" name="contact" value="fortyTwoTypedScript" onChange={handleChoice} checked={selected==="fortyTwoTypedScript"} />
+        <label htmlFor="scriptChoice2">FortyTwo Typed</label>
+      </div>
+     </div>
+  );
+}
+
+export default ChoiceFortyTwo;

@@ -12,12 +12,12 @@ function Table({ title, headers, values }) {
         <div className="table-scroll">
           <table>
             <thead>
-              <tr>
+              <tr key={`header`}>
                 {headers.map(h => (<th>{h}</th>))}
               </tr>
             </thead>
             <tbody>
-              {values.map((row) => (<tr>{row.map((c, i) => (
+              {values.map((row) => (<tr key={row[0]}>{row.map((c, i) => (
                 i === 0
                   ? <td><a href={"https://preview.cardanoscan.io/transaction/" + getTxId(c)}>{getTxId(c)}</a>#{getTxIdx(c)}</td>
                   : <td>{c}</td>

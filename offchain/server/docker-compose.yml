@@ -55,6 +55,7 @@ services:
       "--ogmios-port", "1337",
       "--since", "${KUPO_SINCE}",
       "--match", "${CARDANO_GIFT_ADDRESS}",
+      "--match", "${CARDANO_FORTYTWO_ADDRESS}",
       "--match", "${CARDANO_WALLET_ADDRES_1}",
       "--match", "${CARDANO_WALLET_ADDRES_2}",
       "--workdir", "/db"

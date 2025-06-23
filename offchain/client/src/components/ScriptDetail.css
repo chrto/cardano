@@ -1,0 +1,25 @@
+.script-detail {
+  padding: 10px;
+  /* margin: 20px */
+}
+
+.script-detail label {
+  /* display: block; */
+  /* margin: 20px; */
+  font-weight: 600;
+}
+
+textarea {
+  width: 100%;
+  background-color: floralwhite;
+  min-height: fit-content;
+  /* padding: 8px; */
+  /* font: inherit; */
+  box-sizing: border-box;
+  border: none;
+  resize: vertical;
+
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  word-break: break-all;
+}
