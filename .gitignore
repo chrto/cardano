@@ -5,6 +5,7 @@ node_modules/
 # production
 build/
 dist/
+dist-newstyle/
 
 # keys and assets
 **/keys/*.*
