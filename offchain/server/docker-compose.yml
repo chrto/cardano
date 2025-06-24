@@ -116,6 +116,29 @@ services:
       "--host", "0.0.0.0"
     ]
 
+  kupo-remote-ogmios:
+    image: cardanosolutions/kupo:latest
+    profiles:
+      - remote
+    networks:
+      - cardano-network
+    container_name: kupo-remote-ogmios
+    volumes:
+      - ${KUPO_DB_PATH}:/db
+    ports:
+      - "1442:1442"
+    command: [
+      "--ogmios-port", "1337",
+      "--ogmios-host", "localhost",
+      "--since", "${KUPO_SINCE}",
+      "--match", "${CARDANO_GIFT_ADDRESS}",
+      "--match", "${CARDANO_WALLET_ADDRES_1}",
+      "--match", "${CARDANO_WALLET_ADDRES_2}",
+      "--workdir", "/db",
+      "--host", "0.0.0.0",
+      "--port", "1442"
+    ]
+
   kupo-remote:
     image: cardanosolutions/kupo:latest
     profiles:
