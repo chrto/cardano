@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Default values
-ASSETS_DIR=/home/devo/workspace/cardano/plutus/UntypedValidationScript/assets
+ASSETS_DIR=/home/devo/workspace/cardano/onchain/UntypedValidationScript/assets
 KEYS_PATH=/home/devo/workspace/cardano/keys
 OUTPUT_NAME=burn
 ERA=latest

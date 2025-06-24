@@ -5,7 +5,7 @@ set -e  # Exit immediately if any command fails
 trap 'echo "❌ Script failed at line $LINENO. Exiting."' ERR
 
 # Default values
-ASSETS_DIR=/home/devo/workspace/cardano/plutus/TypedValidationScript/assets
+ASSETS_DIR=/home/devo/workspace/cardano/onchain/TypedValidationScript/assets
 KEYS_PATH=/home/devo/workspace/cardano/keys
 OUTPUT_NAME=redeemerCustomBool
 ERA=latest

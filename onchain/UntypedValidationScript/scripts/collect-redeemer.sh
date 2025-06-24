@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Default values
-ASSETS_DIR=/home/devo/workspace/cardano/plutus/UntypedValidationScript/assets
+ASSETS_DIR=/home/devo/workspace/cardano/onchain/UntypedValidationScript/assets
 KEYS_PATH=/home/devo/workspace/cardano/keys
 OUTPUT_NAME=redeemerUntyped
 ERA=latest
@@ -93,7 +93,7 @@ cardano-cli $ERA transaction build \
     --tx-in "$TXIN" \
     --tx-in-script-file "$ASSETS_DIR/$OUTPUT_NAME.plutus" \
     --tx-in-inline-datum-present \
-    --tx-in-redeemer-file "$ASSETS_DIR/redeemer.json" \
+    --tx-in-redeemer-file "$ASSETS_DIR/42.json" \
     --tx-in-collateral "$COLLATERAL" \
     --change-address "$(cat "$KEYS_PATH/$NAME.addr")" \
     --out-file "$ASSETS_DIR/collect-$OUTPUT_NAME.txbody"

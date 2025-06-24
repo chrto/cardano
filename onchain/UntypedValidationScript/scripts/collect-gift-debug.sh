@@ -7,7 +7,7 @@ GIFT_UTXO="56a5c04bb1872632919f8f501bc9c124d04036e7fdcc6b741452ee0e0b7034c7#0"
 COLLATERAL_UTXO="006e340f98777657cae0318f91b842a30723c77fb33c95b594f8eb8c99c9919d#0"
 
 # Default values
-ASSETS_DIR=/home/devo/workspace/cardano/plutus/UntypedValidationScript/assets
+ASSETS_DIR=/home/devo/workspace/cardano/onchain/UntypedValidationScript/assets
 KEYS_PATH=/home/devo/workspace/cardano/keys
 ERA=latest
 
