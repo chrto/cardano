@@ -5,6 +5,8 @@ Accept: application/json
 
 {
   "rollback_to": {
-    "slot_no": 78623995
-  }
+    "slot_no": 55814394,
+    "header_hash": "bdd4baa2c81d0500a695f836332193ea06c2ce364e585057142220fc0782144c"
+  },
+  "limit": "unsafe_allow_beyond_safe_zone"
 }
