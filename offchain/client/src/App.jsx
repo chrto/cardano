@@ -4,18 +4,27 @@ import Home from './pages/Home';
 import About from './pages/About';
 import Gift from './pages/Gift';
 import FortyTwo from './pages/FortyTwo';
-
 import getData from './utils/getDataFromServer';
 import dispatchData from './utils/dispatchData';
-
 import lucidStorage from './utils/lucid/storage';
+import useSafeInterval from './utils/useSafeInterval';
+
+const {  apiRefreshDelay } = require('./config.json');
 
 function App() {
   const [publicKeyHash, setPublicKeyHash] = useState("...");
   const [walletUtxos, setWalletUtxos] = useState([]);
   const [walletAddress, setWalletAddress] = useState("...");
+  const [enableInterval, setEnableInterval] = useState(false)
 
   useEffect(() => {
+    setState()
+      .then(_ => setEnableInterval(true))
+  }, []);
+
+  useSafeInterval(async () => setState(), enableInterval ? apiRefreshDelay : null);
+
+  const setState = async () =>
     getWalletAddress()
       .then(dispatchData(setWalletAddress))
       .then(address => {
@@ -28,7 +37,6 @@ function App() {
             .catch((err) => console.error('Fetch error:', err))
         ])
       })
-  }, []);
 
   const getWalletAddress = async () => lucidStorage.then(storage => storage.getWalletAddress())
   const getCardanoPKH = async address =>

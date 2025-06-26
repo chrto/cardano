@@ -8,21 +8,29 @@ import FormFortyTwoCollect from '../components/FormFortyTwoCollect';
 import getData from '../utils/getDataFromServer';
 import Navbar from '../components/Navbar';
 import dispatchData from '../utils/dispatchData';
+import useSafeInterval from '../utils/useSafeInterval';
 
-const {fortyTwoScript, fortyTwoTypedScript, fortyTwoTypedScriptP} = require("../config.json");
+const {fortyTwoScript, fortyTwoTypedScript, fortyTwoTypedScriptP, apiRefreshDelay} = require("../config.json");
 
 function FortyTwo({publicKeyHash, walletAddress, walletUtxos}) {
   const [scriptAddress, setScriptAddress] = useState("...");
   const [scriptUtxos, setScriptUtxos] = useState([]);
-  const [selectedScript, setSelectedScript] = useState({name: "fortyTwoScript", script: fortyTwoScript});
+  const [selectedScript, setSelectedScript] = useState({ name: "fortyTwoScript", script: fortyTwoScript });
+  const [enableInterval, setEnableInterval] = useState(false)
 
   useEffect(() => {
+    setState()
+      .then(_ => setEnableInterval(true))
+  }, []);
+
+  useSafeInterval(async () => setState(), enableInterval ? apiRefreshDelay : null);
+
+  const setState = async () =>
     getScriptAddress(selectedScript.script)
       .then(dispatchData(setScriptAddress))
       .then(getAddressUtxos)
       .then(dispatchData(setScriptUtxos))
       .catch((err) => console.error('Fetch error:', err))
-  }, []);
 
   const getScritptByName = (name) => {
     switch (name) {

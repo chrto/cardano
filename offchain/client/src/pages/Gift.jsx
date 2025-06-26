@@ -7,15 +7,24 @@ import FormGiftCollect from '../components/FormGiftCollect';
 import getData from '../utils/getDataFromServer';
 import Navbar from '../components/Navbar';
 import dispatchData from '../utils/dispatchData';
+import useSafeInterval from '../utils/useSafeInterval';
 
-const { giftScript } = require("../config.json");
+const { giftScript, apiRefreshDelay } = require("../config.json");
 
 function Gift({publicKeyHash, walletAddress, walletUtxos}) {
   const [scriptAddress, setScriptAddress] = useState([]);
   const [scriptUtxos, setScriptUtxos] = useState([]);
   const [selectedScript, setSelectedScript] = useState({name: "giftScript", script: giftScript});
+  const [enableInterval, setEnableInterval] = useState(false)
 
   useEffect(() => {
+    setState()
+      .then(_ => setEnableInterval(true))
+  }, []);
+
+  useSafeInterval(async () => setState(), enableInterval ? apiRefreshDelay : null);
+
+  const setState = async () =>
     Promise.resolve(getScritptByName("giftScript"))
       .then(dispatchData(setSelectedScript))
       .then(selected => selected.script)
@@ -24,8 +33,6 @@ function Gift({publicKeyHash, walletAddress, walletUtxos}) {
       .then(getAddressUtxos)
       .then(dispatchData(setScriptUtxos))
       .catch((err) => console.error('Fetch error:', err))
-  }, []);
-
   const getScritptByName = (name) => ({
     name, script: giftScript
   })
