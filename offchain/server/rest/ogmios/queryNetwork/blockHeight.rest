@@ -6,5 +6,5 @@ Content-Type: application/json
 {
   "jsonrpc": "2.0",
   "method": "queryNetwork/blockHeight",
-  "id": 324523453
+  "id": "{{$dotenv OGMIOS_REQ_ID}}"
 }

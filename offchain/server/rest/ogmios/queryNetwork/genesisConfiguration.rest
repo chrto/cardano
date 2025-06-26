@@ -9,5 +9,5 @@ Content-Type: application/json
   "params": {
     "era": "byron"
   },
-  "id": 324523453
+  "id": "{{$dotenv OGMIOS_REQ_ID}}"
 }

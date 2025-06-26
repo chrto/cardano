@@ -10,11 +10,11 @@ Content-Type: application/json
     "outputReferences": [
       {
         "transaction": {
-          "id": "91a73ff95644105b5d023ba6f4597eac78faf0ec04047b556d1b427316f7e28b"
+          "id": "{{$dotenv OGMIOS_TX_HASH}}"
         },
         "index": 43
       }
     ]
   },
-  "id": 324523453
+  "id": "{{$dotenv OGMIOS_REQ_ID}}"
 }

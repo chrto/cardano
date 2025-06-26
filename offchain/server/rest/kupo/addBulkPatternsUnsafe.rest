@@ -1,9 +1,13 @@
 
-PUT  {{$dotenv PROVIDER_NODE_KUPO_URL}}/patterns/{{$dotenv CARDANO_FORTYTWO_ADDRESS_TYPED}} HTTP/1.1
+PUT  {{$dotenv PROVIDER_NODE_KUPO_URL}}/patterns HTTP/1.1
 Content-Type: application/json
 Accept: application/json
 
 {
+  "patterns": [
+    "{{$dotenv CARDANO_FORTYTWO_ADDRESS_TYPED}}",
+    "{{$dotenv CARDANO_FORTYTWO_ADDRESS_TYPED_P}}"
+  ],
   "rollback_to": {
     "slot_no": "{{$dotenv ROLLBACK_SLOT_NO}}",
     "header_hash": "{{$dotenv ROLLBACK_HEADER_HASH}}"

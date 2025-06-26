@@ -5,6 +5,6 @@ Accept: application/json
 
 {
   "rollback_to": {
-    "slot_no": 78623995
+    "slot_no": "{{$dotenv ROLLBACK_SLOT_NO}}",
   }
 }

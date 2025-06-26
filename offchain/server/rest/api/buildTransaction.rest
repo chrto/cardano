@@ -2,7 +2,7 @@
 @datumUnit = d87980
 @amountLovelace = 8000000
 
-POST http://192.168.1.112:{{$dotenv API_PORT}}/api/v1/cardano/transaction/build HTTP/1.1
+POST {{$dotenv API_SERVER_URL}}/cardano/transaction/build HTTP/1.1
 Accept: application/json
 Content-Type: application/json
 

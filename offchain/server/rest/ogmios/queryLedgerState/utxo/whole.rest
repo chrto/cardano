@@ -8,5 +8,5 @@ Content-Type: application/json
   "method": "queryLedgerState/utxo",
   "params": {
   },
-  "id": 324523453
+  "id": "{{$dotenv OGMIOS_REQ_ID}}"
 }

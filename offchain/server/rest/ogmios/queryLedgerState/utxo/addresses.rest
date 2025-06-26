@@ -8,8 +8,8 @@ Content-Type: application/json
   "method": "queryLedgerState/utxo",
   "params": {
     "addresses": [
-      "addr_test1qpw49ruepm39rgcf57wwkfsujmy74cslt550skuxzv68geudpt2hqjfg6evuze0f4rx3z2evfht487kdvzqq2zflh40qj3dqt7"
+      "{{$dotenv CARDANO_WALLET_ADDRES_1}}"
     ]
   },
-  "id": 324523453
+  "id": "{{$dotenv OGMIOS_REQ_ID}}"
 }
