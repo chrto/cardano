@@ -10,4 +10,5 @@ export default (loaders: ConfigurationLoaders) =>
       .lift(loaders.loadDatabaseConfiguration)
       .bind(loaders.loadSSOConfiguration)
       .lift(loaders.loadLoggerConfiguration)
-      .bind(loaders.loadLucidConfiguration);
+      .bind(loaders.loadLucidConfiguration)
+      .lift(loaders.loadCardanoNodeConfiguration);
