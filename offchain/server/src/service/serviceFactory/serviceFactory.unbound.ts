@@ -9,7 +9,7 @@ import { UserService } from '../sequelize/userService/userService.types';
 import { PluginSdkService } from './serviceFactory.types';
 import { AuthenticationService } from '../http/authentication/types';
 import { CardanoStorage } from 'storage/cardano/lucid/lucid.types';
-import { CardanoService } from 'service/cardano/cardanoService.types';
+import { CardanoService } from 'service/cardano/lucid/cardanoService.types';
 
 export default (
   authenticationServiceFactory: Fcn<[ISSOConfig], AuthenticationService>,

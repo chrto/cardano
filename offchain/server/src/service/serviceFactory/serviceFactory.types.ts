@@ -2,7 +2,7 @@ import { AsyncStartStop, SdkTransaction } from 'model/sequelize/modelFactory/mod
 
 import { AuthenticationService } from '../http/authentication/types';
 import { UserService } from '../sequelize/userService/userService.types';
-import { CardanoService } from 'service/cardano/cardanoService.types';
+import { CardanoService } from 'service/cardano/lucid/cardanoService.types';
 
 export interface PluginSdkService {
   sdkStartStop: AsyncStartStop;

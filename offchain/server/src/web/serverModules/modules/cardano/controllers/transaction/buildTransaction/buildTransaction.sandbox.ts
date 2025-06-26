@@ -1,5 +1,6 @@
 import transactionControllerFactory from '../transactionController';
-import cardanoServiceFactory from 'service/cardano/cardanoService';
+import cardanoServiceFactory from 'service/cardano/lucid/cardanoService';
+import { CardanoService } from 'service/cardano/lucid/cardanoService.types';
 import storageFactory from 'storage/cardano/lucid/lucid';
 import * as sniff from 'supersniff';
 import { Datum } from 'model/cardano/cardano.types';
@@ -15,7 +16,6 @@ import { AppConfig } from 'web/server/configuration/loader/appConfig.types';
 import bind from 'utils/monad/either/bind/bind';
 import lift from 'utils/monad/either/lift/lift';
 import lucidConfigLoader from '../../../../../../server/configuration/loader/lucid/lucidConfig';
-import { CardanoService } from 'service/cardano/cardanoService.types';
 import asyncBind from 'utils/monad/either/asyncBind/asyncBind';
 require('dotenv').config();
 

@@ -5,7 +5,7 @@ import pluginSdkServiceUnbound from './serviceFactory.unbound';
 import { AuthenticationService } from '../http/authentication/types';
 import { UserService } from '../sequelize/userService/userService.types';
 import { PluginSdkService } from './serviceFactory.types';
-import { CardanoService } from 'service/cardano/cardanoService.types';
+import { CardanoService } from 'service/cardano/lucid/cardanoService.types';
 import { CardanoStorage } from 'storage/cardano/lucid/lucid.types';
 import { AppConfig } from 'web/server/configuration/loader/appConfig.types';
 import { PluginSdkSequelize } from 'model/sequelize/modelFactory/modelFactory.types';

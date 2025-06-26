@@ -8,7 +8,7 @@ import { Either } from 'tsmonad';
 import { AppError } from 'common/error';
 import { AppRequest } from 'web/serverModules/types';
 import { Context as CardanoContext } from '../../../context/context.types';
-import { CardanoService } from 'service/cardano/cardanoService.types';
+import { CardanoService } from 'service/cardano/lucid/cardanoService.types';
 import { Script } from 'model/cardano/script/script.types';
 import { ScriptTypeExt, PlutusVersion, ScriptType } from 'model/cardano/cardano.types';
 import { isEnum, isMissing } from 'utils/validation';

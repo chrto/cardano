@@ -6,7 +6,7 @@ import { Either } from 'tsmonad';
 import { AppError } from 'common/error';
 import { AppRequest } from 'web/serverModules/types';
 import { Context as CardanoContext } from '../../../context/context.types';
-import { CardanoService } from 'service/cardano/cardanoService.types';
+import { CardanoService } from 'service/cardano/lucid/cardanoService.types';
 import { isMissing } from 'utils/validation';
 import { Validator } from 'utils/object/validator/properties/properties.types';
 import asyncBind from 'utils/monad/either/asyncBind/asyncBind';
