@@ -75,7 +75,7 @@ LucidStorage.prototype.buildSpendFromContractTx = async function (script, utxo, 
     .complete()
     .catch(err => {
       console.error(err)
-      throw new Error(`Build transaction:\ninfo: ${err}`)
+      throw new Error(`Build transaction:\nOrigin error: ${err}`)
     });
 }
 

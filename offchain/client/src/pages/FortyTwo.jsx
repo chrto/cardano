@@ -51,6 +51,10 @@ function FortyTwo({publicKeyHash, walletAddress, walletUtxos}) {
         console.debug(`There are ${utxos.length} UTxOs at address ${address}`)
         return utxos
       })
+      .catch(e => {
+        console.error(`Can not fetch utxos for address ${address} from server!\n origin: ${e.message}`)
+        return scriptUtxos;
+      })
 
   const getScriptAddress = async script =>
     getData(`cardano/script/address?type=${script.type}&script=${script.script}`)
