@@ -9,7 +9,7 @@ import getData from '../utils/getDataFromServer';
 import Navbar from '../components/Navbar';
 import dispatchData from '../utils/dispatchData';
 
-const {fortyTwoScript, fortyTwoTypedScript} = require("../config.json");
+const {fortyTwoScript, fortyTwoTypedScript, fortyTwoTypedScriptP} = require("../config.json");
 
 function FortyTwo({publicKeyHash, walletAddress, walletUtxos}) {
   const [scriptAddress, setScriptAddress] = useState("...");
@@ -28,6 +28,7 @@ function FortyTwo({publicKeyHash, walletAddress, walletUtxos}) {
     switch (name) {
       case 'fortyTwoScript': return {name: "fortyTwoScript", script: fortyTwoScript};
       case 'fortyTwoTypedScript': return {name: "fortyTwoTypedScript", script: fortyTwoTypedScript};
+      case 'fortyTwoTypedScriptP': return {name: "fortyTwoTypedScriptP", script: fortyTwoTypedScriptP};
       default: return {name: "fortyTwoScript", script: fortyTwoScript};
     }
   }
@@ -63,7 +64,7 @@ function FortyTwo({publicKeyHash, walletAddress, walletUtxos}) {
         <aside className="sidebar">
           <ChoiceFortyTwo handleChoice={handleChoice} selected={selectedScript.name}/>
           <FormFortyTwoSend title="Send FortyTwo" scriptAddress={scriptAddress} walletUtxos={walletUtxos} />
-          <FormFortyTwoCollect title="Collect FortyTwo" scriptUtxos={scriptUtxos} validatorScript={selectedScript} />
+          <FormFortyTwoCollect title="Collect FortyTwo" scriptUtxos={scriptUtxos} validatorScript={selectedScript.script} />
         </aside>
         <ViewsFortyTwo walletUtxos={walletUtxos} scriptUtxos={scriptUtxos} scriptAddress={scriptAddress} selectedScript={selectedScript} />
       </div>
