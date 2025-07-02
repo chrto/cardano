@@ -45,7 +45,7 @@ LucidStorage.prototype.buildPayToContractTxFromUtxo = async function (amountLove
     .complete()
     .catch(err => {
       console.error(err)
-      throw new Error(`Build transaction:\ninfo: ${err}`)
+      throw new Error(`Build transaction:\ninfo: ${JSON.stringify(err)}`)
     });
 }
 
@@ -59,7 +59,7 @@ LucidStorage.prototype.buildPayToContractTx = async function (amountLovelace, co
     .complete()
     .catch(err => {
       console.error(err)
-      throw new Error(`Build transaction:\ninfo: ${err}`)
+      throw new Error(`Build transaction:\ninfo: ${JSON.stringify(err)}`)
     });
 }
 
@@ -75,7 +75,7 @@ LucidStorage.prototype.buildSpendFromContractTx = async function (script, utxo, 
     .complete()
     .catch(err => {
       console.error(err)
-      throw new Error(`Build transaction:\nOrigin error: ${err}`)
+      throw new Error(`Build transaction:\nOrigin error: ${JSON.stringify(err)}`)
     });
 }
 
@@ -84,7 +84,7 @@ LucidStorage.prototype.signTx = async function (tx) {
     .sign()
     .complete()
     .catch(err => {
-      throw new Error(`Sign transaction:\ninfo: ${err}`)
+      throw new Error(`Sign transaction:\ninfo: ${JSON.stringify(err)}`)
     });
 }
 
@@ -92,7 +92,7 @@ LucidStorage.prototype.submitTx = async function (signedTx) {
   return signedTx
     .submit()
     .catch(err => {
-      throw new Error(`Submit transaction:\ninfo: ${err}`)
+      throw new Error(`Submit transaction:\ninfo: ${JSON.stringify(err)}`)
     });
 }
 
