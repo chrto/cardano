@@ -10,7 +10,7 @@ import { GlobalModuleControllers } from '../../controllers/controllers.types';
 
 const CONTROLLER: StatusController = { getStatus: null };
 const AUTH_HANDLERS: AuthorizationHandlers = { allAuthenticated: null, isAdministrator: null };
-const SERVICE: PluginSdkService = { sdkStartStop: null, sdkTransaction: null, authenticationService: null, userService: null, cardanoService: null };
+const SERVICE: PluginSdkService = { sdkStartStop: null, sdkTransaction: null, authenticationService: null, userService: null, cardanoService: null, cardanoKupoService: null };
 const MODULE_CONFIG: ModuleConfig<GlobalCOntext> = { moduleDefinition: null, router: null, contextFactory: null };
 
 const EXPECTED_MODULE_DEFINITION: ModuleDef<GlobalCOntext> = {

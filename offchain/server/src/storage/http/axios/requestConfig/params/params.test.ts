@@ -1,4 +1,4 @@
-import setParams from './params';
+import setParams, { paramsSerializer } from './params';
 import { AxiosRequestConfig } from 'axios';
 
 describe(`storage`, () => {
@@ -6,6 +6,21 @@ describe(`storage`, () => {
     describe(`axios`, () => {
       describe(`config`, () => {
         describe(`params`, () => {
+          describe(`serializer`, () => {
+            it(`Should serialize query parameters in exact way.`, () => {
+              const serialized = paramsSerializer({
+                flag_0: '',
+                flag_1: null,
+                flag_2: undefined,
+                flag_3: true,
+                flag_4: 'val',
+                flag_5: 5
+              });
+
+              expect(serialized).toEqual('flag_0&flag_1&flag_3=true&flag_4=val&flag_5=5');
+            });
+          });
+
           const params: object = {
             order: 'desc'
           };

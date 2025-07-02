@@ -5,6 +5,7 @@ import loadDatabaseConfiguration from './database/databaseConfig';
 import loadSSOConfiguration from './sso/ssoConfig';
 import loadLoggerConfiguration from './logger/loggerConfig';
 import loadLucidConfiguration from './lucid/lucidConfig';
+import loadCardanoNodeConfiguration from './cardanoNode/cardanoNodeConfig';
 
 export default appConfigUnbound({
   loadNodeEnvConfiguration,
@@ -12,5 +13,6 @@ export default appConfigUnbound({
   loadDatabaseConfiguration,
   loadSSOConfiguration,
   loadLoggerConfiguration,
-  loadLucidConfiguration
+  loadLucidConfiguration,
+  loadCardanoNodeConfiguration
 });

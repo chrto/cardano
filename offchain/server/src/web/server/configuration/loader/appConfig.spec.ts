@@ -5,6 +5,7 @@ import serverConfigUnbound from './server/serverConfig.unbound';
 import ssoConfigUnbound from './sso/ssoConfig.unbound';
 import loggerConfigUnbound from './logger/loggerConfig.unbound';
 import lucidConfigUnbound from './lucid/lucidConfig.unbound';
+import cardanoNodeConfigUnbound from './cardanoNode/cardanoNodeConfig.unbound';
 import { AppConfig, AppConfigLoader } from './appConfig.types';
 import { ENodeENV } from './nodeEnv/nodeEnvConfig.types';
 import { Either } from 'tsmonad';
@@ -25,7 +26,9 @@ const env = {
 
   PROVIDER_TYPE: 'blockfrost',
   PROVIDER_BLOCKFROST_URL: 'https://cardano-preview.blockfrost.io/api/v0',
-  PROVIDER_BLOCKFROST_PROJECT_ID: 'my_blockfrost_id'
+  PROVIDER_BLOCKFROST_PROJECT_ID: 'my_blockfrost_id',
+  PROVIDER_NODE_KUPO_URL: 'http://localhost:1442',
+  PROVIDER_NODE_OGMIOS_URL: 'http://localhost:1337'
 };
 
 describe('server configuration module', () => {
@@ -36,6 +39,7 @@ describe('server configuration module', () => {
     const loadSSOConfiguration: AppConfigLoader<Either<AppError, AppConfig>> = ssoConfigUnbound(env);
     const loadLoggerConfiguration: AppConfigLoader<AppConfig> = loggerConfigUnbound(env);
     const loadLucidConfiguration: AppConfigLoader<Either<AppError, AppConfig>> = lucidConfigUnbound(env);
+    const loadCardanoNodeConfiguration: AppConfigLoader<AppConfig> = cardanoNodeConfigUnbound(env);
 
     const loadAppConfig = loadAppConfigUnbound({
       loadNodeEnvConfiguration,
@@ -43,14 +47,15 @@ describe('server configuration module', () => {
       loadServerConfiguration,
       loadSSOConfiguration,
       loadLoggerConfiguration,
-      loadLucidConfiguration
+      loadLucidConfiguration,
+      loadCardanoNodeConfiguration
     });
 
     loadAppConfig()
       .do({
         right: (appConfig: AppConfig) => {
           it(`should have 6 own properties`, () => {
-            expect(Object.keys(appConfig).length).toEqual(6);
+            expect(Object.keys(appConfig).length).toEqual(7);
           });
           it(`should have own property 'environment'`, () => {
             expect(appConfig).toHaveProperty('environment');
@@ -69,6 +74,9 @@ describe('server configuration module', () => {
           });
           it(`should have own property 'lucid'`, () => {
             expect(appConfig).toHaveProperty('lucid');
+          });
+          it(`should have own property 'cardanoNode'`, () => {
+            expect(appConfig).toHaveProperty('cardanoNode');
           });
         },
         left: (error: AppError) => {
