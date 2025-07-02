@@ -6,9 +6,9 @@ function ScriptDetail({ scriptAddress, selectedScript }) {
     <div className="script-detail">
       <label htmlFor="scriptAddress">Scritp Address</label>
       <textarea id="scriptAddress" value={scriptAddress} readOnly={true} />
-      <label htmlFor="scriptType">Scritp Address</label>
+      <label htmlFor="scriptType">Scritp Type</label>
       <textarea id="scriptType" value={selectedScript.script.type} readOnly={true} />
-      <label htmlFor="scriptCbor">Scritp Address</label>
+      <label htmlFor="scriptCbor">Scritp CBOR</label>
       <textarea id="scriptCbor" value={selectedScript.script.script} readOnly={true} />
     </div>
   )
