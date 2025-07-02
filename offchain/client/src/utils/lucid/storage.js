@@ -29,6 +29,10 @@ function LucidStorage(lucid) {
   this.buildPayToContractTxFromUtxo = this.buildPayToContractTxFromUtxo.bind(this);
   this.buildPayToContractTx = this.buildPayToContractTx.bind(this);
   this.buildSpendFromContractTx = this.buildSpendFromContractTx.bind(this);
+  this.signTx = this.signTx.bind(this);
+  this.submitTx = this.submitTx.bind(this);
+  this.successHandler = this.successHandler.bind(this);
+  this.errorHandler = this.errorHandler.bind(this);
 }
 
 LucidStorage.prototype.getWalletAddress = async function () {
