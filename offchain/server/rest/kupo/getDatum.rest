@@ -1,0 +1,3 @@
+
+GET {{$dotenv PROVIDER_NODE_KUPO_URL}}/datums/{{$dotenv DATUM_HASH}} HTTP/1.1
+Accept: application/json
