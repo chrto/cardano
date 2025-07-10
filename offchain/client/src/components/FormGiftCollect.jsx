@@ -5,7 +5,7 @@ import utxoToLucid from '../utils/utxoToLucid';
 import lucidStorage from '../utils/lucid/storage';
 
 function FormGiftCollect({ title, scriptUtxos, validatorScript }) {
-  const [formData, setFormData] = useState({ giftUtxo: '' });
+  const [formData, setFormData] = useState({ utxoWithIndex: '' });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -14,7 +14,7 @@ function FormGiftCollect({ title, scriptUtxos, validatorScript }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const utxo = utxoToLucid(findUTxO(scriptUtxos, formData.giftUtxo))
+    const utxo = utxoToLucid(findUTxO(scriptUtxos, formData.utxoWithIndex))
 
     lucidStorage.then(storage =>
       storage.buildSpendFromContractTx(validatorScript, utxo)
@@ -22,16 +22,26 @@ function FormGiftCollect({ title, scriptUtxos, validatorScript }) {
         .then(storage.submitTx)
         .then(storage.successHandler)
         .catch(storage.errorHandler)
+        .finally(() => {
+          setFormData({...formData, utxoWithIndex: ''})
+        })
     )
   };
 
+  const handleReset = (e) => {
+    e.preventDefault();
+    setFormData({...formData, utxoWithIndex: ''});
+  }
+
   return (
-    <form onSubmit={handleSubmit} className="form">
+    <div className="form">
       <h2>{title}</h2>
       <label>Gift UTxO:</label>
-      <input type="text" name="giftUtxo" value={formData.name} onChange={handleChange} />
-      <button type="submit">Submit</button>
-    </form>
+      <input type="text" name="utxoWithIndex" value={formData.utxoWithIndex} onChange={handleChange} />
+
+      <button type="button" onClick={handleSubmit}>Submit</button>
+      <button type="button" onClick={handleReset}>Reset</button>
+    </div>
   );
 }
 

@@ -5,7 +5,7 @@ import utxoToLucid from '../utils/utxoToLucid';
 import lucidStorage from '../utils/lucid/storage';
 
 function FormFortyTwoCollect({ title, scriptUtxos, validatorScript }) {
-  const [formData, setFormData] = useState({ giftUtxo: '', redeemerValue: 0 });
+  const [formData, setFormData] = useState({ utxoWithIndex: '', redeemerValue: 0 });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -14,7 +14,7 @@ function FormFortyTwoCollect({ title, scriptUtxos, validatorScript }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const utxo = utxoToLucid(findUTxO(scriptUtxos, formData.giftUtxo))
+    const utxo = utxoToLucid(findUTxO(scriptUtxos, formData.utxoWithIndex))
     const redeemer = Number(formData.redeemerValue)
 
     lucidStorage.then(storage =>
@@ -26,15 +26,22 @@ function FormFortyTwoCollect({ title, scriptUtxos, validatorScript }) {
     )
   };
 
+  const handleReset = (e) => {
+    e.preventDefault();
+    setFormData({ ...formData, utxoWithIndex: '', redeemerValue: 0 });
+  }
+
   return (
-    <form onSubmit={handleSubmit} className="form">
+    <div className="form">
       <h2>{title}</h2>
       <label>Gift UTxO:</label>
-      <input type="text" name="giftUtxo" value={formData.name} onChange={handleChange} />
+      <input type="text" name="utxoWithIndex" value={formData.utxoWithIndex} onChange={handleChange} />
+      <label>Redeemer value:</label>
       <input type="number" name="redeemerValue" value={formData.redeemerValue} onChange={handleChange} />
 
-      <button type="submit">Submit</button>
-    </form>
+      <button type="button" onClick={handleSubmit}>Submit</button>
+      <button type="button" onClick={handleReset}>Reset</button>
+    </div>
   );
 }
 
