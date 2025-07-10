@@ -1,13 +1,14 @@
 .choice {
   font-size: medium;
-  /* display: flex; */
-  /* flex-direction: column; */
-  /* flex: 1; */
-  /* margin-top: 10px; */
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin-top: 10px;
+  background-color: var(--background-color);
 }
 
 .choiceItem {
-  /* display: flex; */
+  display: flex;
 }
 
 .choice input {

@@ -1,8 +1,6 @@
 .table-box {
-  padding: 10px;
   overflow: hidden;
-  background-color: floralwhite;
-  border-bottom: 1px solid #ccc;
+  background-color: var(--background-color);
 }
 
 .table-wrapper {
@@ -11,7 +9,7 @@
   flex-basis: content;
   flex: 1;
   overflow: hidden;
-  background-color: black;
+  background-color: var(--background-color);
 }
 
 .table-scroll {
@@ -19,6 +17,9 @@
   max-height: calc(100vh / 4);
 }
 
+.table-box button {
+  color: var(--text-color);
+}
 .table-box table {
   font-size: small;
   width: 100%;
@@ -26,12 +27,12 @@
 }
 
 .table-box tr {
-  background-color: white;
+  background-color: var(--background-color);
 }
 
 .table-box th,
 .table-box td {
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid var(--border-color);
   padding: 4px;
   text-align: left;
   max-width: 300px;
@@ -40,8 +41,7 @@
 
 .table-box th {
   font-size: small;
-  background-color: #ccc;
-  ;
+  background-color: var(--background-color);
   position: sticky;
   top: 0;
   z-index: 1;
@@ -55,12 +55,22 @@
   font-size: smalle;
   margin-right: 10px;
   padding: 1px;
-  background-color: white;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  background-color: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 3px;
 }
 
 .table-box button:hover {
   cursor: pointer;
-  background-color: #ccc;
+  background-color: var(--background-color);
+}
+
+.table-link {
+  color: var(--text-color);;
+  text-decoration: none;
+}
+
+.table-link:hover {
+  color: var(--texty-color-hover);
+  text-decoration: underline;
 }

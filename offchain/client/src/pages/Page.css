@@ -1,10 +1,13 @@
+@import './PageGlobalColors.css';
 
 .app-container {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
 
-  background-color: #ccc;
+  background-color: var(--background-color);
+  border: 2px solid var(--border-color);
+  color: var(--text-color);
   background-blend-mode: multiply;
   height: 100dvh;
   font-family: sans-serif;
@@ -17,13 +20,8 @@
   flex-direction: row; /* default row */
   flex-wrap: nowrap;  /* default nowrap */
 
-  background-color: floralwhite;
-  margin: 0.1em;
-  /* padding: 0; */
-
-  /* justify-content: flex-start; */
-  /* align-items: baseline; */
-
+  background-color: var(--background-color);
+  margin: 0.2em;
 }
 
 .sidebar {
@@ -31,7 +29,7 @@
   flex-direction: column;
   flex: 0 0 20%;
 
-  background-color:floralwhite;
+  background-color: var(--background-color);
   border-right: 5px solid #ccc;
   padding: .5em;
 }
