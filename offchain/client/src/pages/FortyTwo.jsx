@@ -1,10 +1,8 @@
 import './Page.css'
-import React, { useEffect, useState } from 'react';
-import ViewsFortyTwo from '../components/ViewsFortyTwo';
+import { useEffect, useState } from 'react';
+import AccordionFortyTwoView from '../components/AccordionFortyTwoView';
 import Header from '../components/Header';
-import ChoiceFortyTwo from '../components/ChoiceFortyTwo';
-import FormFortyTwoSend from '../components/FormFortyTwoSend';
-import FormFortyTwoCollect from '../components/FormFortyTwoCollect';
+import AccordionFortyTwoForm from '../components/AccordionFortyTwoForm'
 import getData from '../utils/getDataFromServer';
 import Navbar from '../components/Navbar';
 import dispatchData from '../utils/dispatchData';
@@ -74,11 +72,23 @@ function FortyTwo({publicKeyHash, walletAddress, walletUtxos}) {
       <Header publicKeyHash={publicKeyHash} walletAddress={walletAddress} walletUtxos={walletUtxos} />
       <div className="main-content">
         <aside className="sidebar">
-          <ChoiceFortyTwo handleChoice={handleChoice} selected={selectedScript.name}/>
-          <FormFortyTwoSend title="Send FortyTwo" scriptAddress={scriptAddress} walletUtxos={walletUtxos} />
-          <FormFortyTwoCollect title="Collect FortyTwo" scriptUtxos={scriptUtxos} validatorScript={selectedScript.script} />
+          <AccordionFortyTwoForm
+            scriptAddress={scriptAddress}
+            walletUtxos={walletUtxos}
+            scriptUtxos={scriptUtxos}
+            validatorScript={selectedScript.script}
+            handleChoice={handleChoice}
+            selected={selectedScript.name}
+          />
         </aside>
-        <ViewsFortyTwo walletUtxos={walletUtxos} scriptUtxos={scriptUtxos} scriptAddress={scriptAddress} selectedScript={selectedScript} />
+        <div className="view-panel">
+          <AccordionFortyTwoView
+            walletUtxos={walletUtxos}
+            scriptUtxos={scriptUtxos}
+            scriptAddress={scriptAddress}
+            selectedScript={selectedScript}
+          />
+        </div>
       </div>
     </div>
   );

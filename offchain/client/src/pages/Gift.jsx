@@ -1,13 +1,12 @@
 import './Page.css'
-import React, { useEffect, useState } from 'react';
-import ViewsGift from '../components/ViewsGift';
+import { useEffect, useState } from 'react';
 import Header from '../components/Header';
-import FormGiftSend from '../components/FormGiftSend';
-import FormGiftCollect from '../components/FormGiftCollect';
 import getData from '../utils/getDataFromServer';
 import Navbar from '../components/Navbar';
 import dispatchData from '../utils/dispatchData';
 import useSafeInterval from '../utils/useSafeInterval';
+import AccordionGiftForm from '../components/AccordionGiftForm';
+import AccordionGiftView from '../components/AccordionGiftView';
 
 const { giftScript, apiRefreshDelay } = require("../config.json");
 
@@ -58,10 +57,21 @@ function Gift({publicKeyHash, walletAddress, walletUtxos}) {
       <Header publicKeyHash={publicKeyHash} walletAddress={walletAddress} walletUtxos={walletUtxos} />
       <div className="main-content">
         <aside className="sidebar">
-          <FormGiftSend title="Send Gift" scriptAddress={scriptAddress} walletUtxos={walletUtxos} />
-          <FormGiftCollect title="Collect Gift" scriptUtxos={scriptUtxos} validatorScript={ giftScript } />
+          <AccordionGiftForm
+            scriptAddress={scriptAddress}
+            walletUtxos={walletUtxos}
+            scriptUtxos={scriptUtxos}
+            validatorScript={giftScript}
+          />
         </aside>
-        <ViewsGift walletUtxos={walletUtxos} scriptUtxos={scriptUtxos} scriptAddress={scriptAddress} selectedScript={selectedScript} />
+        <div className="view-panel">
+          <AccordionGiftView
+            walletUtxos={walletUtxos}
+            scriptUtxos={scriptUtxos}
+            scriptAddress={scriptAddress}
+            selectedScript={selectedScript}
+          />
+        </div>
       </div>
     </div>
   );

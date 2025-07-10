@@ -6,10 +6,9 @@
 
   background-color: #ccc;
   background-blend-mode: multiply;
-  background-size: cover;
-  height: 99vh;
-  margin: 0.5em;
+  height: 100dvh;
   font-family: sans-serif;
+  overflow: scroll;
 }
 
 .main-content {
@@ -30,10 +29,18 @@
 .sidebar {
   display: flex;
   flex-direction: column;
-  flex: 0 0 250px;
+  flex: 0 0 20%;
 
   background-color:floralwhite;
   border-right: 5px solid #ccc;
-  margin: .5em;
+  padding: .5em;
+}
 
+.sidebar h3 {
+  padding: 1em;
+}
+
+.view-panel {
+  width: 100%;
+  padding: .5em;
 }

@@ -4,7 +4,6 @@ import './Choice.css';
 function ChoiceFortyTwo({ handleChoice, selected }) {
   return (
     <div className="choice">
-      <h2>Select script:</h2>
       <div className='choiceItem'>
         <input type="radio" id="scriptChoice1" name="contact" value="fortyTwoScript" onChange={handleChoice} checked={selected==="fortyTwoScript"} />
         <label htmlFor="scriptChoice1">FortyTwo Untyped</label>
