@@ -1,5 +1,7 @@
 .form {
+  padding: 10px;
   font-size: medium;
+  background-color: var(--background-color);
 }
 
 .form label {
@@ -14,13 +16,17 @@
   padding: 8px 4px;
   margin: 4px;
   border-radius: 5px;
+  border: 1px solid var(--border-color);
+  background-color: var(--background-color);
 }
 
 .form button {
   padding: 8px 16px;
-  background-color: #007bff9a;
-  color: white;
-  border: none;
+  background-color: var(--form-button-color);
+  border: 1px solid var(--border-color);
+  color: var(--form-button-text-color);
+  font-size: medium;
+  font-weight: bold;
   cursor: pointer;
   border-radius: 5px;
   margin: 4px;

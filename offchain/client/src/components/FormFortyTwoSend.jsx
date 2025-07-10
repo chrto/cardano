@@ -5,7 +5,7 @@ import utxoToLucid from '../utils/utxoToLucid';
 import lucidStorage from '../utils/lucid/storage';
 
 function FormFortyTwoSend({ title, scriptAddress, walletUtxos }) {
-  const [formData, setFormData] = useState({ giftValue: 3, utxoWithIndex: '' });
+  const [formData, setFormData] = useState({ valueAda: 3, utxoWithIndex: '' });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -14,7 +14,7 @@ function FormFortyTwoSend({ title, scriptAddress, walletUtxos }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     // eslint-disable-next-line no-undef
-    const amountLovelace = BigInt(formData.giftValue) * BigInt(1000000)
+    const amountLovelace = BigInt(formData.valueAda) * BigInt(1000000)
     const utxoRef = formData.utxoWithIndex
 
     lucidStorage.then(storage =>
@@ -24,24 +24,36 @@ function FormFortyTwoSend({ title, scriptAddress, walletUtxos }) {
           .then(storage.submitTx)
           .then(storage.successHandler)
           .catch(storage.errorHandler)
+          .finally(() => {
+            setFormData({...formData, utxoWithIndex: '', valueAda: 3})
+          })
         : storage.buildPayToContractTx(amountLovelace, scriptAddress)
           .then(storage.signTx)
           .then(storage.submitTx)
           .then(storage.successHandler)
           .catch(storage.errorHandler)
+          .finally(() => {
+            setFormData({...formData, utxoWithIndex: '', valueAda: 3})
+          })
     )
   };
 
+  const handleReset = (e) => {
+    e.preventDefault();
+    setFormData({...formData, utxoWithIndex: '', valueAda: 3});
+  }
+
   return (
-    <form onSubmit={handleSubmit} className="form">
+    <div className="form">
       <h2>{title}</h2>
       <label>Value in ADA:</label>
-      <input type="number" name="giftValue" value={formData.giftValue} onChange={handleChange} />
+      <input type="number" name="valueAda" value={formData.valueAda} onChange={handleChange} />
       <label>UTxO (Optional):</label>
       <input type="text" name="utxoWithIndex" value={formData.utxoWithIndex} onChange={handleChange} />
 
-      <button type="submit">Submit</button>
-    </form>
+      <button type="button" onClick={handleSubmit}>Submit</button>
+      <button type="button" onClick={handleReset}>Reset</button>
+    </div>
   );
 }
 

@@ -1,18 +1,18 @@
 .script-detail {
   padding: 10px;
-  /* margin: 20px */
 }
 
 .script-detail label {
-  /* display: block; */
-  /* margin: 20px; */
   font-weight: 600;
   font-size: medium;
 }
 
-textarea {
+.script-detail textarea {
+  font-size: medium;
+  color: var(--text-color);
+
   width: 100%;
-  background-color: floralwhite;
+  background-color: var(--background-color);
   min-height: fit-content;
   box-sizing: border-box;
   border: none;
@@ -20,5 +20,4 @@ textarea {
   white-space: pre-wrap;
   overflow-wrap: break-word;
   word-break: break-all;
-  font-size: small;
 }

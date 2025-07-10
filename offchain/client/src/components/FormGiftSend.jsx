@@ -4,10 +4,12 @@ import findUTxO from '../utils/findUTxO';
 import utxoToLucid from '../utils/utxoToLucid';
 import lucidStorage from '../utils/lucid/storage';
 
-function FormGiftSend({ title, scriptAddress, walletUtxos }) {
+function FormGiftSend({ scriptAddress, walletUtxos }) {
   const [formData, setFormData] = useState({ giftValue: 3, utxoWithIndex: '' });
 
   const handleChange = (e) => {
+    e.preventDefault();
+
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -24,24 +26,35 @@ function FormGiftSend({ title, scriptAddress, walletUtxos }) {
           .then(storage.submitTx)
           .then(storage.successHandler)
           .catch(storage.errorHandler)
+          .finally(() => {
+            setFormData({...formData, utxoWithIndex: '', giftValue: 3})
+          })
         : storage.buildPayToContractTx(amountLovelace, scriptAddress)
           .then(storage.signTx)
           .then(storage.submitTx)
           .then(storage.successHandler)
           .catch(storage.errorHandler)
+          .finally(() => {
+            setFormData({...formData, utxoWithIndex: '', giftValue: 3})
+          })
     )
   };
 
+  const handleReset = (e) => {
+    e.preventDefault();
+    setFormData({...formData, utxoWithIndex: '', giftValue: 3});
+  }
+
   return (
-    <form onSubmit={handleSubmit} className="form">
-      <h2>{title}</h2>
+    <div className="form">
       <label>Value in ADA:</label>
       <input type="number" name="giftValue" value={formData.giftValue} onChange={handleChange} />
       <label>UTxO (Optional):</label>
       <input type="text" name="utxoWithIndex" value={formData.utxoWithIndex} onChange={handleChange} />
 
-      <button type="submit">Submit</button>
-    </form>
+      <button type="button" onClick={handleSubmit}>Submit</button>
+      <button type="button" onClick={handleReset}>Reset</button>
+    </div>
   );
 }
 

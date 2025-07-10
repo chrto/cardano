@@ -1,0 +1,15 @@
+.accordion-form {
+  width: 100%;
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  font-size: medium;
+}
+
+span {
+  color: #ccc;
+}
