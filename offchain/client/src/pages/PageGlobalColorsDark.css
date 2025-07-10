@@ -1,0 +1,27 @@
+:root {
+  --bg-color: #413e3e;
+  --surface-color: #675e5e;
+  --surface-color-hover: #8d7a7a;
+  --text-basic: #f2f5e3;
+  --text-muted: #a0a0a0;
+
+  --accent-color: #4f46e5;
+  --success-color: #10b981;
+  --warning-color: #facc15;
+  --error-color: #ef4444;
+  --info-color: #0ea5e9;
+
+  --background-color: var(--bg-color);
+  --border-color: var(--text-basic);
+  --text-color: var(--text-basic);
+  --choice-color: var(--text-basic);
+  --text-color-hover: var(--text-muted);
+  --nav-link-color: var(--text-muted);
+  --nav-link-color-hover: var(--text-color);
+  --nav-link-color-active: var(--text-color);
+  --form-button-color: var(--surface-color);
+  --form-button-color-hover: var(--surface-color-hover);
+  --form-button-text-color: var(--text-color);
+  --accordion-background-color: var(--surface-color);
+  --accordion-background-color-hover: var(--surface-color-hover);
+}

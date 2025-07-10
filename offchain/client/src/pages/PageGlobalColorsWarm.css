@@ -1,0 +1,27 @@
+:root {
+  --bg-color: floralwhite;
+  --surface-color: rgb(238, 214, 158);
+  --surface-color-hover: rgb(202, 183, 140);
+  --text-basic: rgb(77, 66, 41);
+  --text-muted: rgb(30, 26, 16);
+
+  --accent-color: #4f46e5;
+  --success-color: #10b981;
+  --warning-color: #facc15;
+  --error-color: #ef4444;
+  --info-color: #0ea5e9;
+
+  --background-color: var(--bg-color);
+  --border-color: var(--text-basic);
+  --choice-color: var(--text-basic);
+  --text-color: var(--text-basic);
+  --text-color-hover: var(--text-muted);
+  --nav-link-color: var(--text-muted);
+  --nav-link-color-hover: var(--text-color);
+  --nav-link-color-active: var(--text-color);
+  --form-button-color: var(--surface-color);
+  --form-button-color-hover: var(--surface-color-hover);
+  --form-button-text-color: var(--text-color);
+  --accordion-background-color: var(--surface-color);
+  --accordion-background-color-hover: var(--surface-color-hover);
+}

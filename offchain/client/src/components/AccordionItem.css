@@ -1,5 +1,5 @@
 .accordion-item {
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--accordion-background-color);
   border-radius: 8px;
   margin-bottom: 10px;
   overflow: hidden;
@@ -17,6 +17,7 @@
   border: none;
   font-size: medium;
   font-weight: bold;
+  font-family: inherit;
   transition: background 0.2s ease;
 }
 

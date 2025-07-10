@@ -18,16 +18,23 @@
   border-radius: 5px;
   border: 1px solid var(--border-color);
   background-color: var(--background-color);
+  color: var(--text-color);
+  font-size: small;
+  font-family: inherit;
 }
 
 .form button {
   padding: 8px 16px;
   background-color: var(--form-button-color);
-  border: 1px solid var(--border-color);
   color: var(--form-button-text-color);
   font-size: medium;
   font-weight: bold;
+  font-family: inherit;
   cursor: pointer;
   border-radius: 5px;
   margin: 4px;
+}
+
+.form button:hover {
+  background-color: var(--form-button-color-hover);
 }

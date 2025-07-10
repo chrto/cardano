@@ -1,4 +1,6 @@
-@import './PageGlobalColors.css';
+/* @import './PageGlobalColorsWarm.css'; */
+@import './PageGlobalColorsDark.css';
+/* @import './PageGlobalColorsDarker.css'; */
 
 .app-container {
   display: flex;
@@ -7,10 +9,10 @@
 
   background-color: var(--background-color);
   border: 2px solid var(--border-color);
+  font-family: 'JetBrains Mono', 'Source Code Pro', 'Consolas', 'Menlo', 'Courier New', monospace;
   color: var(--text-color);
   background-blend-mode: multiply;
   height: 100dvh;
-  font-family: sans-serif;
   overflow: scroll;
 }
 
