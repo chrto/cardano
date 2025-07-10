@@ -131,9 +131,6 @@ services:
       "--ogmios-port", "1337",
       "--ogmios-host", "localhost",
       "--since", "${KUPO_SINCE}",
-      "--match", "${CARDANO_GIFT_ADDRESS}",
-      "--match", "${CARDANO_WALLET_ADDRES_1}",
-      "--match", "${CARDANO_WALLET_ADDRES_2}",
       "--workdir", "/db",
       "--host", "0.0.0.0",
       "--port", "1442"
@@ -155,9 +152,6 @@ services:
       "--node-socket", "/cardano/db/node.socket",
       "--node-config", "/cardano/config.json",
       "--since", "${KUPO_SINCE}",
-      "--match", "${CARDANO_GIFT_ADDRESS}",
-      "--match", "${CARDANO_WALLET_ADDRES_1}",
-      "--match", "${CARDANO_WALLET_ADDRES_2}",
       "--workdir", "/db",
       "--host", "0.0.0.0",
       "--port", "1442"
