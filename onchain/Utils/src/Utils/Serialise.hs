@@ -4,7 +4,9 @@ module Utils.Serialise
     ( writeValidatorToFile
     , writeDataToFile
     , validatorToScript
-    , printDataToJSON) where
+    , printDataToJSON
+    , jsonToString
+    , dataToJSON) where
 
 import qualified Plutus.V2.Ledger.Api as PlutusV2
 import           Cardano.Api.Shelley (PlutusScript(PlutusScriptSerialised)
