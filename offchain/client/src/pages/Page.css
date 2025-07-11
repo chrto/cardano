@@ -12,18 +12,18 @@
   font-family: 'JetBrains Mono', 'Source Code Pro', 'Consolas', 'Menlo', 'Courier New', monospace;
   color: var(--text-color);
   background-blend-mode: multiply;
-  height: 100dvh;
+  /* height: 99dvh;   */
+  height: calc(100dvh - 3px) ;
   overflow: scroll;
+  padding: 0px;
+  margin: -9px;
 }
 
 .main-content {
   flex: 1 1;
   display: flex;
-  flex-direction: row; /* default row */
-  flex-wrap: nowrap;  /* default nowrap */
 
   background-color: var(--background-color);
-  margin: 0.2em;
 }
 
 .sidebar {
@@ -32,7 +32,7 @@
   flex: 0 0 20%;
 
   background-color: var(--background-color);
-  border-right: 5px solid #ccc;
+  border-right: 1px solid var(--border-color);
   padding: .5em;
 }
 

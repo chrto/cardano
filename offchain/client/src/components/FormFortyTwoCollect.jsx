@@ -18,7 +18,7 @@ function FormFortyTwoCollect({ title, scriptUtxos, validatorScript }) {
     const redeemer = Number(formData.redeemerValue)
 
     lucidStorage.then(storage =>
-      storage.buildSpendFromContractTx(validatorScript, utxo, redeemer)
+      storage.buildSpendFromContractTx(validatorScript, utxo, redeemer, 'integer')
         .then(storage.signTx)
         .then(storage.submitTx)
         .then(storage.successHandler)
