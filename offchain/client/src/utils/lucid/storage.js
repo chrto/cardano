@@ -1,5 +1,5 @@
 import { Lucid, Blockfrost, Kupmios } from 'lucid-cardano';
-import { toCBOR } from './data';
+import { datumToCBOR, redeemerToCBOR } from './data';
 
 const { provider, wallet } = require("../../config.json");
 
@@ -39,8 +39,8 @@ LucidStorage.prototype.getWalletAddress = async function () {
   return this.lucid.wallet.address()
 }
 
-LucidStorage.prototype.buildPayToContractTxFromUtxo = async function (amountLovelace, utxo, contractAddress, datum = null) {
-  const datumCBOR = toCBOR(datum)
+LucidStorage.prototype.buildPayToContractTxFromUtxo = async function (amountLovelace, utxo, contractAddress, datum = null, datumType = '') {
+  const datumCBOR = datumToCBOR(datum, datumType)
 
   return this.lucid
     .newTx()
@@ -53,9 +53,9 @@ LucidStorage.prototype.buildPayToContractTxFromUtxo = async function (amountLove
     });
 }
 
-LucidStorage.prototype.buildPayToContractTx = async function (amountLovelace, contractAddress, datum = null) {
+LucidStorage.prototype.buildPayToContractTx = async function (amountLovelace, contractAddress, datum = null, datumType = '') {
 
-  const datumCBOR = toCBOR(datum)
+  const datumCBOR = redeemerToCBOR(datum, datumType)
 
   return this.lucid
     .newTx()
@@ -67,9 +67,9 @@ LucidStorage.prototype.buildPayToContractTx = async function (amountLovelace, co
     });
 }
 
-LucidStorage.prototype.buildSpendFromContractTx = async function (script, utxo, redeemer = null) {
+LucidStorage.prototype.buildSpendFromContractTx = async function (script, utxo, redeemer = null, datumType = '') {
 
-  const redeemerCOBR = toCBOR(redeemer)
+  const redeemerCOBR = redeemerToCBOR(redeemer, datumType)
 
   return this.lucid
     .newTx()

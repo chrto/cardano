@@ -12,7 +12,8 @@
   display: flex;
 }
 
-.choice input {
+.choice input, label {
+  cursor: pointer;
   margin: 4px;
 }
 

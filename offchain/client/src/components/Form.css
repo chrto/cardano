@@ -23,6 +23,15 @@
   font-family: inherit;
 }
 
+input[type="datetime-local"] {
+  accent-color: var(--choice-color);
+}
+
+input[type="number"] {
+  /* accent-color: var(--choice-color); */
+  accent-color: red;
+}
+
 .form button {
   padding: 8px 16px;
   background-color: var(--form-button-color);
