@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import About from './pages/About';
 import Gift from './pages/Gift';
 import FortyTwo from './pages/FortyTwo';
+import Vesting from './pages/Vesting';
 import getData from './utils/getDataFromServer';
 import dispatchData from './utils/dispatchData';
 import lucidStorage from './utils/lucid/storage';
@@ -56,6 +57,7 @@ function App() {
         <Route path="/about" element={<About publicKeyHash={publicKeyHash} walletAddress={walletAddress} walletUtxos={walletUtxos} />} />
         <Route path="/gift" element={<Gift publicKeyHash={publicKeyHash} walletAddress={walletAddress} walletUtxos={walletUtxos} />} />
         <Route path="/fortyTwo" element={<FortyTwo publicKeyHash={publicKeyHash} walletAddress={walletAddress} walletUtxos={walletUtxos} />} />
+        <Route path="/vesting" element={<Vesting publicKeyHash={publicKeyHash} walletAddress={walletAddress} walletUtxos={walletUtxos} />} />
       </Routes>
     </Router>
   );
