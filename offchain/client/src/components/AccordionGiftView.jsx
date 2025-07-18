@@ -6,14 +6,11 @@ import ScriptDetail from './ScriptDetail'
 import convertToJs from '../utils/convertToJs'
 import { Data } from 'lucid-cardano'
 
-
-export default function AccordionGiftView({ walletUtxos, scriptUtxos, scriptAddress, selectedScript } ) {
+export default function AccordionGiftView({ scriptUtxos, scriptAddress, selectedScript } ) {
   const [openIndex, setOpenIndex] = useState(0);
-  const [openWallet, setOpenWallet] = useState(true);
   const [openScriptDetail, setOpenScriptDetail] = useState(true);
 
   const convertUtxos = utxo => [`${utxo.txId}#${utxo.txIndex}`, utxo.assets.lovelace, Number(utxo.assets.lovelace) / 1000000]
-  const convertWalletUtxos = utxo => [`${utxo.txId}#${utxo.txIndex}`, utxo.assets.lovelace, Number(utxo.assets.lovelace) / 1000000]
   const convertScriptUtxosInlineDatum = utxo => [`${utxo.txId}#${utxo.txIndex}`, utxo.datum, JSON.stringify(convertToJs(Data.from(utxo.datum)), null, 2), Number(utxo.assets.lovelace) / 1000000]
   const convertScriptUtxosHashDatum = utxo => [`${utxo.txId}#${utxo.txIndex}`, utxo.datumHash, utxo.assets.lovelace, Number(utxo.assets.lovelace) / 1000000]
 
@@ -28,12 +25,6 @@ export default function AccordionGiftView({ walletUtxos, scriptUtxos, scriptAddr
 
   return (
     <form className="accordion-form">
-      <AccordionItem title={"Wallet Utxo's (" + walletUtxos.map(convertWalletUtxos).length + ")"} isOpen={openWallet} onToggle={() => setOpenWallet(!openWallet)}>
-        <Table
-          headers={['UTXO', 'Value [Lovelace]', 'Value [Ada]']}
-          values={walletUtxos.map(convertWalletUtxos)}
-        />
-      </AccordionItem>
       <AccordionItem title={"Script"} isOpen={openScriptDetail} onToggle={() => setOpenScriptDetail(!openScriptDetail)}>
         <ScriptDetail scriptAddress={scriptAddress} selectedScript={selectedScript} />
       </AccordionItem>

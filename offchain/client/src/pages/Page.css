@@ -12,10 +12,8 @@
   font-family: 'JetBrains Mono', 'Source Code Pro', 'Consolas', 'Menlo', 'Courier New', monospace;
   color: var(--text-color);
   background-blend-mode: multiply;
-  /* height: 99dvh;   */
   height: calc(100dvh - 3px) ;
   overflow: scroll;
-  padding: 0px;
   margin: -9px;
 }
 
