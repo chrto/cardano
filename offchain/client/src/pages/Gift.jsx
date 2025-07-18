@@ -7,6 +7,7 @@ import dispatchData from '../utils/dispatchData';
 import useSafeInterval from '../utils/useSafeInterval';
 import AccordionGiftForm from '../components/AccordionGiftForm';
 import AccordionGiftView from '../components/AccordionGiftView';
+import AccordionWalletView from '../components/AccordionWalletView';
 
 const { giftScript, apiRefreshDelay } = require("../config.json");
 
@@ -55,6 +56,7 @@ function Gift({publicKeyHash, walletAddress, walletUtxos}) {
     <div className="app-container">
       <Navbar />
       <Header publicKeyHash={publicKeyHash} walletAddress={walletAddress} walletUtxos={walletUtxos} />
+      <AccordionWalletView walletUtxos={walletUtxos} />
       <div className="main-content">
         <aside className="sidebar">
           <AccordionGiftForm
@@ -66,7 +68,6 @@ function Gift({publicKeyHash, walletAddress, walletUtxos}) {
         </aside>
         <div className="view-panel">
           <AccordionGiftView
-            walletUtxos={walletUtxos}
             scriptUtxos={scriptUtxos}
             scriptAddress={scriptAddress}
             selectedScript={selectedScript}

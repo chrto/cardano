@@ -6,12 +6,10 @@ import ScriptDetail from './ScriptDetail'
 import { datumFromCBOR } from '../utils/lucid/data';
 
 
-export default function AccordionVestingView({ publicKeyHash, walletUtxos, scriptUtxos, scriptAddress, selectedScript } ) {
+export default function AccordionVestingView({ publicKeyHash, scriptUtxos, scriptAddress, selectedScript } ) {
   const [openIndex, setOpenIndex] = useState(0);
-  const [openWallet, setOpenWallet] = useState(true);
   const [openScriptDetail, setOpenScriptDetail] = useState(true);
 
-  const convertWalletUtxos = utxo => [`${utxo.txId}#${utxo.txIndex}`, utxo.assets.lovelace, Number(utxo.assets.lovelace) / 1000000]
   const convertMineVestingUTxOs = utxo => [
     `${utxo.txId}#${utxo.txIndex}`,
     getDeadline(utxo),
@@ -37,12 +35,6 @@ export default function AccordionVestingView({ publicKeyHash, walletUtxos, scrip
 
   return (
     <form className="accordion-form">
-      <AccordionItem title={"Wallet Utxo's (" + walletUtxos.map(convertWalletUtxos).length + ")"} isOpen={openWallet} onToggle={() => setOpenWallet(!openWallet)}>
-        <Table
-          headers={['UTXO', 'Value [Lovelace]', 'Value [Ada]']}
-          values={walletUtxos.map(convertWalletUtxos)}
-        />
-      </AccordionItem>
       <AccordionItem title={"Script"} isOpen={openScriptDetail} onToggle={() => setOpenScriptDetail(!openScriptDetail)}>
         <ScriptDetail scriptAddress={scriptAddress} selectedScript={selectedScript} />
       </AccordionItem>

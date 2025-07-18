@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import AccordionFortyTwoView from '../components/AccordionFortyTwoView';
 import Header from '../components/Header';
 import AccordionFortyTwoForm from '../components/AccordionFortyTwoForm'
+import AccordionWalletView from '../components/AccordionWalletView';
 import getData from '../utils/getDataFromServer';
 import Navbar from '../components/Navbar';
 import dispatchData from '../utils/dispatchData';
@@ -70,6 +71,7 @@ function FortyTwo({publicKeyHash, walletAddress, walletUtxos}) {
     <div className="app-container">
       <Navbar />
       <Header publicKeyHash={publicKeyHash} walletAddress={walletAddress} walletUtxos={walletUtxos} />
+      <AccordionWalletView walletUtxos={walletUtxos} />
       <div className="main-content">
         <aside className="sidebar">
           <AccordionFortyTwoForm
@@ -83,7 +85,6 @@ function FortyTwo({publicKeyHash, walletAddress, walletUtxos}) {
         </aside>
         <div className="view-panel">
           <AccordionFortyTwoView
-            walletUtxos={walletUtxos}
             scriptUtxos={scriptUtxos}
             scriptAddress={scriptAddress}
             selectedScript={selectedScript}
