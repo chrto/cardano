@@ -1,12 +1,11 @@
-.header {
+.wallet {
   display: flex;
   flex-direction: row;
 
   justify-content: space-between;
   flex: 0 0;
   background-color: var(--background-color);
-  border-bottom: 1px solid var(--border-color);
+  /* border-bottom: .1px solid var(--border-color); */
   padding: 0.5em;
-  margin: 0.1em;
   font-size: small;
 }
