@@ -1,6 +1,6 @@
 import './Page.css'
 import { useEffect, useState } from 'react';
-import Header from '../components/Header';
+import Wallet from '../components/Wallet';
 import getData from '../utils/getDataFromServer';
 import Navbar from '../components/Navbar';
 import dispatchData from '../utils/dispatchData';
@@ -55,8 +55,10 @@ function Gift({publicKeyHash, walletAddress, walletUtxos}) {
   return (
     <div className="app-container">
       <Navbar />
-      <Header publicKeyHash={publicKeyHash} walletAddress={walletAddress} walletUtxos={walletUtxos} />
-      <AccordionWalletView walletUtxos={walletUtxos} />
+      <div className="wallet-content">
+        <Wallet publicKeyHash={publicKeyHash} walletAddress={walletAddress} walletUtxos  ={walletUtxos} />
+        <AccordionWalletView walletUtxos={walletUtxos} />
+      </div>
       <div className="main-content">
         <aside className="sidebar">
           <AccordionGiftForm

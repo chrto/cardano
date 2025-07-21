@@ -17,6 +17,15 @@
   margin: -9px;
 }
 
+.wallet-content {
+  display: flex;
+  flex-direction: column;
+
+  background-color: var(--background-color);
+  border-bottom: 1px solid var(--border-color);
+  padding: .5em;
+}
+
 .main-content {
   flex: 1 1;
   display: flex;

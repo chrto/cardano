@@ -1,7 +1,7 @@
 import './Page.css'
 import { useEffect, useState } from 'react';
 import AccordionVestingView from '../components/AccordionVestingView';
-import Header from '../components/Header';
+import Wallet from '../components/Wallet';
 import AccordionVestingForm from '../components/AccordionVestingForm'
 import AccordionWalletView from '../components/AccordionWalletView';
 import getData from '../utils/getDataFromServer';
@@ -68,8 +68,10 @@ function Vesting({publicKeyHash, walletAddress, walletUtxos}) {
   return (
     <div className="app-container">
       <Navbar />
-      <Header publicKeyHash={publicKeyHash} walletAddress={walletAddress} walletUtxos={walletUtxos} />
-      <AccordionWalletView walletUtxos={walletUtxos} />
+      <div className="wallet-content">
+        <Wallet publicKeyHash={publicKeyHash} walletAddress={walletAddress} walletUtxos  ={walletUtxos} />
+        <AccordionWalletView walletUtxos={walletUtxos} />
+      </div>
       <div className="main-content">
         <aside className="sidebar">
           <AccordionVestingForm
