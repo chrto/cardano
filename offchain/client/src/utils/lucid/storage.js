@@ -39,12 +39,12 @@ LucidStorage.prototype.getWalletAddress = async function () {
   return this.lucid.wallet.address()
 }
 
-LucidStorage.prototype.buildPayToContractTxFromUtxo = async function (amountLovelace, utxo, contractAddress, datum = null, datumType = '') {
+LucidStorage.prototype.buildPayToContractTxFromUtxo = async function (amountLovelace, utxos, contractAddress, datum = null, datumType = '') {
   const datumCBOR = datumToCBOR(datum, datumType)
 
   return this.lucid
     .newTx()
-    .collectFrom([utxo])
+    .collectFrom(utxos)
     .payToContract(contractAddress, { inline: datumCBOR }, { lovelace: amountLovelace })
     .complete()
     .catch(err => {
@@ -67,13 +67,13 @@ LucidStorage.prototype.buildPayToContractTx = async function (amountLovelace, co
     });
 }
 
-LucidStorage.prototype.buildSpendFromContractTx = async function (script, utxo, redeemer = null, datumType = '') {
+LucidStorage.prototype.buildSpendFromContractTx = async function (script, utxos, redeemer = null, datumType = '') {
 
   const redeemerCOBR = redeemerToCBOR(redeemer, datumType)
 
   return this.lucid
     .newTx()
-    .collectFrom([utxo], redeemerCOBR)
+    .collectFrom(utxos, redeemerCOBR)
     // .readFrom([collateralUtxo]) // 👈 specify it as collateral here !!! Check it !!!
     .attachSpendingValidator(script)
     .complete()

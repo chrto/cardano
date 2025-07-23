@@ -43,11 +43,16 @@ function App() {
   const getCardanoPKH = async address =>
     getData(`cardano/${address}/credential/payment`)
       .then(({ hash }) => hash)
+      .catch(e => {
+        console.error(`Can not fetch pubKeyHash for address ${address} from server!\n origin: ${e.message}`)
+        return "...";
+      })
+
   const getAddressUtxos = async address =>
     getData(`cardano/${address}/utxos`)
-      .then(utxos => {
-        console.debug(`There are ${utxos.length} UTxOs at address ${address}`)
-        return utxos
+      .catch(e => {
+        console.error(`Can not fetch utxos for address ${address} from server!\n origin: ${e.message}`)
+        return [];
       })
 
   return (

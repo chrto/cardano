@@ -1,9 +1,16 @@
 import React from 'react';
 import './Table.css';
 
-function Table({ headers, values }) {
-  const getTxId = (idAndIdx) => idAndIdx.split("#")[0];
-  const getTxIdx = (idAndIdx) => idAndIdx.split("#")[1];
+function Table({ headers, values, selectUtxo }) {
+  const EXPL_URL = "https://preview.cardanoscan.io/transaction/"
+
+  const getTxHash = (row) => !!selectUtxo ? row[1] : row[0]
+  const getTxIdx = (row) =>  !!selectUtxo ? row[2] : row[1]
+  const getTxKey = (row) => `${getTxHash(row)}#${getTxIdx(row)}`
+
+  const renderCheckboxColumn = (columnVal, id, utxoKey) => <td key={id}><input type="checkbox" checked={columnVal} onChange={() => selectUtxo(utxoKey)}></input></td>
+  const renderUtxoIdColumn = (columnVal, id) => <td key={id}><a className="table-link" href={`${EXPL_URL}${columnVal}`}>{columnVal}</a></td>
+  const renderColumn = (columnVal, id) => <td key={id}>{columnVal}</td>
 
   return (
     <div className="table-box">
@@ -11,15 +18,21 @@ function Table({ headers, values }) {
         <div className="table-scroll">
           <table>
             <thead>
-              <tr key={`header`}>
-                {headers.map(h => (<th>{h}</th>))}
+              <tr>
+                {headers.map(h => (<th key={h}>{h}</th>))}
               </tr>
             </thead>
             <tbody>
-              {values.map((row) => (<tr key={row[0]}>{row.map((c, i) => (
+              {values.map((row) => (<tr key={getTxKey(row)}>{row.map((c, i, cs) => (
                 i === 0
-                  ? <td><button type="button" onClick={()=> navigator.clipboard.writeText(c)}>Copy</button><a className="table-link" href={"https://preview.cardanoscan.io/transaction/" + getTxId(c)}>{getTxId(c)}</a>#{getTxIdx(c)}</td>
-                  : <td>{c}</td>
+                  ? !!selectUtxo
+                    ? renderCheckboxColumn(c, i, getTxKey(cs))
+                    : renderUtxoIdColumn(c, i)
+                  : i === 1
+                    ? !!selectUtxo
+                      ? renderUtxoIdColumn(c, i)
+                      : renderColumn(c, i)
+                    : renderColumn(c, i)
               ))}</tr>))}
             </tbody>
           </table>

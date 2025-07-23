@@ -3,7 +3,7 @@ import Navbar from '../components/Navbar';
 import Wallet from '../components/Wallet';
 import AccordionWalletView from '../components/AccordionWalletView';
 
-export default function Home({publicKeyHash, walletAddress, walletUtxos}) {
+export default function Home({ publicKeyHash, walletAddress, walletUtxos }) {
   return (
     <div className="app-container">
       <Navbar />
