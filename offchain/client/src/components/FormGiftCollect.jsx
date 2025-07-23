@@ -35,8 +35,10 @@ function FormGiftCollect({ validatorScript, getSelectedScriptUtxos, deselectScri
 
   return (
     <div className="form">
-      <button type="button" onClick={handleSubmit}>Submit</button>
-      <button type="button" onClick={handleReset}>Reset</button>
+      <div className="buttons">
+        <button type="button" onClick={handleSubmit}>Submit</button>
+        <button type="button" onClick={handleReset}>Reset</button>
+      </div>
     </div>
   );
 }

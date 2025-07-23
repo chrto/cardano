@@ -1,20 +1,25 @@
 .form {
-  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
   font-size: medium;
   background-color: var(--background-color);
 }
 
+.inputs {
+  display: flex;
+  flex-direction: column;
+  margin: 5px;
+}
+
 .form label {
-  display: block;
   margin-top: 10px;
-  margin-left: 4px;
+  margin-bottom: 4px;
+
 }
 
 .form input {
-  display: inline;
-  width: 90%;
   padding: 8px 4px;
-  margin: 4px;
   border-radius: 5px;
   border: 1px solid var(--border-color);
   background-color: var(--background-color);
@@ -23,17 +28,15 @@
   font-family: inherit;
 }
 
-input[type="datetime-local"] {
-  accent-color: var(--choice-color);
-}
-
-input[type="number"] {
-  /* accent-color: var(--choice-color); */
-  accent-color: red;
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  margin: 5px;
 }
 
 .form button {
-  padding: 8px 16px;
+  width: 100%;
+  padding: 8px 0px;
   background-color: var(--form-button-color);
   color: var(--form-button-text-color);
   font-size: medium;
@@ -41,7 +44,6 @@ input[type="number"] {
   font-family: inherit;
   cursor: pointer;
   border-radius: 5px;
-  margin: 4px;
 }
 
 .form button:hover {
