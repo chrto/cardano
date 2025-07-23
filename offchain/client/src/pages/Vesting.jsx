@@ -52,18 +52,18 @@ function Vesting({publicKeyHash, walletAddress, walletUtxos}) {
 
   const getAddressUtxos = async address =>
     getData(`cardano/${address}/utxos`)
-      .then(utxos => {
-        console.debug(`There are ${utxos.length} UTxOs at address ${address}`)
-        return utxos
-      })
       .catch(e => {
         console.error(`Can not fetch utxos for address ${address} from server!\n origin: ${e.message}`)
-        return scriptUtxos;
+        return [];
       })
 
   const getScriptAddress = async script =>
     getData(`cardano/script/address?type=${script.type}&script=${script.script}`)
       .then(({ address }) => address)
+      .catch(e => {
+        console.error(`Can not fetch script address for script ${script.script} from server!\n origin: ${e.message}`)
+        return "...";
+      })
 
   return (
     <div className="app-container">
