@@ -10,10 +10,14 @@
 
 .choiceItem {
   display: flex;
+  margin: 4px;
 }
 
-.choice input, label {
+.choiceItem label {
   cursor: pointer;
-  margin: 4px;
+}
+
+.choiceItem input {
+  cursor: pointer;
 }
 

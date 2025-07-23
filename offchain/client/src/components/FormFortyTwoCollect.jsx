@@ -43,11 +43,14 @@ function FormFortyTwoCollect({ validatorScript, getSelectedScriptUtxos, deselect
 
   return (
     <div className="form">
-      <label>Redeemer value:</label>
-      <input type="number" name="redeemerValue" value={formData.redeemerValue} onChange={handleChange} />
-
-      <button type="button" onClick={handleSubmit}>Submit</button>
-      <button type="button" onClick={handleReset}>Reset</button>
+      <div className="inputs">
+        <label>Redeemer value:</label>
+        <input type="number" name="redeemerValue" value={formData.redeemerValue} onChange={handleChange} />
+      </div>
+      <div className="buttons">
+        <button type="button" onClick={handleSubmit}>Submit</button>
+        <button type="button" onClick={handleReset}>Reset</button>
+      </div>
     </div>
   );
 }

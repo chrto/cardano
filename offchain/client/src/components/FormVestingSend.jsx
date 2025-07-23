@@ -4,7 +4,7 @@ import findUTxO from '../utils/findUTxO';
 import utxoToLucid from '../utils/utxoToLucid';
 import lucidStorage from '../utils/lucid/storage';
 
-function FormVestingSend({ title, scriptAddress, walletUtxos }) {
+function FormVestingSend({ scriptAddress, walletUtxos }) {
   const [formData, setFormData] = useState({ valueAda: 3, beneficiary: '', deadline: '', utxoWithIndex: '' });
 
     useEffect(() => {
@@ -59,21 +59,24 @@ function FormVestingSend({ title, scriptAddress, walletUtxos }) {
 
   return (
     <div className="form">
-      <h2>{title}</h2>
-      <label>Amount in ADA:</label>
-      <input type="number" name="valueAda" value={formData.valueAda} onChange={handleChange} />
+      <div className="inputs">
+        <label>Amount in ADA:</label>
+        <input type="number" name="valueAda" value={formData.valueAda} onChange={handleChange} />
 
-      <label>Beneficiary:</label>
-      <input type="text" name="beneficiary" value={formData.beneficiary} onChange={handleChange} />
+        <label>Beneficiary:</label>
+        <input type="text" name="beneficiary" value={formData.beneficiary} onChange={handleChange} />
 
-      <label>Deadline:</label>
-      <input type="datetime-local" name="deadline" value={formData.deadline} onChange={handleChange} />
+        <label>Deadline:</label>
+        <input type="datetime-local" name="deadline" value={formData.deadline} onChange={handleChange} />
 
-      <label>UTxO (Optional):</label>
-      <input type="text" name="utxoWithIndex" value={formData.utxoWithIndex} onChange={handleChange} />
+        <label>UTxO (Optional):</label>
+        <input type="text" name="utxoWithIndex" value={formData.utxoWithIndex} onChange={handleChange} />
+      </div>
 
-      <button type="button" onClick={handleSubmit}>Submit</button>
-      <button type="button" onClick={handleReset}>Reset</button>
+      <div className="buttons">
+        <button type="button" onClick={handleSubmit}>Submit</button>
+        <button type="button" onClick={handleReset}>Reset</button>
+      </div>
     </div>
   );
 }

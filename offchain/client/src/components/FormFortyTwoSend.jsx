@@ -38,11 +38,14 @@ function FormFortyTwoSend({ scriptAddress, getSelectedWalletUtxos, deselectWalle
 
   return (
     <div className="form">
-      <label>Value in ADA:</label>
-      <input type="number" name="valueAda" value={formData.valueAda} onChange={handleChange} />
-
-      <button type="button" onClick={handleSubmit}>Submit</button>
-      <button type="button" onClick={handleReset}>Reset</button>
+      <div className="inputs">
+        <label>Value in ADA:</label>
+        <input type="number" name="valueAda" value={formData.valueAda} onChange={handleChange} />
+      </div>
+      <div className="buttons">
+        <button type="button" onClick={handleSubmit}>Submit</button>
+        <button type="button" onClick={handleReset}>Reset</button>
+      </div>
     </div>
   );
 }
