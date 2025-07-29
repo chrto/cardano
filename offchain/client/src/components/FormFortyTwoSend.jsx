@@ -2,9 +2,13 @@ import { useState } from 'react';
 import './Form.css';
 import utxoToLucid from '../utils/utxoToLucid';
 import lucidStorage from '../utils/lucid/storage';
+import Modal from './Modal';
+import dispatchData from '../utils/dispatchData';
 
 function FormFortyTwoSend({ scriptAddress, getSelectedWalletUtxos, deselectWalletUtxos }) {
   const [formData, setFormData] = useState({ valueAda: 3 });
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [txHash, setTxHash] = useState(null);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -17,11 +21,11 @@ function FormFortyTwoSend({ scriptAddress, getSelectedWalletUtxos, deselectWalle
     const utxos = getSelectedWalletUtxos().map(utxoToLucid)
 
     lucidStorage.then(storage =>
-      storage.buildPayToContractTxFromUtxo(amountLovelace, utxos, scriptAddress)
+      storage.buildPayToContractTx(amountLovelace, utxos, scriptAddress)
         .then(storage.signTx)
         .then(storage.submitTx)
-        .then(storage.successHandler)
-        .catch(storage.errorHandler)
+        .then(dispatchData(setTxHash))
+        .catch(dispatchData(setErrorMessage))
         .finally(() => {
           deselectWalletUtxos();
           setFormData({...formData, valueAda: 3})
@@ -36,6 +40,13 @@ function FormFortyTwoSend({ scriptAddress, getSelectedWalletUtxos, deselectWalle
     setFormData({...formData, valueAda: 3});
   }
 
+  const handleCloseModal = (e) => {
+    e.preventDefault();
+
+    setErrorMessage(null)
+    setTxHash(null)
+  }
+
   return (
     <div className="form">
       <div className="inputs">
@@ -46,6 +57,21 @@ function FormFortyTwoSend({ scriptAddress, getSelectedWalletUtxos, deselectWalle
         <button type="button" onClick={handleSubmit}>Submit</button>
         <button type="button" onClick={handleReset}>Reset</button>
       </div>
+
+      <Modal isOpen={!!txHash || !!errorMessage} isError={!!errorMessage} onClose={handleCloseModal}>
+        {
+          !!txHash
+            ? <div>
+                <h2>Transaction has been submited.</h2>
+                <p>Transaction Hash: {txHash}</p>
+                <p><a className="form-link" href={`https://preview.cardanoscan.io/transaction/${txHash}`}>Open transaction in explorer</a></p>
+              </div>
+            : <div>
+                <h2>Transaction has been failed.</h2>
+                {!!errorMessage && errorMessage.split("\\n").map(line => <p>{line}</p> )}
+              </div>
+        }
+      </Modal>
     </div>
   );
 }

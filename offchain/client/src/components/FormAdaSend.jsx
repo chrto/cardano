@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import './Form.css';
+import Modal from './Modal';
 
 function FormAdaSend() {
   const [formData, setFormData] = useState({ amount: 3 });
+  const [isModalOpen, setModalOpen] = useState(false);
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -13,7 +15,7 @@ function FormAdaSend() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    alert("Not implemented yet..")
+    setModalOpen(true)
   };
 
   return (
@@ -25,6 +27,11 @@ function FormAdaSend() {
       <div className='buttons'>
         <button type="button" onClick={handleSubmit}>Submit</button>
       </div>
+
+      <Modal isOpen={isModalOpen} onClose={() => setModalOpen(false)}>
+        <h2>Not implemented yet.</h2>
+        <p>Working on this feature..</p>
+      </Modal>
     </div>
   );
 }

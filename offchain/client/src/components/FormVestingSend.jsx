@@ -1,60 +1,57 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './Form.css';
-import findUTxO from '../utils/findUTxO';
 import utxoToLucid from '../utils/utxoToLucid';
 import lucidStorage from '../utils/lucid/storage';
+import dispatchData from '../utils/dispatchData';
+import Modal from './Modal';
+import getLocalDateTimeValue from '../utils/time/getLocalDateTimeValue';
 
-function FormVestingSend({ scriptAddress, walletUtxos }) {
-  const [formData, setFormData] = useState({ valueAda: 3, beneficiary: '', deadline: '', utxoWithIndex: '' });
-
-    useEffect(() => {
-      setFormData({...formData, deadline: getLocalDateTimeValue()})
-    }, []);
+function FormVestingSend({ scriptAddress, getSelectedWalletUtxos, deselectWalletUtxos }) {
+  const [formData, setFormData] = useState({ valueAda: 3, beneficiary: '', deadline: getLocalDateTimeValue() });
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [txHash, setTxHash] = useState(null);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const getLocalDateTimeValue = () => {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-
-    return `${year}-${month}-${day}T${hours}:${minutes}`;
-  }
   const handleSubmit = (e) => {
     e.preventDefault();
     // eslint-disable-next-line no-undef
     const amountLovelace = BigInt(formData.valueAda) * BigInt(1000000)
-    const utxoRef = formData.utxoWithIndex
+    const utxos = getSelectedWalletUtxos().map(utxoToLucid)
+    // eslint-disable-next-line no-undef
+    const deadline = BigInt(Date.parse(formData.deadline))
+    const beneficiary = formData.beneficiary
+    if (!beneficiary) {
+      setErrorMessage('Beneficiary missing!')
+      return null;
+    }
+    const datum = { beneficiary, deadline };
 
     lucidStorage.then(storage =>
-      !!utxoRef
-        ? storage.buildPayToContractTxFromUtxo(amountLovelace, utxoToLucid(findUTxO(walletUtxos, utxoRef)), scriptAddress)
-          .then(storage.signTx)
-          .then(storage.submitTx)
-          .then(storage.successHandler)
-          .catch(storage.errorHandler)
-          .finally(() => {
-            setFormData({...formData, utxoWithIndex: '', valueAda: 3})
-          })
-        : storage.buildPayToContractTx(amountLovelace, scriptAddress)
-          .then(storage.signTx)
-          .then(storage.submitTx)
-          .then(storage.successHandler)
-          .catch(storage.errorHandler)
-          .finally(() => {
-            setFormData({...formData, utxoWithIndex: '', valueAda: 3})
-          })
+      storage.buildPayToContractTx(amountLovelace, utxos, scriptAddress, datum, 'vesting')
+        .then(storage.signTx)
+        .then(storage.submitTx)
+        .then(dispatchData(setTxHash))
+        .catch(dispatchData(setErrorMessage))
+        .finally(() => {
+          deselectWalletUtxos();
+        })
     )
   };
 
   const handleReset = (e) => {
     e.preventDefault();
-    setFormData({...formData, utxoWithIndex: '', valueAda: 3});
+    deselectWalletUtxos();
+    setFormData({...formData, valueAda: 3, beneficiary: '', deadline: getLocalDateTimeValue()});
+  }
+
+  const handleCloseModal = (e) => {
+    e.preventDefault();
+
+    setErrorMessage(null)
+    setTxHash(null)
   }
 
   return (
@@ -68,15 +65,27 @@ function FormVestingSend({ scriptAddress, walletUtxos }) {
 
         <label>Deadline:</label>
         <input type="datetime-local" name="deadline" value={formData.deadline} onChange={handleChange} />
-
-        <label>UTxO (Optional):</label>
-        <input type="text" name="utxoWithIndex" value={formData.utxoWithIndex} onChange={handleChange} />
       </div>
 
       <div className="buttons">
         <button type="button" onClick={handleSubmit}>Submit</button>
         <button type="button" onClick={handleReset}>Reset</button>
       </div>
+
+      <Modal isOpen={!!txHash || !!errorMessage} isError={!!errorMessage} onClose={handleCloseModal}>
+        {
+          !!txHash
+            ? <div>
+                <h2>Transaction has been submited.</h2>
+                <p>Transaction Hash: {txHash}</p>
+                <p><a className="form-link" href={`https://preview.cardanoscan.io/transaction/${txHash}`}>Open transaction in explorer</a></p>
+              </div>
+            : <div>
+                <h2>Transaction has been failed.</h2>
+                {!!errorMessage && errorMessage.split("\\n").map(line => <p>{line}</p> )}
+              </div>
+        }
+      </Modal>
     </div>
   );
 }

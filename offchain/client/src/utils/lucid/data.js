@@ -49,14 +49,12 @@ const getDataFromCBOR = (data, type) => {
       try {
         return Data.from(data, VestingDatum);
       } catch (err) {
-        console.error(`Can not convert CBOR to VestingDatum: ${err}`)
         return null;
       }
     case 'integer':
       try {
         return Data.from(data, IntegerData);
       } catch (err) {
-        console.error(`Can not convert CBOR to IntegerData: ${err}`)
         return null;
       }
     default: return null;

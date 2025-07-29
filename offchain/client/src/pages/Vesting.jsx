@@ -1,5 +1,5 @@
 import './Page.css'
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import AccordionVestingView from '../components/AccordionVestingView';
 import Wallet from '../components/Wallet';
 import AccordionVestingForm from '../components/AccordionVestingForm'
@@ -8,10 +8,14 @@ import getData from '../utils/getDataFromServer';
 import Navbar from '../components/Navbar';
 import dispatchData from '../utils/dispatchData';
 import useSafeInterval from '../utils/useSafeInterval';
+import getKeyUTxO from '../utils/getKeyUTxO';
 
 const {vestingScript, apiRefreshDelay} = require("../config.json");
 
-function Vesting({publicKeyHash, walletAddress, walletUtxos}) {
+function Vesting({ publicKeyHash, walletAddress, walletUtxos }) {
+  const walletViewRef = useRef(null);
+  const scriptViewRef = useRef(null);
+
   const [scriptAddress, setScriptAddress] = useState("...");
   const [scriptUtxos, setScriptUtxos] = useState([]);
   const [selectedScript, setSelectedScript] = useState({ name: "vestingScript", script: vestingScript });
@@ -65,22 +69,43 @@ function Vesting({publicKeyHash, walletAddress, walletUtxos}) {
         return "...";
       })
 
+  const getSelectedWalletUtxos = () => {
+    const selected = walletViewRef.current?.getSelected();
+    return walletUtxos.filter(utxo => selected.has(getKeyUTxO(utxo)))
+  }
+
+  const deselectWalletUtxos = () => {
+    walletViewRef.current?.deselect();
+  }
+
+  const getSelectedScriptUtxos = () => {
+    const selected = scriptViewRef.current?.getSelected();
+    return scriptUtxos.filter(utxo => selected.has(getKeyUTxO(utxo)))
+  }
+
+  const deselectScriptUtxos = () => {
+    scriptViewRef.current?.deselect();
+  }
+
   return (
     <div className="app-container">
       <Navbar />
       <div className="wallet-content">
         <Wallet publicKeyHash={publicKeyHash} walletAddress={walletAddress} walletUtxos  ={walletUtxos} />
-        <AccordionWalletView walletUtxos={walletUtxos} />
+        <AccordionWalletView walletUtxos={walletUtxos} ref={walletViewRef} />
       </div>
       <div className="main-content">
         <aside className="sidebar">
           <AccordionVestingForm
             scriptAddress={scriptAddress}
-            walletUtxos={walletUtxos}
-            scriptUtxos={scriptUtxos}
             validatorScript={selectedScript.script}
             handleChoice={handleChoice}
             selected={selectedScript.name}
+            publicKeyHash={publicKeyHash}
+            getSelectedWalletUtxos={getSelectedWalletUtxos}
+            deselectWalletUtxos={deselectWalletUtxos}
+            getSelectedScriptUtxos={getSelectedScriptUtxos}
+            deselectScriptUtxos={deselectScriptUtxos}
           />
         </aside>
         <div className="view-panel">
@@ -89,6 +114,7 @@ function Vesting({publicKeyHash, walletAddress, walletUtxos}) {
             scriptUtxos={scriptUtxos}
             scriptAddress={scriptAddress}
             selectedScript={selectedScript}
+            ref={scriptViewRef}
           />
         </div>
       </div>

@@ -28,6 +28,33 @@
   font-family: inherit;
 }
 
+.form-link {
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+.form-link:hover {
+  color: var(--texty-color-hover);
+  text-decoration: underline;
+}
+
+.form textarea {
+  font-size: small;
+  color: var(--text-color);
+
+  font-family: inherit;
+  width: 100%;
+  background-color: var(--background-color);
+  min-height:min-content;
+  /* min-height: fit-content; */
+  box-sizing: border-box;
+  border: solid var(--error-color);
+  resize: vertical;
+  white-space: pre-wrap;
+  /* overflow-wrap: break-word; */
+  /* word-break: break-all; */
+}
+
 .buttons {
   display: flex;
   justify-content: space-between;

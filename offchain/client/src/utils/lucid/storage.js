@@ -26,7 +26,6 @@ function LucidStorage(lucid) {
   this.lucid = lucid;
 
   this.getWalletAddress = this.getWalletAddress.bind(this);
-  this.buildPayToContractTxFromUtxo = this.buildPayToContractTxFromUtxo.bind(this);
   this.buildPayToContractTx = this.buildPayToContractTx.bind(this);
   this.buildSpendFromContractTx = this.buildSpendFromContractTx.bind(this);
   this.signTx = this.signTx.bind(this);
@@ -39,7 +38,7 @@ LucidStorage.prototype.getWalletAddress = async function () {
   return this.lucid.wallet.address()
 }
 
-LucidStorage.prototype.buildPayToContractTxFromUtxo = async function (amountLovelace, utxos, contractAddress, datum = null, datumType = '') {
+LucidStorage.prototype.buildPayToContractTx = async function (amountLovelace, utxos, contractAddress, datum = null, datumType = '') {
   const datumCBOR = datumToCBOR(datum, datumType)
 
   return this.lucid
@@ -53,30 +52,27 @@ LucidStorage.prototype.buildPayToContractTxFromUtxo = async function (amountLove
     });
 }
 
-LucidStorage.prototype.buildPayToContractTx = async function (amountLovelace, contractAddress, datum = null, datumType = '') {
+LucidStorage.prototype.buildSpendFromContractTx = async function (script, utxos, options) {
+  const { redeemer, redeemerType, publicKeyHash, validFrom, validTo } = options;
+  const redeemerCOBR = redeemerToCBOR(redeemer, redeemerType)
 
-  const datumCBOR = redeemerToCBOR(datum, datumType)
-
-  return this.lucid
-    .newTx()
-    .payToContract(contractAddress, { inline: datumCBOR }, { lovelace: amountLovelace })
-    .complete()
-    .catch(err => {
-      console.error(err)
-      throw new Error(`Build transaction:\ninfo: ${JSON.stringify(err)}`)
-    });
-}
-
-LucidStorage.prototype.buildSpendFromContractTx = async function (script, utxos, redeemer = null, datumType = '') {
-
-  const redeemerCOBR = redeemerToCBOR(redeemer, datumType)
-
-  return this.lucid
+  const transaction = this.lucid
     .newTx()
     .collectFrom(utxos, redeemerCOBR)
     // .readFrom([collateralUtxo]) // 👈 specify it as collateral here !!! Check it !!!
-    .attachSpendingValidator(script)
-    .complete()
+    .attachSpendingValidator(script);
+
+  if (!!publicKeyHash) {
+    transaction.addSignerKey(publicKeyHash)
+  }
+  if (!!validFrom) {
+    transaction.validFrom(validFrom)
+  }
+  if (!!validTo) {
+    transaction.validTo(validTo)
+  }
+
+  return transaction.complete()
     .catch(err => {
       console.error(err)
       throw new Error(`Build transaction:\nOrigin error: ${JSON.stringify(err)}`)

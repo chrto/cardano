@@ -2,10 +2,10 @@ import { useState } from 'react';
 import './AccordionForm.css';
 import AccordionItem from './AccordionItem';
 import FormVestingSend from './FormVestingSend';
-import FormFortyTwoCollect from './FormFortyTwoCollect';
+import FormVestingClaim from './FormVestingClaim';
 import ChoiceVesting from './ChoiceVesting';
 
-export default function AccordionVestingForm({ scriptAddress, walletUtxos, scriptUtxos, validatorScript, handleChoice, selected} ) {
+export default function AccordionVestingForm({ scriptAddress, validatorScript, handleChoice, selected, publicKeyHash, getSelectedWalletUtxos, deselectWalletUtxos, getSelectedScriptUtxos, deselectScriptUtxos} ) {
   const [openIndex, setOpenIndex] = useState(null);
   const [openSelectScript, setOpenSelectScript] = useState(true);
 
@@ -20,11 +20,11 @@ export default function AccordionVestingForm({ scriptAddress, walletUtxos, scrip
       </AccordionItem>
 
       <AccordionItem title="Vest" isOpen={openIndex === 0} onToggle={() => toggle(0)}>
-        <FormVestingSend scriptAddress={scriptAddress} walletUtxos={walletUtxos} />
+        <FormVestingSend scriptAddress={scriptAddress} getSelectedWalletUtxos={getSelectedWalletUtxos} deselectWalletUtxos={deselectWalletUtxos} />
       </AccordionItem>
 
       <AccordionItem title="Claim" isOpen={openIndex === 1} onToggle={() => toggle(1)}>
-        <FormFortyTwoCollect scriptUtxos={scriptUtxos} validatorScript={ validatorScript } />
+        <FormVestingClaim publicKeyHash={publicKeyHash} validatorScript={ validatorScript } getSelectedScriptUtxos={getSelectedScriptUtxos} deselectScriptUtxos={deselectScriptUtxos} />
       </AccordionItem>
     </form>
   );
