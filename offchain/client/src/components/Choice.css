@@ -5,13 +5,19 @@
   flex: 1;
   margin-top: 10px;
   background-color: var(--background-color);
+  accent-color: var(--choice-color);
 }
 
 .choiceItem {
   display: flex;
+  margin: 4px;
 }
 
-.choice input {
-  margin: 4px;
+.choiceItem label {
+  cursor: pointer;
+}
+
+.choiceItem input {
+  cursor: pointer;
 }
 

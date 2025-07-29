@@ -8,6 +8,7 @@ label {
   display: flex;
   flex-direction: column;
   font-size: medium;
+  font-family: inherit;
 }
 
 span {

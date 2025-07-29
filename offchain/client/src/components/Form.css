@@ -1,33 +1,78 @@
 .form {
-  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
   font-size: medium;
   background-color: var(--background-color);
+}
+
+.inputs {
+  display: flex;
+  flex-direction: column;
+  margin: 5px;
 }
 
 .form label {
-  display: block;
   margin-top: 10px;
-  margin-left: 4px;
+  margin-bottom: 4px;
+
 }
 
 .form input {
-  display: inline;
-  width: 90%;
   padding: 8px 4px;
-  margin: 4px;
   border-radius: 5px;
   border: 1px solid var(--border-color);
   background-color: var(--background-color);
+  color: var(--text-color);
+  font-size: small;
+  font-family: inherit;
+}
+
+.form-link {
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+.form-link:hover {
+  color: var(--texty-color-hover);
+  text-decoration: underline;
+}
+
+.form textarea {
+  font-size: small;
+  color: var(--text-color);
+
+  font-family: inherit;
+  width: 100%;
+  background-color: var(--background-color);
+  min-height:min-content;
+  /* min-height: fit-content; */
+  box-sizing: border-box;
+  border: solid var(--error-color);
+  resize: vertical;
+  white-space: pre-wrap;
+  /* overflow-wrap: break-word; */
+  /* word-break: break-all; */
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  margin: 5px;
 }
 
 .form button {
-  padding: 8px 16px;
+  width: 100%;
+  padding: 8px 0px;
   background-color: var(--form-button-color);
-  border: 1px solid var(--border-color);
   color: var(--form-button-text-color);
   font-size: medium;
   font-weight: bold;
+  font-family: inherit;
   cursor: pointer;
   border-radius: 5px;
-  margin: 4px;
+}
+
+.form button:hover {
+  background-color: var(--form-button-color-hover);
 }

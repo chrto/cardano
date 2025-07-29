@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import About from './pages/About';
 import Gift from './pages/Gift';
 import FortyTwo from './pages/FortyTwo';
+import Vesting from './pages/Vesting';
 import getData from './utils/getDataFromServer';
 import dispatchData from './utils/dispatchData';
 import lucidStorage from './utils/lucid/storage';
@@ -42,11 +43,16 @@ function App() {
   const getCardanoPKH = async address =>
     getData(`cardano/${address}/credential/payment`)
       .then(({ hash }) => hash)
+      .catch(e => {
+        console.error(`Can not fetch pubKeyHash for address ${address} from server!\n origin: ${e.message}`)
+        return "...";
+      })
+
   const getAddressUtxos = async address =>
     getData(`cardano/${address}/utxos`)
-      .then(utxos => {
-        console.debug(`There are ${utxos.length} UTxOs at address ${address}`)
-        return utxos
+      .catch(e => {
+        console.error(`Can not fetch utxos for address ${address} from server!\n origin: ${e.message}`)
+        return [];
       })
 
   return (
@@ -56,6 +62,7 @@ function App() {
         <Route path="/about" element={<About publicKeyHash={publicKeyHash} walletAddress={walletAddress} walletUtxos={walletUtxos} />} />
         <Route path="/gift" element={<Gift publicKeyHash={publicKeyHash} walletAddress={walletAddress} walletUtxos={walletUtxos} />} />
         <Route path="/fortyTwo" element={<FortyTwo publicKeyHash={publicKeyHash} walletAddress={walletAddress} walletUtxos={walletUtxos} />} />
+        <Route path="/vesting" element={<Vesting publicKeyHash={publicKeyHash} walletAddress={walletAddress} walletUtxos={walletUtxos} />} />
       </Routes>
     </Router>
   );

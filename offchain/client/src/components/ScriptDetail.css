@@ -8,9 +8,10 @@
 }
 
 .script-detail textarea {
-  font-size: medium;
+  font-size: small;
   color: var(--text-color);
 
+  font-family: inherit;
   width: 100%;
   background-color: var(--background-color);
   min-height: fit-content;

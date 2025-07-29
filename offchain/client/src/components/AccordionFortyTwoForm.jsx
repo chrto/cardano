@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import AccordionItem from './AccordionItem';
 import './AccordionForm.css';
+import AccordionItem from './AccordionItem';
 import FormFortyTwoSend from './FormFortyTwoSend';
 import FormFortyTwoCollect from './FormFortyTwoCollect';
-import ChoiceFortyTwo from '../components/ChoiceFortyTwo';
+import ChoiceFortyTwo from './ChoiceFortyTwo';
 
-export default function AccordionFortyTwoForm({ scriptAddress, walletUtxos, scriptUtxos, validatorScript, handleChoice, selected} ) {
+export default function AccordionFortyTwoForm({ scriptAddress, validatorScript, handleChoice, selected, getSelectedWalletUtxos, deselectWalletUtxos, getSelectedScriptUtxos, deselectScriptUtxos } ) {
   const [openIndex, setOpenIndex] = useState(null);
   const [openSelectScript, setOpenSelectScript] = useState(true);
 
@@ -20,11 +20,11 @@ export default function AccordionFortyTwoForm({ scriptAddress, walletUtxos, scri
       </AccordionItem>
 
       <AccordionItem title="Send FortyTwo" isOpen={openIndex === 0} onToggle={() => toggle(0)}>
-        <FormFortyTwoSend scriptAddress={scriptAddress} walletUtxos={walletUtxos} />
+        <FormFortyTwoSend scriptAddress={scriptAddress} getSelectedWalletUtxos={getSelectedWalletUtxos} deselectWalletUtxos={deselectWalletUtxos} />
       </AccordionItem>
 
       <AccordionItem title="Collect FortyTwo" isOpen={openIndex === 1} onToggle={() => toggle(1)}>
-        <FormFortyTwoCollect scriptUtxos={scriptUtxos} validatorScript={ validatorScript } />
+        <FormFortyTwoCollect validatorScript={validatorScript} getSelectedScriptUtxos={getSelectedScriptUtxos} deselectScriptUtxos={deselectScriptUtxos} />
       </AccordionItem>
     </form>
   );

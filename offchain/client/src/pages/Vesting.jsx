@@ -1,24 +1,24 @@
 import './Page.css'
 import { useEffect, useState, useRef } from 'react';
+import AccordionVestingView from '../components/AccordionVestingView';
 import Wallet from '../components/Wallet';
+import AccordionVestingForm from '../components/AccordionVestingForm'
+import AccordionWalletView from '../components/AccordionWalletView';
 import getData from '../utils/getDataFromServer';
 import Navbar from '../components/Navbar';
 import dispatchData from '../utils/dispatchData';
 import useSafeInterval from '../utils/useSafeInterval';
-import AccordionGiftForm from '../components/AccordionGiftForm';
-import AccordionGiftView from '../components/AccordionGiftView';
-import AccordionWalletView from '../components/AccordionWalletView';
 import getKeyUTxO from '../utils/getKeyUTxO';
 
-const { giftScript, apiRefreshDelay } = require("../config.json");
+const {vestingScript, apiRefreshDelay} = require("../config.json");
 
-function Gift({ publicKeyHash, walletAddress, walletUtxos }) {
+function Vesting({ publicKeyHash, walletAddress, walletUtxos }) {
   const walletViewRef = useRef(null);
   const scriptViewRef = useRef(null);
 
-  const [scriptAddress, setScriptAddress] = useState([]);
+  const [scriptAddress, setScriptAddress] = useState("...");
   const [scriptUtxos, setScriptUtxos] = useState([]);
-  const [selectedScript, setSelectedScript] = useState({name: "giftScript", script: giftScript});
+  const [selectedScript, setSelectedScript] = useState({ name: "vestingScript", script: vestingScript });
   const [enableInterval, setEnableInterval] = useState(false)
 
   useEffect(() => {
@@ -29,18 +29,30 @@ function Gift({ publicKeyHash, walletAddress, walletUtxos }) {
   useSafeInterval(async () => setState(), enableInterval ? apiRefreshDelay : null);
 
   const setState = async () =>
-    Promise.resolve(getScritptByName("giftScript"))
+    getScriptAddress(selectedScript.script)
+      .then(dispatchData(setScriptAddress))
+      .then(getAddressUtxos)
+      .then(dispatchData(setScriptUtxos))
+      .catch((err) => console.error('Fetch error:', err))
+
+  const getScritptByName = (name) => {
+    switch (name) {
+      case 'vestingScript': return {name: "vestingScript", script: vestingScript};
+      default: return {name: "vestingScript", script: vestingScript};
+    }
+  }
+
+  const handleChoice = (e) => {
+    dispatchData(setScriptUtxos)([])
+    Promise.resolve(getScritptByName(e.target.value))
       .then(dispatchData(setSelectedScript))
       .then(selected => selected.script)
       .then(getScriptAddress)
       .then(dispatchData(setScriptAddress))
       .then(getAddressUtxos)
       .then(dispatchData(setScriptUtxos))
-      .catch((err) => console.error('Fetch error:', err));
-
-  const getScritptByName = (name) => ({
-    name, script: giftScript
-  });
+      .catch((err) => console.error('Fetch error:', err))
+  };
 
   const getAddressUtxos = async address =>
     getData(`cardano/${address}/utxos`)
@@ -84,9 +96,12 @@ function Gift({ publicKeyHash, walletAddress, walletUtxos }) {
       </div>
       <div className="main-content">
         <aside className="sidebar">
-          <AccordionGiftForm
+          <AccordionVestingForm
             scriptAddress={scriptAddress}
-            validatorScript={giftScript}
+            validatorScript={selectedScript.script}
+            handleChoice={handleChoice}
+            selected={selectedScript.name}
+            publicKeyHash={publicKeyHash}
             getSelectedWalletUtxos={getSelectedWalletUtxos}
             deselectWalletUtxos={deselectWalletUtxos}
             getSelectedScriptUtxos={getSelectedScriptUtxos}
@@ -94,7 +109,8 @@ function Gift({ publicKeyHash, walletAddress, walletUtxos }) {
           />
         </aside>
         <div className="view-panel">
-          <AccordionGiftView
+          <AccordionVestingView
+            publicKeyHash={publicKeyHash}
             scriptUtxos={scriptUtxos}
             scriptAddress={scriptAddress}
             selectedScript={selectedScript}
@@ -106,4 +122,4 @@ function Gift({ publicKeyHash, walletAddress, walletUtxos }) {
   );
 }
 
-export default Gift;
+export default Vesting;

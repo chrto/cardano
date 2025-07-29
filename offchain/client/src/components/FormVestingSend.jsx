@@ -1,12 +1,13 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import './Form.css';
 import utxoToLucid from '../utils/utxoToLucid';
 import lucidStorage from '../utils/lucid/storage';
-import Modal from './Modal';
 import dispatchData from '../utils/dispatchData';
+import Modal from './Modal';
+import getLocalDateTimeValue from '../utils/time/getLocalDateTimeValue';
 
-function FormFortyTwoSend({ scriptAddress, getSelectedWalletUtxos, deselectWalletUtxos }) {
-  const [formData, setFormData] = useState({ valueAda: 3 });
+function FormVestingSend({ scriptAddress, getSelectedWalletUtxos, deselectWalletUtxos }) {
+  const [formData, setFormData] = useState({ valueAda: 3, beneficiary: '', deadline: getLocalDateTimeValue() });
   const [errorMessage, setErrorMessage] = useState(null);
   const [txHash, setTxHash] = useState(null);
 
@@ -19,25 +20,31 @@ function FormFortyTwoSend({ scriptAddress, getSelectedWalletUtxos, deselectWalle
     // eslint-disable-next-line no-undef
     const amountLovelace = BigInt(formData.valueAda) * BigInt(1000000)
     const utxos = getSelectedWalletUtxos().map(utxoToLucid)
+    // eslint-disable-next-line no-undef
+    const deadline = BigInt(Date.parse(formData.deadline))
+    const beneficiary = formData.beneficiary
+    if (!beneficiary) {
+      setErrorMessage('Beneficiary missing!')
+      return null;
+    }
+    const datum = { beneficiary, deadline };
 
     lucidStorage.then(storage =>
-      storage.buildPayToContractTx(amountLovelace, utxos, scriptAddress)
+      storage.buildPayToContractTx(amountLovelace, utxos, scriptAddress, datum, 'vesting')
         .then(storage.signTx)
         .then(storage.submitTx)
         .then(dispatchData(setTxHash))
         .catch(dispatchData(setErrorMessage))
         .finally(() => {
           deselectWalletUtxos();
-          setFormData({...formData, valueAda: 3})
         })
     )
   };
 
   const handleReset = (e) => {
     e.preventDefault();
-
     deselectWalletUtxos();
-    setFormData({...formData, valueAda: 3});
+    setFormData({...formData, valueAda: 3, beneficiary: '', deadline: getLocalDateTimeValue()});
   }
 
   const handleCloseModal = (e) => {
@@ -50,9 +57,16 @@ function FormFortyTwoSend({ scriptAddress, getSelectedWalletUtxos, deselectWalle
   return (
     <div className="form">
       <div className="inputs">
-        <label>Value in ADA:</label>
+        <label>Amount in ADA:</label>
         <input type="number" name="valueAda" value={formData.valueAda} onChange={handleChange} />
+
+        <label>Beneficiary:</label>
+        <input type="text" name="beneficiary" value={formData.beneficiary} onChange={handleChange} />
+
+        <label>Deadline:</label>
+        <input type="datetime-local" name="deadline" value={formData.deadline} onChange={handleChange} />
       </div>
+
       <div className="buttons">
         <button type="button" onClick={handleSubmit}>Submit</button>
         <button type="button" onClick={handleReset}>Reset</button>
@@ -76,4 +90,4 @@ function FormFortyTwoSend({ scriptAddress, getSelectedWalletUtxos, deselectWalle
   );
 }
 
-export default FormFortyTwoSend;
+export default FormVestingSend;
