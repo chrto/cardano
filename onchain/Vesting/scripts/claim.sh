@@ -5,6 +5,7 @@ ASSETS_DIR=/home/devo/workspace/cardano/onchain/Vesting/assets
 KEYS_PATH=/home/devo/workspace/cardano/keys
 OUTPUT_NAME=vesting
 ERA=latest
+CURRENT_SLOT_NO=$(cardano-cli query tip --testnet-magic 2 | jq '.slot')
 SLOT_NO=$(cardano-cli query tip --testnet-magic 2 | jq '.slot')
 NAME=""
 TXIN=""
@@ -95,6 +96,7 @@ if [ -z "$SLOT_NO" ]; then
     exit 1
 fi
 
+echo "Current slot: $CURRENT_SLOT_NO"
 echo "Transaction will be valid from slot: $SLOT_NO"
 
 # Build the transaction
