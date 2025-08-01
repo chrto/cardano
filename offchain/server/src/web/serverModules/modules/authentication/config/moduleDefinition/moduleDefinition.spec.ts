@@ -9,7 +9,7 @@ import { ModuleDef } from 'web/serverModules/configuration/routes/register/regis
 
 const CONTROLLER: AuthenticationController = { token: null, refreshToken: null };
 const AUTH_HANDLERS: AuthorizationHandlers = { allAuthenticated: null, isAdministrator: null };
-const SERVICE: PluginSdkService = { sdkStartStop: null, sdkTransaction: null, authenticationService: null, userService: null, cardanoService: null, cardanoKupoService: null };
+const SERVICE: PluginSdkService = { sdkStartStop: null, sdkTransaction: null, authenticationService: null, userService: null, scriptService: null, cardanoService: null, cardanoKupoService: null };
 const MODULE_CONFIG: ModuleConfig<AuthContext> = { moduleDefinition: null, router: null, contextFactory: null };
 const EXPECTED_MODULE_DEFINITION: ModuleDef<AuthContext> = {
   '/token': {
