@@ -10,7 +10,7 @@ import { DEFAULT_DB_DIALECT, DEFAULT_DB_URL } from 'src/defaults';
 require('dotenv').config();
 
 const SSO_CONFIG: ISSOConfig = {
-  ssoWellKnown: process.env.SSO_WELL_KNOWN,
+  ssoWellKnown: process.env.SSO_WELL_KNOWN
 } as ISSOConfig;
 
 const DB_CONFIG: IDatabaseConfig = {

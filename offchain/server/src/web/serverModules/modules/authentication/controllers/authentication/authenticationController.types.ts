@@ -6,7 +6,7 @@ import { Context } from '../../context/context.types';
 import { Response } from 'express';
 import { TokenQueryParams } from './getTokenSet/getTokenSet.types';
 import { TokenRefreshQueryParams } from './refreshTokenSet/refreshTokenSet.types';
-import { Query } from "express-serve-static-core";
+import { Query } from 'express-serve-static-core';
 
 export interface AuthenticationController {
   token: (ctx: Context, req: AppRequest<unknown, unknown, TokenQueryParams & Query>, res: Response) => Promise<Either<AppError, TokenSetModel>>;

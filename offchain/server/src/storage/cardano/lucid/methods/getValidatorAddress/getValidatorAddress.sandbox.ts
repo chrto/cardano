@@ -19,7 +19,7 @@ require('dotenv').config();
 
 const script: SpendingValidatorModel = {
   type: PlutusVersion.PlutusV2,
-  script: "49480100002221200101",
+  script: '49480100002221200101'
 };
 
 Promise.resolve(Either.right<AppError, AppConfig>({} as AppConfig))

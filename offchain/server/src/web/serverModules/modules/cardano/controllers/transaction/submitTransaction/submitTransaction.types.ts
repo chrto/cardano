@@ -4,6 +4,4 @@ export interface Body {
   transaction: CborHex;
 }
 
-export interface Query {
-
-}
+export interface Query { }

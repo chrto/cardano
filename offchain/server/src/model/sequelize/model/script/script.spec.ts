@@ -60,12 +60,11 @@ describe('sequelize model', () => {
       expect(script).toHaveProperty('updatedAt');
     });
 
-
     it('Should update user items', () => {
       script.setAttributes({
         category: ScritpCategory.FortyTwo,
         title: 'FortyTwo PPP',
-        description: '...',
+        description: '...'
       });
 
       expect(script.category).toBe(ScritpCategory.FortyTwo);

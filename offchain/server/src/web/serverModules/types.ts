@@ -1,5 +1,5 @@
 import { Request, Router } from 'express';
-import { Query, ParamsDictionary } from "express-serve-static-core";
+import { Query, ParamsDictionary } from 'express-serve-static-core';
 import { PluginSdkService } from 'service/serviceFactory/serviceFactory.types';
 import { ISSOConfig } from 'web/server/configuration/loader/sso/ssoConfig.types';
 import { ModuleDef } from './configuration/routes/register/registerRoutes.types';

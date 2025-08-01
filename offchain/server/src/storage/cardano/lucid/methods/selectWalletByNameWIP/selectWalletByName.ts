@@ -4,7 +4,6 @@
 // import asyncLift from 'utils/monad/either/asyncLift/asyncLift';
 // import doer from 'utils/monad/either/do/doer';
 
-
 // export default (lucid: LucidEvolution) => (privateKey: PrivateKey): Promise<Either<AppError, Address>> =>
 //   // makeWalletFromPrivateKey
 //   Promise.resolve(Either.right(lucid))

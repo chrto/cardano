@@ -107,7 +107,7 @@ describe(`service`, () => {
             result.do({
               right: (utxos: UTxO[]): void => {
                 expect(utxos).toBeArrayOfSize(2);
-                expect(utxos.map(utxo => utxo.txId)).toIncludeAllMembers(AXIOS_RESPONSE.data.map(utxo => utxo.transaction_id))
+                expect(utxos.map(utxo => utxo.txId)).toIncludeAllMembers(AXIOS_RESPONSE.data.map(utxo => utxo.transaction_id));
               },
               left: (error: AppError) => fail(`Left side has not been expected: ${error.message}`)
             });

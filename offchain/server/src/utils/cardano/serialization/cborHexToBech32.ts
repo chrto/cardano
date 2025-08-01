@@ -1,6 +1,5 @@
 // const CSL = require('@emurgo/cardano-serialization-lib-nodejs');
 
-
 // // Load the .skey file (JSON with "cborHex")
 // const skeyPath = path.resolve('./keys/payment.skey'); // ← adjust path if needed
 // const skeyJson = JSON.parse(fs.readFileSync(skeyPath, 'utf8'));

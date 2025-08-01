@@ -30,7 +30,7 @@
     "docker:compose:up:dev": "docker-compose up --detach swagger-ui keycloak",
     "docker:compose:down": "docker-compose down",
     "prune": "ts-prune",
-    "tslint": "tslint ",
+    "tslint": "tslint 'src/**/*.ts'",
     "tslint:unittest": "tslint 'src/**/*.test.ts' 'src/**/*.spec.ts'",
     "sandbox": "node -r ts-node/register -r tsconfig-paths/register",
     "keycloak:export": "docker exec -it keycloak /opt/jboss/keycloak/bin/standalone.sh -Djboss.socket.binding.port-offset=100 -Dkeycloak.migration.action=export -Dkeycloak.migration.provider=singleFile -Dkeycloak.migration.realmName=demo -Dkeycloak.migration.usersExportStrategy=REALM_FILE -Dkeycloak.migration.file=/tmp/realm-demo.json"

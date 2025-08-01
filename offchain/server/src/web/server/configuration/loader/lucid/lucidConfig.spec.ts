@@ -77,7 +77,7 @@ describe('server configuration module', () => {
         const env = {
           PROVIDER_TYPE: 'blockfrost',
           PROVIDER_BLOCKFROST_URL: 'https://cardano-preview.blockfrost.io/api/v0',
-          PROVIDER_BLOCKFROST_PROJECT_ID: 'my_proj_id',
+          PROVIDER_BLOCKFROST_PROJECT_ID: 'my_proj_id'
         };
 
         const expected: ILucidConfig = {
@@ -86,7 +86,7 @@ describe('server configuration module', () => {
             blockfrost: {
               url: env.PROVIDER_BLOCKFROST_URL,
               projectId: env.PROVIDER_BLOCKFROST_PROJECT_ID
-            },
+            }
           },
           network: DEFAULT_PROVIDER_NETWORK
         };
@@ -126,7 +126,7 @@ describe('server configuration module', () => {
       it(`Should fail, if PROVIDER_TYPE missing.`, () => {
         const env = {
           PROVIDER_BLOCKFROST_URL: 'https://cardano-preview.blockfrost.io/api/v0',
-          PROVIDER_BLOCKFROST_PROJECT_ID: 'my_proj_id',
+          PROVIDER_BLOCKFROST_PROJECT_ID: 'my_proj_id'
         };
 
         const expected: InvalidConfiguraton = new InvalidConfiguraton('Lucid configuration was not loaded.');
@@ -146,7 +146,7 @@ describe('server configuration module', () => {
 
       it(`Should fail, if provider missing.`, () => {
         const env = {
-          PROVIDER_TYPE: 'blockfrost',
+          PROVIDER_TYPE: 'blockfrost'
         };
 
         const expected: InvalidConfiguraton = new InvalidConfiguraton('Lucid configuration was not loaded.');

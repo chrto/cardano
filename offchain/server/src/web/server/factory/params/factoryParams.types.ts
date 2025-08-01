@@ -5,5 +5,5 @@ import { PluginSdkService } from 'service/serviceFactory/serviceFactory.types';
 export interface ServerFactoryParams {
   appConfig: AppConfig;
   expressApp: Express;
-  service: PluginSdkService
+  service: PluginSdkService;
 }
