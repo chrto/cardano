@@ -1,8 +1,14 @@
 import getAddress from './getAddress/getAddress';
+import getScriptById from './getScriptById/getScriptById';
+import getScripts from './getScripts/getScripts';
+import createScript from './createScript/createScript';
 import { PluginSdkService } from 'service/serviceFactory/serviceFactory.types';
 import { ScriptController } from './scriptController.types';
 
-export default ({ cardanoService }: PluginSdkService): ScriptController =>
+export default ({ cardanoService, scriptService }: PluginSdkService): ScriptController =>
 ({
-  getScirptAddress: getAddress(cardanoService)
+  getScirptAddress: getAddress(cardanoService),
+  getScriptById,
+  getScripts: getScripts(scriptService),
+  createScript: createScript(scriptService)
 });
