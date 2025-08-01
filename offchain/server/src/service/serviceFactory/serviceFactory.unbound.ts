@@ -6,6 +6,7 @@ import { Factory, Fcn } from 'common/types';
 import sdkStartStopFactory from './sdkStartStop/sdkStartStop';
 import sdkTransactionFactory from './sdkTransaction/sdkTransaction';
 import { UserService } from '../sequelize/userService/userService.types';
+import { ScriptService } from 'service/sequelize/scriptService/scriptService.types';
 import { PluginSdkService } from './serviceFactory.types';
 import { AuthenticationService } from '../http/authentication/types';
 import { CardanoStorage } from 'storage/cardano/lucid/lucid.types';
@@ -16,6 +17,7 @@ import { CardanoKupoService } from 'service/http/kupo/kupoService.types';
 export default (
   authenticationServiceFactory: Factory<ISSOConfig, AuthenticationService>,
   userServiceFactory: Fcn<[], UserService>,
+  scriptServiceFactory: Fcn<[], ScriptService>,
   cardanoServiceFactory: Factory<CardanoStorage, CardanoService>,
   cardanoKupoServiceFactory: Factory<ICardanoNodeConfig, CardanoKupoService>
 ) =>
@@ -26,6 +28,7 @@ export default (
 
       authenticationService: authenticationServiceFactory(appConfig.sso),
       userService: userServiceFactory(),
+      scriptService: scriptServiceFactory(),
       cardanoService: cardanoServiceFactory(cardanoStorage),
       cardanoKupoService: cardanoKupoServiceFactory(appConfig.cardanoNode)
     });
