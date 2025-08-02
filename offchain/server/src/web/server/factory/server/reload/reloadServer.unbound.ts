@@ -12,7 +12,6 @@ import { AppError } from 'common/error';
 import lift from 'utils/monad/either/lift/lift';
 import doer from 'utils/monad/either/do/doer';
 
-
 export default (
   lucidStorageFactory: Fcn<[ILucidConfig], Promise<Either<AppError, CardanoStorage>>>,
   serviceFactory: Fcn<[AppConfig], Fcn<[PluginSdkSequelize, CardanoStorage], PluginSdkService>>,

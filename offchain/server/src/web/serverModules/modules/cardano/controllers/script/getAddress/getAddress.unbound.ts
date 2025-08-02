@@ -1,9 +1,10 @@
+import { Query as ExpressQuery } from 'express-serve-static-core';
+import { Response } from 'express';
 import requiredProperties from 'utils/object/validator/required/requiredProperties';
 import validateProperties, { check } from 'utils/object/validator/properties/properties';
 import { scriptTypeFactory } from 'model/cardano/factories';
 import { Validator } from 'utils/object/validator/properties/properties.types';
 import { Query } from './getAddress.types';
-import { Response } from 'express';
 import { Either } from 'tsmonad';
 import { AppError } from 'common/error';
 import { AppRequest } from 'web/serverModules/types';
@@ -39,7 +40,7 @@ const queryToScript = (query: Query): Either<AppError, Script> =>
 
 export default () =>
   ({ getValidatorAddress }: CardanoService) =>
-    async (_ctx: CardanoContext, req: AppRequest<unknown, unknown, Query>, _res: Response): Promise<Either<AppError, AddressResponse>> =>
+    async (_ctx: CardanoContext, req: AppRequest<unknown, unknown, Query & ExpressQuery>, _res: Response): Promise<Either<AppError, AddressResponse>> =>
       Promise.resolve(req.query)
         .then(queryValidator)
         .then(bind(queryToScript))

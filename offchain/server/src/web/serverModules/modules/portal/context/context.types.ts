@@ -4,4 +4,4 @@ import { RequestImplicits } from '../paramHandlers/paramHandlers.types';
 export interface Context {
   readonly loggedInUser: PortalUser;
   readonly implicits?: RequestImplicits;
-};
+}

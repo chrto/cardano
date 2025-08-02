@@ -6,7 +6,7 @@ import { ISSOConfig } from 'web/server/configuration/loader/sso/ssoConfig.types'
 require('dotenv').config();
 
 const config: ISSOConfig = {
-  ssoWellKnown: process.env.SSO_WELL_KNOWN,
+  ssoWellKnown: process.env.SSO_WELL_KNOWN
 } as ISSOConfig;
 
 ping

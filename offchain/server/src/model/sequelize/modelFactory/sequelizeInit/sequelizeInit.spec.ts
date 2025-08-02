@@ -11,7 +11,8 @@ describe('sequelize model', () => {
 
       beforeAll(() => {
         initModel = {
-          userModel: jest.fn().mockImplementation((_sequelize: Sequelize): void => null)
+          userModel: jest.fn().mockImplementation((_sequelize: Sequelize): void => null),
+          scriptModel: jest.fn().mockImplementation((_sequelize: Sequelize): void => null)
         };
         sequelizeInit = sequelizeInitUnbound.apply(null, [initModel]);
       });
@@ -19,6 +20,11 @@ describe('sequelize model', () => {
       it('Should init User sequelize model', () => {
         sequelizeInit(sequelize);
         expect(initModel.userModel).toHaveBeenCalled();
+      });
+
+      it('Should init Script sequelize model', () => {
+        sequelizeInit(sequelize);
+        expect(initModel.scriptModel).toHaveBeenCalled();
       });
 
       it('Should return sequelize instance', () => {

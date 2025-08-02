@@ -5,17 +5,16 @@ import { ModuleParams } from '../../paramHandlers/paramHandlers.types';
 import { CardanoModuleControllers } from '../../controllers/controllers.types';
 import { AddressController } from '../../controllers/address/addressController.types';
 import { ScriptController } from '../../controllers/script/scriptController.types';
-import scriptController from '../../controllers/script/scriptController';
-import transactionController from '../../controllers/transaction/transactionController';
 import { TransactionController } from '../../controllers/transaction/transactionController.types';
+
 export default (
-  { addressController }: CardanoModuleControllers,
+  { addressController, scriptController, transactionController }: CardanoModuleControllers,
   { allAuthenticated }: AuthorizationHandlers
 ) =>
   <CTX> (service: PluginSdkService) =>
     (moduleConfig: ModuleConfig<CTX>): ModuleConfig<CTX> => {
       const { getUTxOs, getDetails, getCredentialPayment }: AddressController = addressController(service);
-      const { getScirptAddress }: ScriptController = scriptController(service);
+      const { getScirptAddress, createScript, getScripts, getScriptById }: ScriptController = scriptController(service);
       const { buildTransaction, submitTransaction }: TransactionController = transactionController(service);
 
       return {
@@ -39,12 +38,31 @@ export default (
               authorization: allAuthenticated
             }
           },
+
           [`/script/address`]: {
             get: {
               action: getScirptAddress,
               authorization: allAuthenticated
             }
           },
+
+          [`/scripts`]: {
+            post: {
+              action: createScript,
+              authorization: allAuthenticated
+            },
+            get: {
+              action: getScripts,
+              authorization: allAuthenticated
+            }
+          },
+          [`/scripts/:${ModuleParams.scriptId}`]: {
+            get: {
+              action: getScriptById,
+              authorization: allAuthenticated
+            }
+          },
+
           [`/transaction/build`]: {
             post: {
               action: buildTransaction,

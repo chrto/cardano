@@ -51,6 +51,103 @@
       500:
         $ref: "#/components/responses/500_InternalServerError"
 
+# Cardano endpoints
+/cardano/script/address:
+  get:
+    summary: Get script address
+    security: []
+    description: >-
+      Receive cardano script address.
+    tags: [Cardano]
+    parameters:
+      - $ref: "#/components/parameters/cardano_script"
+      - $ref: "#/components/parameters/cardano_script_type_mandatory"
+    responses:
+      200:
+        $ref: "#/components/responses/AddressResponse"
+      400:
+        $ref: "#/components/responses/40x_BadRequest"
+      500:
+        $ref: "#/components/responses/500_InternalServerError"
+
+/cardano/scripts:
+  get:
+    summary: Get scripts
+    security: []
+    description: >-
+      Receive all scripts stored in DB
+    operationId: getScript
+    tags: [Cardano]
+    parameters:
+      - $ref: "#/components/parameters/cardano_script_category"
+      - $ref: "#/components/parameters/cardano_script_type"
+    responses:
+      200:
+        $ref: "#/components/responses/ScriptListResponse"
+      400:
+        $ref: "#/components/responses/40x_BadRequest"
+      500:
+        $ref: "#/components/responses/500_InternalServerError"
+
+  post:
+    summary: Create new cardano script
+    security:
+      - bearerAuth: []
+    description: >-
+      Add new scritp into DB
+    operationId: createScript
+    tags: [Cardano]
+    requestBody:
+      description: ""
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              type:
+                type: string
+                enum: [PlutusV1, PlutusV2, PlutusV3, Native]
+              script:
+                type: string
+              category:
+                type: string
+                enum: [Burn, Gift, FortyTwo, Vesting, Unknown]
+              title:
+                type: string
+              description:
+                type: string
+            example:
+              type: PlutusV2
+              script: 58385836010000322225335333573466ebc008dd4240a82440042440022008264c649319ab9c49010b6578706563746564203432000041200101
+              category: FortyTwo
+              title: Untyped version
+              description: Required redeemer is 42!
+    responses:
+      201:
+        $ref: "#/components/responses/ScriptCreateResponse"
+      400:
+        $ref: "#/components/responses/40x_BadRequest"
+      409:
+        $ref: "#/components/responses/40x_Conflict"
+      500:
+        $ref: "#/components/responses/500_InternalServerError"
+
+/cardano/scripts/{id}:
+  get:
+    summary: List detailed cardano script resource
+    security: []
+    description: Get cardano script entity
+    tags: [Cardano]
+    parameters:
+      - $ref: "#/components/parameters/uuid"
+    responses:
+      200:
+        $ref: "#/components/responses/ScriptResponse"
+      404:
+        $ref: "#/components/responses/40x_NotFound"
+      500:
+        $ref: "#/components/responses/500_InternalServerError"
 # Portal endpoints
 /portal/user/basic-info:
   get:
