@@ -1,9 +1,6 @@
 {
+  "apiRefreshDelay": 10000,
   "apiUrl": "http://localhost:8800/api/v1",
-  "giftScript": {
-    "type": "PlutusV2",
-    "script": "49480.."
-  },
   "provider": {
     "use": "blockFrost",
     "blockFrost": {
