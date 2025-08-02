@@ -1,18 +1,20 @@
 import getScriptsUnbound from './getScripts.unbound';
-import { AppError } from 'common/error';
+import filterBuilder from './filter/filterBuilder';
+import sanitizeModels from 'model/sequelize/sanitizeModel/sanitizeModels';
 import scriptFactory from 'model/sequelize/model/script/factory/scriptFactory';
+import { AppError } from 'common/error';
 import initScriptModel, { Script } from 'model/sequelize/model/script/scirpt';
-import { Sequelize, WhereOptions } from 'sequelize';
+import { Sequelize } from 'sequelize';
 import { DEFAULT_DB_DIALECT } from 'src/defaults';
 import { Either } from 'tsmonad';
 import sanitizeModel from 'model/sequelize/sanitizeModel/sanitizeModel';
 import { ScriptRequired, ScritpCategory } from 'model/sequelize/model/script/script.types';
 import { PlutusVersion } from 'model/cardano/cardano.types';
-import { ScriptService } from 'service/sequelize/scriptService/scriptService.types';
-import { Query } from './getScripts.types';
-import { Query as ExpressQuery } from 'express-serve-static-core';
 import { AppRequest } from 'web/serverModules/types';
 import { RequestImplicits } from '../../../paramHandlers/paramHandlers.types';
+import { Query } from './getScripts.types';
+import { Query as ExpressQuery } from 'express-serve-static-core';
+import { ScriptService } from 'service/sequelize/scriptService/scriptService.types';
 
 type AppReq = AppRequest<unknown, RequestImplicits, Query & ExpressQuery>;
 
@@ -41,12 +43,12 @@ describe('Web Server', () => {
             let req: AppReq;
             let sequelize: Sequelize;
             let scripts: Script[];
-            let filterBuilder: jest.Mock<WhereOptions, [Query]>;
-            let sanitizeEntities: jest.Mock<any[], [Script[]]>;
             let getScriptsExecutor: jest.Mock<Promise<Either<AppError, Script[]>>, [any, any, any]>;
             let scriptService: ScriptService;
+            let result: Either<AppError, Script[]>;
 
             beforeAll(async () => {
+
               req = {
                 query: {
                   category: ScritpCategory.Gift
@@ -64,52 +66,29 @@ describe('Web Server', () => {
                   })
               );
 
-              filterBuilder = jest.fn().mockReturnValue({ category: req.query.category });
-              sanitizeEntities = jest.fn().mockImplementation((scripts: Script[]) => scripts.map(sanitizeModel));
-
-              getScriptsExecutor = jest.fn().mockResolvedValue(Either.right(scripts));
+              getScriptsExecutor = jest.fn().mockResolvedValue(Either.right(scripts.filter(script => script.category === req.query.category)));
               scriptService = {
                 getScripts: jest.fn().mockImplementation(() => getScriptsExecutor),
                 getScriptById: null,
                 createScript: null
               };
 
-              await getScriptsUnbound
-                (sanitizeEntities, filterBuilder)
+              result = await getScriptsUnbound
+                (sanitizeModels, filterBuilder)
                 (scriptService)
                 (null, req, null);
             });
 
-            it(`Should build filter from query`, () => {
-              expect(filterBuilder)
-                .toHaveBeenCalledTimes(1);
-              expect(filterBuilder)
-                .toHaveBeenCalledWith(req.query);
-            });
+            it('Should return Either with exact script objects in right side', () => {
+              const expected = scripts.filter(script => script.category === ScritpCategory.Gift).map(sanitizeModel);
 
-            it(`Should call service with exact filter`, () => {
-              expect(scriptService.getScripts)
-                .toHaveBeenCalledTimes(1);
-              expect(scriptService.getScripts)
-                .toHaveBeenCalledWith();
-
-              expect(getScriptsExecutor)
-                .toHaveBeenCalledTimes(1);
-              expect(getScriptsExecutor)
-                .toHaveBeenCalledWith({ category: 'Gift' });
-
-              expect(getScriptsExecutor)
-                .toHaveBeenCalledAfter(filterBuilder);
-            });
-
-            it(`Should sanitize service result`, () => {
-              expect(sanitizeEntities)
-                .toHaveBeenCalledTimes(1);
-              expect(sanitizeEntities)
-                .toHaveBeenCalledWith(scripts);
-
-              expect(sanitizeEntities)
-                .toHaveBeenCalledAfter(getScriptsExecutor);
+              result.do({
+                right: (scriptsResult) => {
+                  expect(scriptsResult).toBeArray;
+                  expect(scriptsResult).toBeArrayOfSize(1);
+                  expect(scriptsResult).toStrictEqual(expected);
+                }
+              });
             });
           });
         });
