@@ -2,13 +2,19 @@ import getScriptsUnbound from './getScripts.unbound';
 import { AppError } from 'common/error';
 import scriptFactory from 'model/sequelize/model/script/factory/scriptFactory';
 import initScriptModel, { Script } from 'model/sequelize/model/script/scirpt';
-import { Sequelize } from 'sequelize';
+import { Sequelize, WhereOptions } from 'sequelize';
 import { DEFAULT_DB_DIALECT } from 'src/defaults';
 import { Either } from 'tsmonad';
 import sanitizeModel from 'model/sequelize/sanitizeModel/sanitizeModel';
 import { ScriptRequired, ScritpCategory } from 'model/sequelize/model/script/script.types';
 import { PlutusVersion } from 'model/cardano/cardano.types';
 import { ScriptService } from 'service/sequelize/scriptService/scriptService.types';
+import { Query } from './getScripts.types';
+import { Query as ExpressQuery } from 'express-serve-static-core';
+import { AppRequest } from 'web/serverModules/types';
+import { RequestImplicits } from '../../../paramHandlers/paramHandlers.types';
+
+type AppReq = AppRequest<unknown, RequestImplicits, Query & ExpressQuery>;
 
 const SCRIPT_REQUIRED: ScriptRequired = {
   type: PlutusVersion.PlutusV2,
@@ -24,13 +30,21 @@ describe('Web Server', () => {
       describe('controller', () => {
         describe('script controller', () => {
           describe('get scripts', () => {
+            let req: AppReq;
             let sequelize: Sequelize;
             let scripts: Script[];
+            let filterBuilder: jest.Mock<WhereOptions, [Query]>;
             let sanitizeEntities: jest.Mock<any[], [Script[]]>;
             let getScriptsExecutor: jest.Mock<Promise<Either<AppError, Script[]>>, [any, any, any]>;
             let scriptService: ScriptService;
 
             beforeAll(async () => {
+              req = {
+                query: {
+                  category: ScritpCategory.Gift
+                }
+              } as AppReq;
+
               sequelize = new Sequelize(null, null, null, { dialect: DEFAULT_DB_DIALECT });
               initScriptModel(sequelize);
               scripts = [scriptFactory(SCRIPT_REQUIRED)
@@ -39,6 +53,8 @@ describe('Web Server', () => {
                   right: (script) => script,
                   left: _ => null
                 })];
+
+              filterBuilder = jest.fn().mockReturnValue({ category: req.query.category });
               sanitizeEntities = jest.fn().mockImplementation((scripts: Script[]) => scripts.map(sanitizeModel));
 
               getScriptsExecutor = jest.fn().mockResolvedValue(Either.right(scripts));
@@ -49,12 +65,19 @@ describe('Web Server', () => {
               };
 
               await getScriptsUnbound
-                (sanitizeEntities)
+                (sanitizeEntities, filterBuilder)
                 (scriptService)
-                (null, null, null);
+                (null, req, null);
             });
 
-            it(`Should call exact service`, () => {
+            it(`Should build filter from query`, () => {
+              expect(filterBuilder)
+                .toHaveBeenCalledTimes(1);
+              expect(filterBuilder)
+                .toHaveBeenCalledWith(req.query)
+            });
+
+            it(`Should call service with exact filter`, () => {
               expect(scriptService.getScripts)
                 .toHaveBeenCalledTimes(1);
               expect(scriptService.getScripts)
@@ -63,7 +86,10 @@ describe('Web Server', () => {
               expect(getScriptsExecutor)
                 .toHaveBeenCalledTimes(1);
               expect(getScriptsExecutor)
-                .toHaveBeenCalledWith();
+                .toHaveBeenCalledWith({ category: 'Gift' });
+
+              expect(getScriptsExecutor)
+                .toHaveBeenCalledAfter(filterBuilder)
             });
 
             it(`Should sanitize service result`, () => {

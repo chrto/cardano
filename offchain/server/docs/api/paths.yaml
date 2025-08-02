@@ -61,7 +61,7 @@
     tags: [Cardano]
     parameters:
       - $ref: "#/components/parameters/cardano_script"
-      - $ref: "#/components/parameters/cardano_script_type"
+      - $ref: "#/components/parameters/cardano_script_type_mandatory"
     responses:
       200:
         $ref: "#/components/responses/AddressResponse"
@@ -78,6 +78,9 @@
       Receive all scripts stored in DB
     operationId: getScript
     tags: [Cardano]
+    parameters:
+      - $ref: "#/components/parameters/cardano_script_category"
+      - $ref: "#/components/parameters/cardano_script_type"
     responses:
       200:
         $ref: "#/components/responses/ScriptListResponse"

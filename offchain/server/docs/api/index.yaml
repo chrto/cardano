@@ -68,10 +68,30 @@ components:
       name: type
       description: >-
         Cardano Scirtpt type.
-      required: true
       schema:
         type: string
         enum: [PlutusV1, PlutusV2, PlutusV3, Native]
+        example: "PlutusV2"
+
+    cardano_script_type_mandatory:
+      in: query
+      name: type
+      description: >-
+        Cardano Scirtpt type.
+      schema:
+        type: string
+        enum: [PlutusV1, PlutusV2, PlutusV3, Native]
+        example: "PlutusV2"
+      required: true
+
+    cardano_script_category:
+      in: query
+      name: category
+      description: >-
+        Cardano Scirtpt category.
+      schema:
+        type: string
+        enum: [Gift, Burn, FortyTwo, Vesting]
         example: "PlutusV2"
 
   schemas:
