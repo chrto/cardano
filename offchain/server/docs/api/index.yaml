@@ -6,7 +6,7 @@ servers:
       server:
         default: localhost
       port:
-        default: "8000"
+        default: "8800"
 
 info:
   version: 1.0.0
@@ -16,7 +16,7 @@ info:
   contact:
     name: Ján Chrtianský
     email: jan.chrtiansky@gmail.com
-    url: ""
+    url: "/"
 paths:
   $ref: ./paths.yaml
 components:
@@ -52,6 +52,27 @@ components:
         example: "11111111-1111-1111-1111-111111111111"
       required: true
       description: Resource ID in UUID format
+
+    cardano_script:
+      in: query
+      name: script
+      description: >-
+        CBOR value of cardano script.
+      required: true
+      schema:
+        type: string
+        example: "58385836010000322225335333573466ebc008dd4240a82440042440022008264c649319ab9c49010b6578706563746564203432000041200101"
+
+    cardano_script_type:
+      in: query
+      name: type
+      description: >-
+        Cardano Scirtpt type.
+      required: true
+      schema:
+        type: string
+        enum: [PlutusV1, PlutusV2, PlutusV3, Native]
+        example: "PlutusV2"
 
   schemas:
     UUID:
@@ -122,7 +143,38 @@ components:
             An refresh_tokens can be used to get a new set of id_token and
             access_token. This is useful because id_token and access_token
             expire after a short time.
+    # Cardano
+    Address:
+      type: object
+      properties:
+        address:
+          type: string
 
+    Script:
+      type: object
+      properties:
+        id:
+          allOf:
+            - $ref: "#/components/schemas/UUID"
+            - description: "Unique identification of the cardano script."
+        type:
+          type: string
+          enum: [PlutusV1, PlutusV2, PlutusV3, Native]
+        script:
+          type: string
+        category:
+          type: string
+          enum: [Burn, Gift, FortyTwo, Vesting, Unknown]
+        title:
+          type: string
+        description:
+          type: string
+        createdAt:
+          $ref: "#/components/schemas/DATE"
+        updatedAt:
+          $ref: "#/components/schemas/DATE"
+
+    # Portal
     User:
       type: object
       properties:
