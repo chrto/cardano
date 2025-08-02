@@ -39,7 +39,10 @@ export default (sequelize: Sequelize): typeof Script =>
       },
       category: {
         type: DataTypes.STRING(15),
-        allowNull: false
+        allowNull: false,
+        validate: {
+          isIn: [[ScritpCategory.Burn, ScritpCategory.Gift, ScritpCategory.FortyTwo, ScritpCategory.Vesting, ScritpCategory.Unknown]]
+        }
       },
       title: {
         type: DataTypes.STRING(25),
