@@ -1,7 +1,6 @@
 import scriptParamHandlerUnbound from './scriptParamHandler.unbound';
 import { AppError } from 'common/error';
 import { NextFunction, Response } from 'express';
-import { User } from 'model/sequelize/model/user/user';
 import { Script } from 'model/sequelize/model/script/scirpt';
 import { ScriptService } from 'service/sequelize/scriptService/scriptService.types';
 import { Either } from 'tsmonad';
@@ -20,13 +19,13 @@ const SCRIPT: Script = {
 
 describe('Web Server', () => {
   describe('Modules', () => {
-    describe('Portal', () => {
+    describe('Cardano', () => {
       describe('Request parameter handlers', () => {
         describe('Script', () => {
           let leftSideExecutor: LeftSideExecutor;
-          let handleError: jest.Mock<LeftSideExecutor, [AppRequest<User, RequestImplicits>, Response, NextFunction, string]>;
+          let handleError: jest.Mock<LeftSideExecutor, [AppRequest<unknown, RequestImplicits>, Response, NextFunction, string]>;
           let rightSideExecutor: RightSideExecutor;
-          let addEntityInToRequestImplicits: jest.Mock<RightSideExecutor, [AppRequest<User, RequestImplicits>, Response, NextFunction, string]>;
+          let addEntityInToRequestImplicits: jest.Mock<RightSideExecutor, [AppRequest<unknown, RequestImplicits>, Response, NextFunction, string]>;
           let isUuid: jest.Mock<boolean, [any]>;
 
           let serviceExecutor: jest.Mock<Promise<Either<AppError, Script>>, [string]>;
