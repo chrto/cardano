@@ -20,7 +20,7 @@ const SCRIPT_REQUIRED: ScriptRequired = {
 
 describe('Web Server', () => {
   describe('Modules', () => {
-    describe('Portal', () => {
+    describe('Cardano', () => {
       describe('controller', () => {
         describe('script controller', () => {
           describe('get script by id', () => {

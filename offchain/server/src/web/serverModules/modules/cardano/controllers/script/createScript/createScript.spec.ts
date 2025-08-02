@@ -34,7 +34,7 @@ const SCRIPT_ITEMS: ScriptItems = {
 
 describe('Web Server', () => {
   describe('Modules', () => {
-    describe('Portal', () => {
+    describe('Caredano', () => {
       describe('controller', () => {
         describe('script controller', () => {
           describe('create script', () => {

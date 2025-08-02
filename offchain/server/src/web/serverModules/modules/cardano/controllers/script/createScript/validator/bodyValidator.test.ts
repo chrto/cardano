@@ -16,7 +16,7 @@ const BODY: ScriptBody = {
 
 describe('Web Server', () => {
   describe('Modules', () => {
-    describe('Portal', () => {
+    describe('Caredano', () => {
       describe('controller', () => {
         describe('script controller', () => {
           describe('create script', () => {

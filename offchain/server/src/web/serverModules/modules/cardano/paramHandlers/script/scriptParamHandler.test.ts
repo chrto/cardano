@@ -21,7 +21,7 @@ const SCRIPT: Script = {
 
 describe('Web Server', () => {
   describe('Modules', () => {
-    describe('Portal', () => {
+    describe('Cardano', () => {
       describe('Request parameter handlers', () => {
         describe('Script', () => {
           let nextFunction: jest.Mock<void, [any]>;
