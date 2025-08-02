@@ -6,7 +6,7 @@ import lift from 'utils/monad/either/lift/lift';
 import { Either } from 'tsmonad';
 import { ScriptService } from 'service/sequelize/scriptService/scriptService.types';
 import { AppRequest } from 'web/serverModules/types';
-import { Context as PortalContext } from './../../../context/context.types';
+import { Context as CardanoContext } from './../../../context/context.types';
 import { ScriptBody } from './createScript.types';
 import { Script as PortalScript } from 'model/sequelize/model/script/scirpt';
 import { AppError } from 'common/error';
@@ -20,7 +20,7 @@ export default (
   sanitizeEntity: Fcn<[PortalScript], any>
 ) =>
   ({ createScript }: ScriptService) =>
-    async (_ctx: PortalContext, req: AppRequest<unknown, RequestImplicits, ExpressQuery, ScriptBody>, res: Response): Promise<Either<AppError, PortalScript>> =>
+    async (_ctx: CardanoContext, req: AppRequest<unknown, RequestImplicits, ExpressQuery, ScriptBody>, res: Response): Promise<Either<AppError, PortalScript>> =>
       Promise.resolve(Either.right<AppError, ScriptBody>(req.body))
         .then(bind(bodyValidator))
         .then(bind(scriptFactory))

@@ -4,13 +4,13 @@ import { Either } from 'tsmonad';
 import { AppError } from 'common/error';
 import { Response } from 'express';
 import { AppRequest } from 'web/serverModules/types';
-import { Context as PortalContext } from './../../../context/context.types';
+import { Context as CardanoContext } from './../../../context/context.types';
 import { Fcn } from 'common/types';
 import { Model } from 'sequelize/types';
 import { RequestImplicits } from '../../../paramHandlers/paramHandlers.types';
 
 export default (
   sanitizeEntity: Fcn<[Model<PortalScript>], any>
-) => async (ctx: PortalContext, _req: AppRequest<unknown, RequestImplicits, ExpressQuery>, _res: Response): Promise<Either<AppError, PortalScript>> =>
+) => async (ctx: CardanoContext, _req: AppRequest<unknown, RequestImplicits, ExpressQuery>, _res: Response): Promise<Either<AppError, PortalScript>> =>
     Either.right<AppError, PortalScript>(ctx.implicits.script)
       .lift(sanitizeEntity);
