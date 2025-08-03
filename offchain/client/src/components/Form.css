@@ -28,6 +28,16 @@
   font-family: inherit;
 }
 
+.form select {
+  padding: 8px 4px;
+  border-radius: 5px;
+  border: 1px solid var(--border-color);
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-size: small;
+  font-family: inherit;
+}
+
 .form-link {
   color: var(--text-color);
   text-decoration: none;

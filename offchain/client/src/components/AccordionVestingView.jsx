@@ -79,14 +79,14 @@ export default function AccordionVestingView({ publicKeyHash, scriptUtxos, scrip
         <Table
           headers={['', 'TxHash', 'TxIdx', 'Deadline', 'Value [Ada]']}
           values={scriptUtxos.filter(afterDeadline).map(convertMineVestingUTxOs)}
-          selectUtxo={selectUtxo}s
+          selectUtxo={selectUtxo}
         />
       </AccordionItem>
       <AccordionItem title={"Script Utxo's Before Deadline (" + scriptUtxos.filter(beforeDeadline).length + ")"} isOpen={openIndex === 1} onToggle={() => toggle(1)}>
         <Table
           headers={['', 'TxHash', 'TxIdx', 'Deadline', 'Value [Ada]']}
           values={scriptUtxos.filter(beforeDeadline).map(convertMineVestingUTxOs)}
-          selectUtxo={selectUtxo}s
+          selectUtxo={selectUtxo}
         />
       </AccordionItem>
       <AccordionItem title={"Script Utxo's with other as beneficiaries (" + scriptUtxos.filter(filterOtherVest).length + ")"} isOpen={openIndex === 2} onToggle={() => toggle(2)}>

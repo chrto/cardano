@@ -8,8 +8,8 @@ import getData from '../utils/getDataFromServer';
 import Navbar from '../components/Navbar';
 import dispatchData from '../utils/dispatchData';
 import useSafeInterval from '../utils/useSafeInterval';
-import getKeyUTxO
-  from '../utils/getKeyUTxO';
+import getKeyUTxO from '../utils/getKeyUTxO';
+
 const { apiRefreshDelay } = require("../config.json");
 
 function FortyTwo({ publicKeyHash, walletAddress, walletUtxos }) {
