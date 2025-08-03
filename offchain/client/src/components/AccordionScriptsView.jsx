@@ -15,11 +15,16 @@ export default function AccordionScriptsView({ scripts }) {
   const filterFortyTwo = script => script.category === 'FortyTwo';
   const filterVesting = script => script.category === 'Vesting';
 
-  const formToLine = script => ([
-    script.title,
-    script.type,
-    script.description
-  ]);
+  const formToLine = script => ({
+    key: script.id,
+    link: false,
+    select: false,
+    data: [
+      script.title,
+      script.type,
+      script.description
+    ]
+  });
 
   return (
     <form className="accordion-form">
@@ -27,6 +32,12 @@ export default function AccordionScriptsView({ scripts }) {
         <Table
           headers={['Title', 'Type', 'Description']}
           values={scripts.filter(filterBurn).map(formToLine)}
+          buttons={[
+            {
+              handler: () => null,
+              title: 'Delete'
+            }
+          ]}
         />
       </AccordionItem>
 
@@ -34,6 +45,16 @@ export default function AccordionScriptsView({ scripts }) {
         <Table
           headers={['Title', 'Type', 'Description']}
           values={scripts.filter(filterGift).map(formToLine)}
+          buttons={[
+            {
+              handler: () => null,
+              title: 'Open'
+            },
+            {
+              handler: () => null,
+              title: 'Delete'
+            }
+          ]}
         />
       </AccordionItem>
 

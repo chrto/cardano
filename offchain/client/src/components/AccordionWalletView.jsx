@@ -18,7 +18,12 @@ export default function AccordionWalletView({ walletUtxos, ref }) {
     }
   }));
 
-  const convertWalletUtxos = utxo => [isSelectedUTxO(utxo), utxo.txId, utxo.txIndex, utxo.assets.lovelace, Number(utxo.assets.lovelace) / 1000000]
+  const convertWalletUtxos = utxo => ({
+    key: getKeyUTxO(utxo),
+    link: true,
+    select: true,
+    data: [isSelectedUTxO(utxo), utxo.txId, utxo.txIndex, utxo.assets.lovelace, Number(utxo.assets.lovelace) / 1000000]
+  })
 
   const selectUtxo = (utxoKey) => {
     const selection = new Set(selectedUtxos)

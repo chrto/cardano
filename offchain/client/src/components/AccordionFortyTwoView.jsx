@@ -22,10 +22,30 @@ export default function AccordionFortyTwoView({ scriptUtxos, scriptAddress, sele
     }
   }));
 
-  const convertUtxosCheckBox = utxo => [isSelectedUTxO(utxo), utxo.txId, utxo.txIndex, utxo.assets.lovelace, Number(utxo.assets.lovelace) / 1000000]
-  const convertUtxos = utxo => [utxo.txId, utxo.txIndex, utxo.assets.lovelace, Number(utxo.assets.lovelace) / 1000000]
-  const convertScriptUtxosInlineDatum = utxo => [utxo.txId, utxo.txIndex, utxo.datum, JSON.stringify(convertToJs(Data.from(utxo.datum)), null, 2), Number(utxo.assets.lovelace) / 1000000]
-  const convertScriptUtxosHashDatum = utxo => [utxo.txId, utxo.txIndex, utxo.datumHash, utxo.assets.lovelace, Number(utxo.assets.lovelace) / 1000000]
+  const convertUtxosCheckBox = utxo => ({
+    key: getKeyUTxO(utxo),
+    link: true,
+    select: true,
+    data: [isSelectedUTxO(utxo), utxo.txId, utxo.txIndex, utxo.assets.lovelace, Number(utxo.assets.lovelace) / 1000000]
+  })
+  const convertUtxos = utxo => ({
+    key: getKeyUTxO(utxo),
+    link: true,
+    select: false,
+    data: [utxo.txId, utxo.txIndex, utxo.assets.lovelace, Number(utxo.assets.lovelace) / 1000000]
+  })
+  const convertScriptUtxosInlineDatum = utxo => ({
+    key: getKeyUTxO(utxo),
+    link: true,
+    select: false,
+    data: [utxo.txId, utxo.txIndex, utxo.datum, JSON.stringify(convertToJs(Data.from(utxo.datum)), null, 2), Number(utxo.assets.lovelace) / 1000000]
+  })
+  const convertScriptUtxosHashDatum = utxo => ({
+    key: getKeyUTxO(utxo),
+    link: true,
+    select: false,
+    data: [utxo.txId, utxo.txIndex, utxo.datumHash, utxo.assets.lovelace, Number(utxo.assets.lovelace) / 1000000]
+  })
 
   const filterInlineDatumFortyTwo = utxo => utxo.datum === 'd87980'
   const filterInlineDatum = utxo => !!utxo.datum && !filterInlineDatumFortyTwo(utxo)

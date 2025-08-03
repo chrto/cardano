@@ -20,6 +20,7 @@
 .table-box button {
   color: var(--text-color);
 }
+
 .table-box table {
   font-size: small;
   width: 100%;
@@ -37,6 +38,9 @@
   text-align: left;
   max-width: 300px;
   overflow: scroll;
+}
+td:last-child {
+  text-align: right;
 }
 
 .table-box th {
@@ -66,7 +70,7 @@
 }
 
 .table-link {
-  color: var(--text-color);;
+  color: var(--text-color);
   text-decoration: none;
 }
 
