@@ -31,6 +31,30 @@
   color: var(--error-color);
 }
 
+.modal-close {
+  width: 100%;
+  padding: 8px 0px;
+  background-color: var(--form-button-color);
+  color: var(--form-button-text-color);
+  font-size: medium;
+  font-weight: bold;
+  font-family: inherit;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.modal-content textarea {
+  font-size: small;
+  color: var(--text-color);
+
+  font-family: inherit;
+  width: 100%;
+  background-color: var(--background-color);
+  min-height: min-content;
+  box-sizing: border-box;
+  resize: vertical;
+  white-space: pre-wrap;
+}
 /* Animations */
 @keyframes fadeIn {
   from { opacity: 0; }

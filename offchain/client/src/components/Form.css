@@ -58,7 +58,6 @@
   min-height:min-content;
   /* min-height: fit-content; */
   box-sizing: border-box;
-  border: solid var(--error-color);
   resize: vertical;
   white-space: pre-wrap;
   /* overflow-wrap: break-word; */

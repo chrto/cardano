@@ -7,7 +7,7 @@ function Table({ headers, values, selectUtxo, buttons }) {
   const renderCheckboxColumn = (columnVal, id, utxoKey) => <td key={id}><input type="checkbox" checked={columnVal} onChange={() => selectUtxo(utxoKey)}></input></td>
   const renderUtxoIdColumn = (columnVal, id) => <td key={id}><a className="table-link" href={`${EXPL_URL}${columnVal}`}>{columnVal}</a></td>
   const renderColumn = (columnVal, id) => <td key={id}>{columnVal}</td>
-  const renderButtonsCulomn = (buttons) => <td style={{ textAlign: 'right' }}>{buttons.map(button => <button onClick={button.handler}>{button.title}</button>)}</td>
+  const renderButtonsCulomn = (buttons, id) => <td style={{ textAlign: 'right' }}>{buttons.map((button, idx) => <button value={ id } key={idx} onClick={button.handler}>{button.title}</button>)}</td>
 
   const renderRow = (row) => {
     return (
@@ -26,7 +26,7 @@ function Table({ headers, values, selectUtxo, buttons }) {
               : renderColumn(c, i)
         ))}
 
-        {!!buttons && (renderButtonsCulomn(buttons)) || <td></td>}
+        {!!buttons && (renderButtonsCulomn(buttons, row.key)) || <td></td>}
       </tr>
     );
   };

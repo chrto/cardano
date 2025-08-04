@@ -17,10 +17,6 @@
   max-height: calc(100vh / 4);
 }
 
-.table-box button {
-  color: var(--text-color);
-}
-
 .table-box table {
   font-size: small;
   width: 100%;
@@ -53,11 +49,12 @@
 }
 
 .table-box button {
+  color: var(--text-color);
   font-size: small;
   margin-right: 10px;
-  padding: 1px;
+  padding: 1px 3px;
   background-color: var(--background-color);
-  border: 1px solid var(--border-color);
+  border: .5px solid var(--border-color);
   border-radius: 3px;
 }
 
