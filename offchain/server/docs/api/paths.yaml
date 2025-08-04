@@ -148,6 +148,32 @@
         $ref: "#/components/responses/40x_NotFound"
       500:
         $ref: "#/components/responses/500_InternalServerError"
+  delete:
+    summary: Remove script.
+    security: []
+    description: Delete cardano script entity
+    tags: [Cardano]
+    parameters:
+      - $ref: "#/components/parameters/uuid"
+    responses:
+      200:
+        description: Removed
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                removedScriptId:
+                  allOf:
+                    - $ref: "#/components/schemas/UUID"
+                    - example: ed3b3493-697f-4915-9906-fc29f8d33521
+      404:
+        $ref: "#/components/responses/40x_NotFound"
+      409:
+        $ref: "#/components/responses/40x_Conflict"
+      500:
+        $ref: "#/components/responses/500_InternalServerError"
+
 # Portal endpoints
 /portal/user/basic-info:
   get:
