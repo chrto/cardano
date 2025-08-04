@@ -70,7 +70,8 @@ describe('Web Server', () => {
               scriptService = {
                 getScripts: jest.fn().mockImplementation(() => getScriptsExecutor),
                 getScriptById: null,
-                createScript: null
+                createScript: null,
+                deleteScript: null
               };
 
               result = await getScriptsUnbound
