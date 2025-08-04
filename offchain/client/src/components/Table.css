@@ -39,9 +39,6 @@
   max-width: 300px;
   overflow: scroll;
 }
-td:last-child {
-  text-align: right;
-}
 
 .table-box th {
   font-size: small;
