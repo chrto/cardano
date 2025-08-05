@@ -46,6 +46,16 @@ export default function AccordionScriptsView({ scripts, ref }) {
     ]
   });
 
+  const scriptToDetail = (script) =>
+    Object.keys(script).filter(key => key !== 'script').map(
+      key => ({
+        key,
+        link: false,
+        select: false,
+        data: [key.toUpperCase(), script[key]]
+      })
+    )
+
   const selectScript = (scriptId) => {
     selectedScript === scriptId
       ? setSelectedScript(null)
@@ -206,9 +216,12 @@ export default function AccordionScriptsView({ scripts, ref }) {
         }
         {
           !!scriptDetail && !scriptDetail.script &&
-          <div>
+          <div style={{ height: '70dvh', width: '70dvw' }}>
               <h2>Script Detail</h2>
-              {Object.keys(scriptDetail).map(key => !!scriptDetail[key] && <p kye={key}>{ key }: {scriptDetail[key]}</p>)}
+              <Table
+                headers={['', '']}
+                values={scriptToDetail(scriptDetail)}
+            />
           </div>
         }
         {
