@@ -79,7 +79,7 @@ export default function AccordionGiftView({ scriptUtxos, scriptAddress, selected
         <Table
           headers={['', 'TxHash', 'TxIdx', 'Value [Lovelace]', 'Value [Ada]']}
           values={scriptUtxos.filter(filterInlineDatumUnit).map(convertUtxosCheckBox).sort((x, y) => y[4] - x[4])}
-          selectUtxo={selectUtxo}
+          selectRow={selectUtxo}
         />
       </AccordionItem>
       <AccordionItem title={"Script Utxo's without Datum (" + scriptUtxos.filter(filterNoDatum).length + ")"} isOpen={openIndex === 1} onToggle={() => toggle(1)}>

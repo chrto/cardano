@@ -1,15 +1,27 @@
-import { useState } from 'react';
+import { useState, useImperativeHandle } from 'react';
 import AccordionItem from './AccordionItem';
 import './AccordionForm.css';
 import Table from './Table'
 import Modal from './Modal';
 import deleteDataFromServer from '../utils/deleteDataFromServer';
+import getData from '../utils/getDataFromServer';
 
-export default function AccordionScriptsView({ scripts }) {
+export default function AccordionScriptsView({ scripts, ref }) {
   const [openIndex, setOpenIndex] = useState(0);
   const [errorMessage, setErrorMessage] = useState(null);
   const [data, setData] = useState(null);
   const [scriptDetail, setScriptDetail] = useState(null);
+  const [selectedScript, setSelectedScript] = useState(null);
+
+  // Expose functions to parent
+  useImperativeHandle(ref, () => ({
+    getSelected() {
+      return selectedScript
+    },
+    deselect() {
+      setSelectedScript(null)
+    }
+  }));
 
   const toggle = (index) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -20,16 +32,25 @@ export default function AccordionScriptsView({ scripts }) {
   const filterFortyTwo = script => script.category === 'FortyTwo';
   const filterVesting = script => script.category === 'Vesting';
 
+  const isSelected = (script) => selectedScript === script.id
+
   const formToLine = script => ({
     key: script.id,
     link: false,
-    select: false,
+    select: true,
     data: [
+      isSelected(script),
       script.title,
       script.type,
       script.description
     ]
   });
+
+  const selectScript = (scriptId) => {
+    selectedScript === scriptId
+      ? setSelectedScript(null)
+      : setSelectedScript(scriptId)
+  }
 
   const handleOnDelete = (e) => {
     e.preventDefault();
@@ -53,11 +74,20 @@ export default function AccordionScriptsView({ scripts }) {
     setScriptDetail({script: script.script})
   }
 
+  const getScriptAddress = async script =>
+    getData(`cardano/script/address?type=${script.type}&script=${script.script}`)
+      .then(({ address }) => address)
+      .catch(e => {
+        console.error(`Can not fetch script address for script ${script.script} from server!\n origin: ${e.message}`)
+        return "...";
+      })
+
   const handleOnDetail = (e) => {
     e.preventDefault();
 
     const script = scripts.find(script => script.id === e.target.value);
-    setScriptDetail({...script, script: null})
+    getScriptAddress(script)
+      .then(address => setScriptDetail({...script, script: null, address}))
   }
 
   const handleCloseModal = (e) => {
@@ -71,7 +101,7 @@ export default function AccordionScriptsView({ scripts }) {
     <form className="accordion-form">
       <AccordionItem title={"Burn (" + scripts.filter(filterBurn).length + ")"} isOpen={openIndex === 0} onToggle={() => toggle(0)}>
         <Table
-          headers={['Title', 'Type', 'Description']}
+          headers={['', 'Title', 'Type', 'Description']}
           values={scripts.filter(filterBurn).map(formToLine)}
           buttons={[
             {
@@ -87,12 +117,13 @@ export default function AccordionScriptsView({ scripts }) {
               title: 'Delete'
             }
           ]}
+          selectRow={selectScript}
         />
       </AccordionItem>
 
       <AccordionItem title={"Gift (" + scripts.filter(filterGift).length + ")"} isOpen={openIndex === 1} onToggle={() => toggle(1)}>
         <Table
-          headers={['Title', 'Type', 'Description']}
+          headers={['', 'Title', 'Type', 'Description']}
           values={scripts.filter(filterGift).map(formToLine)}
           buttons={[
             {
@@ -108,12 +139,14 @@ export default function AccordionScriptsView({ scripts }) {
               title: 'Delete'
             }
           ]}
+          selectRow={selectScript}
+
         />
       </AccordionItem>
 
       <AccordionItem title={"FortyTwo (" + scripts.filter(filterFortyTwo).length + ")"} isOpen={openIndex === 2} onToggle={() => toggle(2)}>
         <Table
-          headers={['Title', 'Type', 'Description']}
+          headers={['', 'Title', 'Type', 'Description']}
           values={scripts.filter(filterFortyTwo).map(formToLine)}
           buttons={[
             {
@@ -129,12 +162,13 @@ export default function AccordionScriptsView({ scripts }) {
               title: 'Delete'
             }
           ]}
+          selectRow={selectScript}
         />
       </AccordionItem>
 
       <AccordionItem title={"Vesting (" + scripts.filter(filterVesting).length + ")"} isOpen={openIndex === 3} onToggle={() => toggle(3)}>
         <Table
-          headers={['Title', 'Type', 'Description']}
+          headers={['', 'Title', 'Type', 'Description']}
           values={scripts.filter(filterVesting).map(formToLine)}
           buttons={[
             {
@@ -150,7 +184,8 @@ export default function AccordionScriptsView({ scripts }) {
               title: 'Delete'
             }
           ]}
-        />
+          selectRow={selectScript}
+      />
       </AccordionItem>
 
       <Modal isOpen={!!data || !!errorMessage || !!scriptDetail} isError={!!errorMessage} onClose={handleCloseModal}>
@@ -172,14 +207,8 @@ export default function AccordionScriptsView({ scripts }) {
         {
           !!scriptDetail && !scriptDetail.script &&
           <div>
-            <h2>Script Detail</h2>
-            <p>id: {scriptDetail.id}</p>
-            <p>type: {scriptDetail.type}</p>
-            <p>category: {scriptDetail.category}</p>
-            <p>title: {scriptDetail.title}</p>
-            <p>description: {scriptDetail.description}</p>
-            <p>createdAt: {scriptDetail.createdAt}</p>
-            <p>updatedAt: {scriptDetail.updatedAt}</p>
+              <h2>Script Detail</h2>
+              {Object.keys(scriptDetail).map(key => !!scriptDetail[key] && <p kye={key}>{ key }: {scriptDetail[key]}</p>)}
           </div>
         }
         {

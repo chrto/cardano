@@ -27,10 +27,18 @@ function FormVestingSend({ scriptAddress, getSelectedWalletUtxos, deselectWallet
       setErrorMessage('Beneficiary missing!')
       return null;
     }
-    const datum = { beneficiary, deadline };
+
+    const options = {
+      amountLovelace,
+      contractAddress: scriptAddress,
+      datum: {
+        data: { beneficiary, deadline },
+        type: 'vesting'
+      }
+    }
 
     lucidStorage.then(storage =>
-      storage.buildPayToContractTx(amountLovelace, utxos, scriptAddress, datum, 'vesting')
+      storage.buildPayToContractTx( utxos, options)
         .then(storage.signTx)
         .then(storage.submitTx)
         .then(dispatchData(setTxHash))

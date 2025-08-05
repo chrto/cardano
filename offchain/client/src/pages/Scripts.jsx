@@ -1,5 +1,5 @@
 import './Page.css'
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Navbar from '../components/Navbar';
 import Wallet from '../components/Wallet';
 import AccordionWalletView from '../components/AccordionWalletView';
@@ -13,6 +13,7 @@ import AccordionScriptsForm from '../components/AccordionScriptsForm';
 const { apiRefreshDelay } = require("../config.json");
 
 function Scripts({ publicKeyHash, walletAddress, walletUtxos }) {
+  const scriptViewRef = useRef(null);
 
   const [scripts, setScripts] = useState([]);
   const [enableInterval, setEnableInterval] = useState(false)
@@ -37,6 +38,15 @@ function Scripts({ publicKeyHash, walletAddress, walletUtxos }) {
         return [];
       })
 
+  const getSelectedScript = () => {
+    const selected = scriptViewRef.current?.getSelected();
+    return scripts.find(script => selected === script.id)
+  }
+
+  const deselectScript = () => {
+    scriptViewRef.current?.deselect();
+  }
+
   return (
     <div className="app-container">
       <Navbar />
@@ -46,11 +56,18 @@ function Scripts({ publicKeyHash, walletAddress, walletUtxos }) {
         <AccordionWalletForm walletUtxos={walletUtxos} />
       </div>
 
+      <div className="wallet-content">
+        <AccordionScriptsForm
+          getSelectedScript={getSelectedScript}
+          deselectScript={deselectScript}
+
+        />
+      </div>
       <div className="main-content">
         <div className="view-panel">
-          <AccordionScriptsForm />
           <AccordionScriptsView
             scripts={scripts}
+            ref={scriptViewRef}
           />
         </div>
       </div>

@@ -22,8 +22,14 @@ function FormGiftSend({ scriptAddress, getSelectedWalletUtxos, deselectWalletUtx
     const amountLovelace = BigInt(formData.giftValue) * BigInt(1000000)
     const utxos = getSelectedWalletUtxos().map(utxoToLucid)
 
+    const options = {
+      amountLovelace,
+      contractAddress: scriptAddress,
+      datum: null
+    }
+
     lucidStorage.then(storage =>
-      storage.buildPayToContractTx(amountLovelace, utxos, scriptAddress)
+      storage.buildPayToContractTx(utxos, options)
         .then(storage.signTx)
         .then(storage.submitTx)
         .then(dispatchData(setTxHash))

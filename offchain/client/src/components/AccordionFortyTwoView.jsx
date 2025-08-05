@@ -77,7 +77,7 @@ export default function AccordionFortyTwoView({ scriptUtxos, scriptAddress, sele
         <Table
           headers={['', 'TxHash', 'TxIdx', 'Value [Lovelace]', 'Value [Ada]']}
           values={scriptUtxos.filter(filterInlineDatumFortyTwo).map(convertUtxosCheckBox).sort((x, y) => y[4] - x[4])}
-          selectUtxo={selectUtxo}
+          selectRow={selectUtxo}
         />
       </AccordionItem>
       <AccordionItem title={"Script Utxo's without Datum (" + scriptUtxos.filter(filterNoDatum).length + ")"} isOpen={openIndex === 1} onToggle={() => toggle(1)}>

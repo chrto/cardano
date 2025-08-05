@@ -42,7 +42,7 @@ export default function AccordionWalletView({ walletUtxos, ref }) {
         <Table
           headers={['', 'TxHash', 'TxIdx', 'Value [Lovelace]', 'Value [Ada]']}
           values={walletUtxos.map(convertWalletUtxos)}
-          selectUtxo={selectUtxo}
+          selectRow={selectUtxo}
         />
       </AccordionItem>
     </form>

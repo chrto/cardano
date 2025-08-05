@@ -1,10 +1,10 @@
 import React from 'react';
 import './Table.css';
 
-function Table({ headers, values, selectUtxo, buttons }) {
+function Table({ headers, values, selectRow, buttons }) {
   const EXPL_URL = "https://preview.cardanoscan.io/transaction/"
 
-  const renderCheckboxColumn = (columnVal, id, utxoKey) => <td key={id}><input type="checkbox" checked={columnVal} onChange={() => selectUtxo(utxoKey)}></input></td>
+  const renderCheckboxColumn = (columnVal, id, utxoKey) => <td key={id}><input type="checkbox" checked={columnVal} onChange={() => selectRow(utxoKey)}></input></td>
   const renderUtxoIdColumn = (columnVal, id) => <td key={id}><a className="table-link" href={`${EXPL_URL}${columnVal}`}>{columnVal}</a></td>
   const renderColumn = (columnVal, id) => <td key={id}>{columnVal}</td>
   const renderButtonsCulomn = (buttons, id) => <td style={{ textAlign: 'right' }}>{buttons.map((button, idx) => <button value={ id } key={idx} onClick={button.handler}>{button.title}</button>)}</td>

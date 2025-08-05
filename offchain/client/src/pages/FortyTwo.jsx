@@ -119,7 +119,6 @@ function FortyTwo({ publicKeyHash, walletAddress, walletUtxos }) {
               deselectWalletUtxos={deselectWalletUtxos}
               getSelectedScriptUtxos={getSelectedScriptUtxos}
               deselectScriptUtxos={deselectScriptUtxos}
-
             />
           </aside>
           <div className="view-panel">
