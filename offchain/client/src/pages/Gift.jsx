@@ -10,15 +10,16 @@ import AccordionGiftView from '../components/AccordionGiftView';
 import AccordionWalletView from '../components/AccordionWalletView';
 import getKeyUTxO from '../utils/getKeyUTxO';
 
-const { giftScript, apiRefreshDelay } = require("../config.json");
+const { apiRefreshDelay } = require("../config.json");
 
 function Gift({ publicKeyHash, walletAddress, walletUtxos }) {
   const walletViewRef = useRef(null);
   const scriptViewRef = useRef(null);
 
   const [scriptAddress, setScriptAddress] = useState([]);
+  const [scripts, setScripts] = useState([]);
   const [scriptUtxos, setScriptUtxos] = useState([]);
-  const [selectedScript, setSelectedScript] = useState({name: "giftScript", script: giftScript});
+  const [selectedScript, setSelectedScript] = useState(null);
   const [enableInterval, setEnableInterval] = useState(false)
 
   useEffect(() => {
@@ -26,21 +27,45 @@ function Gift({ publicKeyHash, walletAddress, walletUtxos }) {
       .then(_ => setEnableInterval(true))
   }, []);
 
-  useSafeInterval(async () => setState(), enableInterval ? apiRefreshDelay : null);
+  useSafeInterval(async () => refresh(), enableInterval ? apiRefreshDelay : null);
+
+  const refresh = async () =>
+    getScripts()
+      .then(dispatchData(setScripts))
+      .then(_ => getAddressUtxos(scriptAddress))
+      .then(dispatchData(setScriptUtxos))
+      .catch((err) => console.error('Fetch error:', err));
 
   const setState = async () =>
-    Promise.resolve(getScritptByName("giftScript"))
+    getScripts()
+      .then(dispatchData(setScripts))
+      .then(scripts => scripts[0])
       .then(dispatchData(setSelectedScript))
-      .then(selected => selected.script)
       .then(getScriptAddress)
       .then(dispatchData(setScriptAddress))
       .then(getAddressUtxos)
       .then(dispatchData(setScriptUtxos))
       .catch((err) => console.error('Fetch error:', err));
 
-  const getScritptByName = (name) => ({
-    name, script: giftScript
-  });
+  const handleChoice = (e) => {
+    dispatchData(setScriptUtxos)([])
+    Promise.resolve(getScritptById(e.target.value))
+      .then(dispatchData(setSelectedScript))
+      .then(getScriptAddress)
+      .then(dispatchData(setScriptAddress))
+      .then(getAddressUtxos)
+      .then(dispatchData(setScriptUtxos))
+      .catch((err) => console.error('Fetch error:', err))
+  };
+
+  const getScritptById = (id) => scripts.find(script => script.id === id);
+
+  const getScripts = async () =>
+    getData(`cardano/scripts?category=Gift`)
+      .catch(e => {
+        console.error(`Can not fetch 'Gift' script from server!\n origin: ${e.message}`)
+        return [];
+      })
 
   const getAddressUtxos = async address =>
     getData(`cardano/${address}/utxos`)
@@ -82,26 +107,30 @@ function Gift({ publicKeyHash, walletAddress, walletUtxos }) {
         <Wallet publicKeyHash={publicKeyHash} walletAddress={walletAddress} walletUtxos  ={walletUtxos} />
         <AccordionWalletView walletUtxos={walletUtxos} ref={walletViewRef} />
       </div>
-      <div className="main-content">
-        <aside className="sidebar">
-          <AccordionGiftForm
-            scriptAddress={scriptAddress}
-            validatorScript={giftScript}
-            getSelectedWalletUtxos={getSelectedWalletUtxos}
-            deselectWalletUtxos={deselectWalletUtxos}
-            getSelectedScriptUtxos={getSelectedScriptUtxos}
-            deselectScriptUtxos={deselectScriptUtxos}
-          />
-        </aside>
-        <div className="view-panel">
-          <AccordionGiftView
-            scriptUtxos={scriptUtxos}
-            scriptAddress={scriptAddress}
-            selectedScript={selectedScript}
-            ref={scriptViewRef}
-          />
+      {selectedScript &&
+        <div className="main-content">
+          <aside className="sidebar">
+            <AccordionGiftForm
+              scriptAddress={scriptAddress}
+              handleChoice={handleChoice}
+              selected={selectedScript}
+              scripts={scripts}
+              getSelectedWalletUtxos={getSelectedWalletUtxos}
+              deselectWalletUtxos={deselectWalletUtxos}
+              getSelectedScriptUtxos={getSelectedScriptUtxos}
+              deselectScriptUtxos={deselectScriptUtxos}
+            />
+          </aside>
+          <div className="view-panel">
+            <AccordionGiftView
+              scriptUtxos={scriptUtxos}
+              scriptAddress={scriptAddress}
+              selectedScript={selectedScript}
+              ref={scriptViewRef}
+            />
+          </div>
         </div>
-      </div>
+      }
     </div>
   );
 }

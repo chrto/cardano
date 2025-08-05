@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import About from './pages/About';
+import Scripts from './pages/Scripts';
 import Gift from './pages/Gift';
 import FortyTwo from './pages/FortyTwo';
 import Vesting from './pages/Vesting';
@@ -60,6 +61,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home publicKeyHash={publicKeyHash} walletAddress={walletAddress} walletUtxos={walletUtxos} />} />
         <Route path="/about" element={<About publicKeyHash={publicKeyHash} walletAddress={walletAddress} walletUtxos={walletUtxos} />} />
+        <Route path="/scripts" element={<Scripts publicKeyHash={publicKeyHash} walletAddress={walletAddress} walletUtxos={walletUtxos} />} />
         <Route path="/gift" element={<Gift publicKeyHash={publicKeyHash} walletAddress={walletAddress} walletUtxos={walletUtxos} />} />
         <Route path="/fortyTwo" element={<FortyTwo publicKeyHash={publicKeyHash} walletAddress={walletAddress} walletUtxos={walletUtxos} />} />
         <Route path="/vesting" element={<Vesting publicKeyHash={publicKeyHash} walletAddress={walletAddress} walletUtxos={walletUtxos} />} />

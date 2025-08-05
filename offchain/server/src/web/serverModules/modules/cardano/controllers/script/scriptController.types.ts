@@ -9,6 +9,7 @@ import { AddressResponse } from '../../response/response.types';
 import { RequestImplicits } from '../../paramHandlers/paramHandlers.types';
 import { ScriptBody as CreateScriptBody } from './createScript/createScript.types';
 import { Script } from 'model/sequelize/model/script/scirpt';
+import { DeletedScript } from './deleteScript/deleteScript.types';
 
 export interface ScriptController {
   // lucid
@@ -18,4 +19,5 @@ export interface ScriptController {
   getScriptById: (ctx: Context, req: AppRequest<unknown, RequestImplicits, ExpressQuery>, res: Response) => Promise<Either<AppError, Script>>;
   getScripts: (ctx: Context, req: AppRequest<unknown, RequestImplicits, ExpressQuery>, res: Response) => Promise<Either<AppError, Script[]>>;
   createScript: (ctx: Context, req: AppRequest<unknown, RequestImplicits, ExpressQuery, CreateScriptBody>, res: Response) => Promise<Either<AppError, Script>>;
+  deleteScript: (ctx: Context, req: AppRequest<unknown, RequestImplicits, ExpressQuery, CreateScriptBody>, res: Response) => Promise<Either<AppError, DeletedScript>>;
 }

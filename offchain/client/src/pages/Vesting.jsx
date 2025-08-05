@@ -10,15 +10,16 @@ import dispatchData from '../utils/dispatchData';
 import useSafeInterval from '../utils/useSafeInterval';
 import getKeyUTxO from '../utils/getKeyUTxO';
 
-const {vestingScript, apiRefreshDelay} = require("../config.json");
+const { apiRefreshDelay } = require("../config.json");
 
 function Vesting({ publicKeyHash, walletAddress, walletUtxos }) {
   const walletViewRef = useRef(null);
   const scriptViewRef = useRef(null);
 
   const [scriptAddress, setScriptAddress] = useState("...");
+  const [scripts, setScripts] = useState([]);
   const [scriptUtxos, setScriptUtxos] = useState([]);
-  const [selectedScript, setSelectedScript] = useState({ name: "vestingScript", script: vestingScript });
+  const [selectedScript, setSelectedScript] = useState(null);
   const [enableInterval, setEnableInterval] = useState(false)
 
   useEffect(() => {
@@ -26,33 +27,46 @@ function Vesting({ publicKeyHash, walletAddress, walletUtxos }) {
       .then(_ => setEnableInterval(true))
   }, []);
 
-  useSafeInterval(async () => setState(), enableInterval ? apiRefreshDelay : null);
+  useSafeInterval(async () => refresh(), enableInterval ? apiRefreshDelay : null);
+
+  const refresh = async () =>
+    getScripts()
+      .then(dispatchData(setScripts))
+      .then(_ => getAddressUtxos(scriptAddress))
+      .then(dispatchData(setScriptUtxos))
+      .catch((err) => console.error('Fetch error:', err));
 
   const setState = async () =>
-    getScriptAddress(selectedScript.script)
+    getScripts()
+      .then(dispatchData(setScripts))
+      .then(scripts => scripts[0])
+      .then(dispatchData(setSelectedScript))
+      .then(getScriptAddress)
       .then(dispatchData(setScriptAddress))
       .then(getAddressUtxos)
       .then(dispatchData(setScriptUtxos))
-      .catch((err) => console.error('Fetch error:', err))
-
-  const getScritptByName = (name) => {
-    switch (name) {
-      case 'vestingScript': return {name: "vestingScript", script: vestingScript};
-      default: return {name: "vestingScript", script: vestingScript};
-    }
-  }
+      .catch((err) => console.error('Fetch error:', err));
 
   const handleChoice = (e) => {
     dispatchData(setScriptUtxos)([])
-    Promise.resolve(getScritptByName(e.target.value))
+    Promise.resolve(getScritptById(e.target.value))
       .then(dispatchData(setSelectedScript))
-      .then(selected => selected.script)
       .then(getScriptAddress)
       .then(dispatchData(setScriptAddress))
       .then(getAddressUtxos)
       .then(dispatchData(setScriptUtxos))
       .catch((err) => console.error('Fetch error:', err))
+
   };
+
+  const getScritptById = (id) => scripts.find(script => script.id === id);
+
+  const getScripts = async () =>
+    getData(`cardano/scripts?category=Vesting`)
+      .catch(e => {
+        console.error(`Can not fetch 'Vesting' script from server!\n origin: ${e.message}`)
+        return [];
+      })
 
   const getAddressUtxos = async address =>
     getData(`cardano/${address}/utxos`)
@@ -94,30 +108,32 @@ function Vesting({ publicKeyHash, walletAddress, walletUtxos }) {
         <Wallet publicKeyHash={publicKeyHash} walletAddress={walletAddress} walletUtxos  ={walletUtxos} />
         <AccordionWalletView walletUtxos={walletUtxos} ref={walletViewRef} />
       </div>
-      <div className="main-content">
-        <aside className="sidebar">
-          <AccordionVestingForm
-            scriptAddress={scriptAddress}
-            validatorScript={selectedScript.script}
-            handleChoice={handleChoice}
-            selected={selectedScript.name}
-            publicKeyHash={publicKeyHash}
-            getSelectedWalletUtxos={getSelectedWalletUtxos}
-            deselectWalletUtxos={deselectWalletUtxos}
-            getSelectedScriptUtxos={getSelectedScriptUtxos}
-            deselectScriptUtxos={deselectScriptUtxos}
-          />
-        </aside>
-        <div className="view-panel">
-          <AccordionVestingView
-            publicKeyHash={publicKeyHash}
-            scriptUtxos={scriptUtxos}
-            scriptAddress={scriptAddress}
-            selectedScript={selectedScript}
-            ref={scriptViewRef}
-          />
+      {selectedScript &&
+        <div className="main-content">
+          <aside className="sidebar">
+            <AccordionVestingForm
+              scriptAddress={scriptAddress}
+              handleChoice={handleChoice}
+              selected={selectedScript}
+              scripts={scripts}
+              publicKeyHash={publicKeyHash}
+              getSelectedWalletUtxos={getSelectedWalletUtxos}
+              deselectWalletUtxos={deselectWalletUtxos}
+              getSelectedScriptUtxos={getSelectedScriptUtxos}
+              deselectScriptUtxos={deselectScriptUtxos}
+            />
+          </aside>
+          <div className="view-panel">
+            <AccordionVestingView
+              publicKeyHash={publicKeyHash}
+              scriptUtxos={scriptUtxos}
+              scriptAddress={scriptAddress}
+              selectedScript={selectedScript}
+              ref={scriptViewRef}
+            />
+          </div>
         </div>
-      </div>
+      }
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import createScriptUnbound from './createScript.unbound';
 import initScriptModel, { Script } from 'model/sequelize/model/script/scirpt';
 import { Response } from 'express';
+import { Query as ExpressQuery } from 'express-serve-static-core';
 import { Sequelize } from 'sequelize';
 import { DEFAULT_DB_DIALECT } from 'src/defaults';
 import { ScriptBody } from './createScript.types';
@@ -13,7 +14,7 @@ import { ScriptItems, ScriptRequired, ScritpCategory } from 'model/sequelize/mod
 import { PlutusVersion } from 'model/cardano/cardano.types';
 
 type BodyValidator = jest.Mock<Either<AppError, ScriptBody>, [ScriptBody]>;
-type AppReq = AppRequest<unknown, RequestImplicits, unknown, ScriptBody>;
+type AppReq = AppRequest<unknown, RequestImplicits, ExpressQuery, ScriptBody>;
 const UUID: string = '92b814ed-1aff-46c1-b669-0c9fd2ea81a3';
 
 const SCRIPT_REQUIRED: ScriptRequired = {
@@ -37,14 +38,14 @@ describe('Web Server', () => {
       describe('controller', () => {
         describe('script controller', () => {
           describe('create script', () => {
-            let res: Partial<Response>;
+            let res: Response;
             let req: AppReq;
             let bodyValidator: BodyValidator;
             let scriptFactory: jest.Mock<Either<AppError, ScriptItems>, [ScriptRequired]>;
             let sequelize: Sequelize;
             let script: Script;
             let sanitizeEntity: jest.Mock<any, [Script]>;
-            let scriptService: Partial<ScriptService> = {};
+            let scriptService: ScriptService;
             let createScriptExecutor: jest.Mock<Promise<Either<AppError, Script>>, [ScriptRequired]>;
 
             beforeAll(async () => {
@@ -54,7 +55,7 @@ describe('Web Server', () => {
 
               res = {
                 status: jest.fn().mockReturnThis()
-              };
+              } as unknown as Response;
               sequelize = new Sequelize(null, null, null, { dialect: DEFAULT_DB_DIALECT });
               initScriptModel(sequelize);
 
@@ -64,13 +65,17 @@ describe('Web Server', () => {
               sanitizeEntity = jest.fn().mockImplementation((script: Script) => script.get({ plain: true }));
               createScriptExecutor = jest.fn().mockResolvedValue(Either.right(script));
               scriptFactory = jest.fn().mockReturnValue(Either.right(SCRIPT_ITEMS));
-
-              scriptService.createScript = jest.fn().mockImplementation(() => createScriptExecutor);
+              scriptService = {
+                createScript: jest.fn().mockImplementation(() => createScriptExecutor),
+                deleteScript: null,
+                getScripts: null,
+                getScriptById: null
+              };
 
               await createScriptUnbound
-                .apply(null, [bodyValidator, scriptFactory, sanitizeEntity])
-                .apply(null, [scriptService])
-                .apply(null, [null, req, res]);
+                (bodyValidator, scriptFactory, sanitizeEntity)
+                (scriptService)
+                (null, req, res);
             });
 
             it('Should validate body as first', () => {

@@ -8,17 +8,18 @@ import getData from '../utils/getDataFromServer';
 import Navbar from '../components/Navbar';
 import dispatchData from '../utils/dispatchData';
 import useSafeInterval from '../utils/useSafeInterval';
-import getKeyUTxO
-  from '../utils/getKeyUTxO';
-const {fortyTwoScript, fortyTwoTypedScript, fortyTwoTypedScriptP, apiRefreshDelay} = require("../config.json");
+import getKeyUTxO from '../utils/getKeyUTxO';
+
+const { apiRefreshDelay } = require("../config.json");
 
 function FortyTwo({ publicKeyHash, walletAddress, walletUtxos }) {
   const walletViewRef = useRef(null);
   const scriptViewRef = useRef(null);
 
   const [scriptAddress, setScriptAddress] = useState("...");
+  const [scripts, setScripts] = useState([]);
   const [scriptUtxos, setScriptUtxos] = useState([]);
-  const [selectedScript, setSelectedScript] = useState({ name: "fortyTwoScript", script: fortyTwoScript });
+  const [selectedScript, setSelectedScript] = useState(null);
   const [enableInterval, setEnableInterval] = useState(false)
 
   useEffect(() => {
@@ -26,35 +27,45 @@ function FortyTwo({ publicKeyHash, walletAddress, walletUtxos }) {
       .then(_ => setEnableInterval(true))
   }, []);
 
-  useSafeInterval(async () => setState(), enableInterval ? apiRefreshDelay : null);
+  useSafeInterval(async () => refresh(), enableInterval ? apiRefreshDelay : null);
+
+  const refresh = async () =>
+    getScripts()
+      .then(dispatchData(setScripts))
+      .then(_ => getAddressUtxos(scriptAddress))
+      .then(dispatchData(setScriptUtxos))
+      .catch((err) => console.error('Fetch error:', err));
 
   const setState = async () =>
-    getScriptAddress(selectedScript.script)
+    getScripts()
+      .then(dispatchData(setScripts))
+      .then(scripts => scripts[0])
+      .then(dispatchData(setSelectedScript))
+      .then(getScriptAddress)
       .then(dispatchData(setScriptAddress))
       .then(getAddressUtxos)
       .then(dispatchData(setScriptUtxos))
-      .catch((err) => console.error('Fetch error:', err))
-
-  const getScritptByName = (name) => {
-    switch (name) {
-      case 'fortyTwoScript': return {name: "fortyTwoScript", script: fortyTwoScript};
-      case 'fortyTwoTypedScript': return {name: "fortyTwoTypedScript", script: fortyTwoTypedScript};
-      case 'fortyTwoTypedScriptP': return {name: "fortyTwoTypedScriptP", script: fortyTwoTypedScriptP};
-      default: return {name: "fortyTwoScript", script: fortyTwoScript};
-    }
-  }
+      .catch((err) => console.error('Fetch error:', err));
 
   const handleChoice = (e) => {
     dispatchData(setScriptUtxos)([])
-    Promise.resolve(getScritptByName(e.target.value))
+    Promise.resolve(getScritptById(e.target.value))
       .then(dispatchData(setSelectedScript))
-      .then(selected => selected.script)
       .then(getScriptAddress)
       .then(dispatchData(setScriptAddress))
       .then(getAddressUtxos)
       .then(dispatchData(setScriptUtxos))
       .catch((err) => console.error('Fetch error:', err))
   };
+
+  const getScritptById = (id) => scripts.find(script => script.id === id);
+
+  const getScripts = async () =>
+    getData(`cardano/scripts?category=FortyTwo`)
+      .catch(e => {
+        console.error(`Can not fetch 'FortyTwo' script from server!\n origin: ${e.message}`)
+        return [];
+      })
 
   const getAddressUtxos = async address =>
     getData(`cardano/${address}/utxos`)
@@ -96,29 +107,30 @@ function FortyTwo({ publicKeyHash, walletAddress, walletUtxos }) {
         <Wallet publicKeyHash={publicKeyHash} walletAddress={walletAddress} walletUtxos={walletUtxos} />
         <AccordionWalletView walletUtxos={walletUtxos} ref={walletViewRef} />
       </div>
-      <div className="main-content">
-        <aside className="sidebar">
-          <AccordionFortyTwoForm
-            scriptAddress={scriptAddress}
-            validatorScript={selectedScript.script}
-            handleChoice={handleChoice}
-            selected={selectedScript.name}
-            getSelectedWalletUtxos={getSelectedWalletUtxos}
-            deselectWalletUtxos={deselectWalletUtxos}
-            getSelectedScriptUtxos={getSelectedScriptUtxos}
-            deselectScriptUtxos={deselectScriptUtxos}
-
-          />
-        </aside>
-        <div className="view-panel">
-          <AccordionFortyTwoView
-            scriptUtxos={scriptUtxos}
-            scriptAddress={scriptAddress}
-            selectedScript={selectedScript}
-            ref={scriptViewRef}
-          />
+      {selectedScript &&
+        <div className="main-content">
+          <aside className="sidebar">
+            <AccordionFortyTwoForm
+              scriptAddress={scriptAddress}
+              handleChoice={handleChoice}
+              selected={selectedScript}
+              scripts={scripts}
+              getSelectedWalletUtxos={getSelectedWalletUtxos}
+              deselectWalletUtxos={deselectWalletUtxos}
+              getSelectedScriptUtxos={getSelectedScriptUtxos}
+              deselectScriptUtxos={deselectScriptUtxos}
+            />
+          </aside>
+          <div className="view-panel">
+            <AccordionFortyTwoView
+              scriptUtxos={scriptUtxos}
+              scriptAddress={scriptAddress}
+              selectedScript={selectedScript}
+              ref={scriptViewRef}
+            />
+          </div>
         </div>
-      </div>
+      }
     </div>
   );
 }

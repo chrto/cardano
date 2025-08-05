@@ -38,14 +38,23 @@ LucidStorage.prototype.getWalletAddress = async function () {
   return this.lucid.wallet.address()
 }
 
-LucidStorage.prototype.buildPayToContractTx = async function (amountLovelace, utxos, contractAddress, datum = null, datumType = '') {
-  const datumCBOR = datumToCBOR(datum, datumType)
+LucidStorage.prototype.buildPayToContractTx = async function (utxos, options) {
+  const { amountLovelace, contractAddress, datum, scriptRef } = options
+  // const { type, script } = scriptRef
+  // const { data, type } = datum
 
-  return this.lucid
+  const datumCBOR = datumToCBOR(datum)
+
+  const transaction = this.lucid
     .newTx()
     .collectFrom(utxos)
-    .payToContract(contractAddress, { inline: datumCBOR }, { lovelace: amountLovelace })
-    .complete()
+
+  if (!!scriptRef) {
+    transaction.payToContract(contractAddress, { inline: datumCBOR, scriptRef }, { })
+  } else {
+    transaction.payToContract(contractAddress, { inline: datumCBOR }, { lovelace: amountLovelace })
+  }
+  return transaction.complete()
     .catch(err => {
       console.error(err)
       throw new Error(`Build transaction:\ninfo: ${JSON.stringify(err)}`)

@@ -7,4 +7,5 @@ export interface ScriptService {
   getScriptById: SequelizeService<[string], Script>;
   getScripts: SequelizeService<[WhereOptions?, Order?], Script[]>;
   createScript: SequelizeService<[ScriptRequired], Script>;
+  deleteScript: SequelizeService<[Script], number>;
 }

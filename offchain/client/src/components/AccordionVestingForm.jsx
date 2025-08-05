@@ -3,9 +3,9 @@ import './AccordionForm.css';
 import AccordionItem from './AccordionItem';
 import FormVestingSend from './FormVestingSend';
 import FormVestingClaim from './FormVestingClaim';
-import ChoiceVesting from './ChoiceVesting';
+import ChoiceScriptVersion from './ChoiceScriptVersion';
 
-export default function AccordionVestingForm({ scriptAddress, validatorScript, handleChoice, selected, publicKeyHash, getSelectedWalletUtxos, deselectWalletUtxos, getSelectedScriptUtxos, deselectScriptUtxos} ) {
+export default function AccordionVestingForm({ scriptAddress, handleChoice, selected, scripts, publicKeyHash, getSelectedWalletUtxos, deselectWalletUtxos, getSelectedScriptUtxos, deselectScriptUtxos} ) {
   const [openIndex, setOpenIndex] = useState(null);
   const [openSelectScript, setOpenSelectScript] = useState(true);
 
@@ -13,11 +13,18 @@ export default function AccordionVestingForm({ scriptAddress, validatorScript, h
     setOpenIndex(openIndex === index ? null : index);
   };
 
+  const validatorScript = {
+    script: selected.script,
+    type: selected.type
+  }
+
   return (
     <form className="accordion-form">
-      <AccordionItem title="Select Script Version" isOpen={openSelectScript} onToggle={() => setOpenSelectScript(!openSelectScript)}>
-        <ChoiceVesting handleChoice={handleChoice} selected={selected}/>
-      </AccordionItem>
+      {scripts.length > 1 &&
+        <AccordionItem title="Select Script Version" isOpen={openSelectScript} onToggle={() => setOpenSelectScript(!openSelectScript)}>
+          <ChoiceScriptVersion handleChoice={handleChoice} selected={selected.id} scripts={ scripts } />
+        </AccordionItem>
+      }
 
       <AccordionItem title="Vest" isOpen={openIndex === 0} onToggle={() => toggle(0)}>
         <FormVestingSend scriptAddress={scriptAddress} getSelectedWalletUtxos={getSelectedWalletUtxos} deselectWalletUtxos={deselectWalletUtxos} />

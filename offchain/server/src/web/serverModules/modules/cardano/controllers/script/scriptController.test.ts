@@ -15,12 +15,13 @@ describe('Web Server', () => {
 
           it('Happy path', () => {
             expect(controller).toBeObject();
-            expect(Object.keys(controller).length).toEqual(4);
+            expect(Object.keys(controller).length).toEqual(5);
 
             expect(controller).toHaveProperty('getScirptAddress');
             expect(controller).toHaveProperty('getScriptById');
             expect(controller).toHaveProperty('getScripts');
             expect(controller).toHaveProperty('createScript');
+            expect(controller).toHaveProperty('deleteScript');
           });
         });
       });

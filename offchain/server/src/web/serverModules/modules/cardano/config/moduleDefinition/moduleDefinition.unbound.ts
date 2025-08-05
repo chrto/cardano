@@ -14,7 +14,7 @@ export default (
   <CTX> (service: PluginSdkService) =>
     (moduleConfig: ModuleConfig<CTX>): ModuleConfig<CTX> => {
       const { getUTxOs, getDetails, getCredentialPayment }: AddressController = addressController(service);
-      const { getScirptAddress, createScript, getScripts, getScriptById }: ScriptController = scriptController(service);
+      const { getScirptAddress, createScript, getScripts, getScriptById, deleteScript }: ScriptController = scriptController(service);
       const { buildTransaction, submitTransaction }: TransactionController = transactionController(service);
 
       return {
@@ -59,6 +59,10 @@ export default (
           [`/scripts/:${ModuleParams.scriptId}`]: {
             get: {
               action: getScriptById,
+              authorization: allAuthenticated
+            },
+            delete: {
+              action: deleteScript,
               authorization: allAuthenticated
             }
           },

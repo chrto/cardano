@@ -24,21 +24,31 @@ export default function AccordionVestingView({ publicKeyHash, scriptUtxos, scrip
 
   const isSelectedUTxO = (utxo) => selectedUtxos.has(getKeyUTxO(utxo))
 
-  const convertMineVestingUTxOs = utxo => [
-    isSelectedUTxO(utxo),
-    utxo.txId,
-    utxo.txIndex,
-    getDeadlineISO(utxo),
-    Number(utxo.assets.lovelace) / 1000000
-  ]
+  const convertMineVestingUTxOs = utxo => ({
+    key: getKeyUTxO(utxo),
+    link: true,
+    select: true,
+    data: [
+      isSelectedUTxO(utxo),
+      utxo.txId,
+      utxo.txIndex,
+      getDeadlineISO(utxo),
+      Number(utxo.assets.lovelace) / 1000000
+    ]
+  })
 
-  const convertOthersVestingUTxOs = utxo => [
-    utxo.txId,
-    utxo.txIndex,
-    getBeneficiary(utxo),
-    getDeadlineISO(utxo),
-    Number(utxo.assets.lovelace) / 1000000
-  ]
+  const convertOthersVestingUTxOs = utxo => ({
+    key: getKeyUTxO(utxo),
+    link: true,
+    select: false,
+    data: [
+      utxo.txId,
+      utxo.txIndex,
+      getBeneficiary(utxo),
+      getDeadlineISO(utxo),
+      Number(utxo.assets.lovelace) / 1000000
+    ]
+  })
 
   const getBeneficiary = utxo => datumFromCBOR(utxo.datum, 'vesting')?.beneficiary
 
@@ -79,14 +89,14 @@ export default function AccordionVestingView({ publicKeyHash, scriptUtxos, scrip
         <Table
           headers={['', 'TxHash', 'TxIdx', 'Deadline', 'Value [Ada]']}
           values={scriptUtxos.filter(afterDeadline).map(convertMineVestingUTxOs)}
-          selectUtxo={selectUtxo}s
+          selectRow={selectUtxo}
         />
       </AccordionItem>
       <AccordionItem title={"Script Utxo's Before Deadline (" + scriptUtxos.filter(beforeDeadline).length + ")"} isOpen={openIndex === 1} onToggle={() => toggle(1)}>
         <Table
           headers={['', 'TxHash', 'TxIdx', 'Deadline', 'Value [Ada]']}
           values={scriptUtxos.filter(beforeDeadline).map(convertMineVestingUTxOs)}
-          selectUtxo={selectUtxo}s
+          selectRow={selectUtxo}
         />
       </AccordionItem>
       <AccordionItem title={"Script Utxo's with other as beneficiaries (" + scriptUtxos.filter(filterOtherVest).length + ")"} isOpen={openIndex === 2} onToggle={() => toggle(2)}>

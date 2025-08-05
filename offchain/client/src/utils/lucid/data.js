@@ -29,14 +29,14 @@ const getCBORFromData = (data, type) => {
         console.error(`Can not convert VestingDatum to CBOR: ${err}`)
         return null
       }
-    default: return null;
+    default: return DEFAULT_UNIT_CBOR;
   }
 }
 
-export const datumToCBOR = (datum, type) =>
+export const datumToCBOR = (datum) =>
   !datum
     ? DEFAULT_UNIT_CBOR
-    : getCBORFromData(datum, type)
+    : getCBORFromData(datum.data, datum.type)
 
 export const redeemerToCBOR = (redeemer, type) =>
   !redeemer

@@ -13,9 +13,11 @@ describe('Service', () => {
 
       it('Happy path', () => {
         expect(service).toBeInstanceOf(Object);
+        expect(Object.keys(service)).toBeArrayOfSize(4);
         expect(service).toHaveProperty('getScriptById');
         expect(service).toHaveProperty('getScripts');
         expect(service).toHaveProperty('createScript');
+        expect(service).toHaveProperty('deleteScript');
       });
     });
   });
