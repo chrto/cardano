@@ -50,21 +50,19 @@ function Scripts({ publicKeyHash, walletAddress, walletUtxos }) {
   return (
     <div className="app-container">
       <Navbar />
-      <div className="wallet-content">
+      <div className="partial-content">
         <Wallet publicKeyHash={publicKeyHash} walletAddress={walletAddress} walletUtxos  ={walletUtxos} />
         <AccordionWalletView walletUtxos={walletUtxos} />
         <AccordionWalletForm walletUtxos={walletUtxos} />
       </div>
-
-      <div className="wallet-content">
+      <div className="partial-content">
         <AccordionScriptsForm
           getSelectedScript={getSelectedScript}
           deselectScript={deselectScript}
-
         />
       </div>
-      <div className="main-content">
-        <div className="view-panel">
+      <div className="view-panel">
+        <div className="partial-content" >
           <AccordionScriptsView
             scripts={scripts}
             ref={scriptViewRef}

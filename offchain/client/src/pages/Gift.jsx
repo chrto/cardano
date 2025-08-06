@@ -103,7 +103,7 @@ function Gift({ publicKeyHash, walletAddress, walletUtxos }) {
   return (
     <div className="app-container">
       <Navbar />
-      <div className="wallet-content">
+      <div className="partial-content">
         <Wallet publicKeyHash={publicKeyHash} walletAddress={walletAddress} walletUtxos  ={walletUtxos} />
         <AccordionWalletView walletUtxos={walletUtxos} ref={walletViewRef} />
       </div>

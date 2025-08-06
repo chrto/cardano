@@ -69,35 +69,38 @@ export default function AccordionFortyTwoView({ scriptUtxos, scriptAddress, sele
 
   return (
     <form className="accordion-form">
-      <AccordionItem title={"Script"} isOpen={openScriptDetail} onToggle={() => setOpenScriptDetail(!openScriptDetail)}>
-        <ScriptDetail scriptAddress={scriptAddress} selectedScript={selectedScript} />
-      </AccordionItem>
-
-      <AccordionItem title={"Script Utxo's with Unit InLine Datum (" + scriptUtxos.filter(filterInlineDatumFortyTwo).length + ")"} isOpen={openIndex === 0} onToggle={() => toggle(0)}>
-        <Table
-          headers={['', 'TxHash', 'TxIdx', 'Value [Lovelace]', 'Value [Ada]']}
-          values={scriptUtxos.filter(filterInlineDatumFortyTwo).map(convertUtxosCheckBox).sort((x, y) => y[4] - x[4])}
-          selectRow={selectUtxo}
-        />
-      </AccordionItem>
-      <AccordionItem title={"Script Utxo's without Datum (" + scriptUtxos.filter(filterNoDatum).length + ")"} isOpen={openIndex === 1} onToggle={() => toggle(1)}>
-        <Table
-          headers={['TxHash', 'TxIdx', 'Value [Lovelace]', 'Value [Ada]']}
-          values={scriptUtxos.filter(filterNoDatum).map(convertUtxos)}
-        />
-      </AccordionItem>
-      <AccordionItem title={"Script Utxo's with InLine Datum (" + scriptUtxos.filter(filterInlineDatum).length + ")"} isOpen={openIndex === 2} onToggle={() => toggle(2)}>
-        <Table
-          headers={['TxHash', 'TxIdx', 'Datum', 'Datum Decoded', 'Value [Ada]']}
-          values={scriptUtxos.filter(filterInlineDatum).map(convertScriptUtxosInlineDatum)}
-        />
-      </AccordionItem>
-      <AccordionItem title={"Script Utxo's with Hash Datum (" + scriptUtxos.filter(filterHashDatum).length + ")"} isOpen={openIndex === 3} onToggle={() => toggle(3)}>
-        <Table
-          headers={['TxHash', 'TxIdx', 'Datum Hash', 'Value [Lovelace]', 'Value [Ada]']}
-          values={scriptUtxos.filter(filterHashDatum).map(convertScriptUtxosHashDatum)}
-        />
-      </AccordionItem>
+      <div className="partial-content">
+        <AccordionItem title={"Script"} isOpen={openScriptDetail} onToggle={() => setOpenScriptDetail(!openScriptDetail)}>
+          <ScriptDetail scriptAddress={scriptAddress} selectedScript={selectedScript} />
+        </AccordionItem>
+      </div>
+      <div className="partial-content" >
+        <AccordionItem title={"Script Utxo's with Unit InLine Datum (" + scriptUtxos.filter(filterInlineDatumFortyTwo).length + ")"} isOpen={openIndex === 0} onToggle={() => toggle(0)}>
+          <Table
+            headers={['', 'TxHash', 'TxIdx', 'Value [Lovelace]', 'Value [Ada]']}
+            values={scriptUtxos.filter(filterInlineDatumFortyTwo).map(convertUtxosCheckBox).sort((x, y) => y[4] - x[4])}
+            selectRow={selectUtxo}
+          />
+        </AccordionItem>
+        <AccordionItem title={"Script Utxo's without Datum (" + scriptUtxos.filter(filterNoDatum).length + ")"} isOpen={openIndex === 1} onToggle={() => toggle(1)}>
+          <Table
+            headers={['TxHash', 'TxIdx', 'Value [Lovelace]', 'Value [Ada]']}
+            values={scriptUtxos.filter(filterNoDatum).map(convertUtxos)}
+          />
+        </AccordionItem>
+        <AccordionItem title={"Script Utxo's with InLine Datum (" + scriptUtxos.filter(filterInlineDatum).length + ")"} isOpen={openIndex === 2} onToggle={() => toggle(2)}>
+          <Table
+            headers={['TxHash', 'TxIdx', 'Datum', 'Datum Decoded', 'Value [Ada]']}
+            values={scriptUtxos.filter(filterInlineDatum).map(convertScriptUtxosInlineDatum)}
+          />
+        </AccordionItem>
+        <AccordionItem title={"Script Utxo's with Hash Datum (" + scriptUtxos.filter(filterHashDatum).length + ")"} isOpen={openIndex === 3} onToggle={() => toggle(3)}>
+          <Table
+            headers={['TxHash', 'TxIdx', 'Datum Hash', 'Value [Lovelace]', 'Value [Ada]']}
+            values={scriptUtxos.filter(filterHashDatum).map(convertScriptUtxosHashDatum)}
+          />
+        </AccordionItem>
+      </div>
     </form>
   );
 }

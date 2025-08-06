@@ -26,6 +26,7 @@ function LucidStorage(lucid) {
   this.lucid = lucid;
 
   this.getWalletAddress = this.getWalletAddress.bind(this);
+  this.getUTxOsByOutRef = this.getUTxOsByOutRef.bind(this);
   this.buildPayToContractTx = this.buildPayToContractTx.bind(this);
   this.buildSpendFromContractTx = this.buildSpendFromContractTx.bind(this);
   this.signTx = this.signTx.bind(this);
@@ -36,6 +37,14 @@ function LucidStorage(lucid) {
 
 LucidStorage.prototype.getWalletAddress = async function () {
   return this.lucid.wallet.address()
+}
+
+LucidStorage.prototype.getUTxOsByOutRef = async function (outRef) {
+  return this.lucid.utxosByOutRef(outRef)
+    .catch(err => {
+      console.error(err)
+      throw new Error(`Get UTxOs By OutRef:\ninfo: ${JSON.stringify(err)}`)
+    });
 }
 
 LucidStorage.prototype.buildPayToContractTx = async function (utxos, options) {
@@ -61,15 +70,23 @@ LucidStorage.prototype.buildPayToContractTx = async function (utxos, options) {
     });
 }
 
-LucidStorage.prototype.buildSpendFromContractTx = async function (script, utxos, options) {
-  const { redeemer, redeemerType, publicKeyHash, validFrom, validTo } = options;
+LucidStorage.prototype.buildSpendFromContractTx = async function ( utxos, options) {
+  const { redeemer, redeemerType, publicKeyHash, validFrom, validTo, script, scriptRefUTxO } = options;
   const redeemerCOBR = redeemerToCBOR(redeemer, redeemerType)
 
   const transaction = this.lucid
     .newTx()
     .collectFrom(utxos, redeemerCOBR)
     // .readFrom([collateralUtxo]) // 👈 specify it as collateral here !!! Check it !!!
-    .attachSpendingValidator(script);
+
+  if (!!script) {
+    transaction.attachSpendingValidator(script);
+  }
+
+  console.log(scriptRefUTxO)
+  if (!!scriptRefUTxO) {
+    transaction.readFrom([scriptRefUTxO])
+  }
 
   if (!!publicKeyHash) {
     transaction.addSignerKey(publicKeyHash)

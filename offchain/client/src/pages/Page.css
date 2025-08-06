@@ -17,13 +17,17 @@
   margin: -9px;
 }
 
-.wallet-content {
+.partial-content {
   display: flex;
   flex-direction: column;
 
   background-color: var(--background-color);
   border-bottom: 1px solid var(--border-color);
   padding: .5em;
+}
+
+.partial-content:last-child {
+  border: none;
 }
 
 .main-content {
@@ -49,5 +53,4 @@
 
 .view-panel {
   width: 100%;
-  padding: .5em;
 }
