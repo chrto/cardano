@@ -11,6 +11,7 @@ export class ScriptReference extends Model implements ScriptReferenceItems {
   public readonly address!: string;
   public readonly txId!: TxHash;
   public readonly txIndex!: TxIndex;
+  public  unspend!: boolean;
 
   // timestamps!
   public readonly createdAt!: Date;
@@ -46,6 +47,10 @@ export default (sequelize: Sequelize): typeof ScriptReference =>
       txIndex: {
         type: DataTypes.INTEGER,
         field: 'tx_index',
+        allowNull: false
+      },
+      unspend: {
+        type: DataTypes.BOOLEAN,
         allowNull: false
       },
       createdAt: {
