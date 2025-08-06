@@ -14,7 +14,8 @@ describe('sequelize model', () => {
         scriptId: 'f0962fc9-882d-416d-bc08-fed1d5aa3a36',
         address: 'addr_test1wqag3rt979nep9g2wtdwu8mr4gz6m4kjdpp5zp705km8wys6t2kla',
         txId: '82e75104c2ffcab389fae6a9c87ebbe99e83cd7826d02534e77783b12c62e467',
-        txIndex: 0
+        txIndex: 0,
+        unspend: true
       };
 
       it('Should return script reference items in right side', () => {
@@ -23,7 +24,8 @@ describe('sequelize model', () => {
           scriptId: 'f0962fc9-882d-416d-bc08-fed1d5aa3a36',
           address: 'addr_test1wqag3rt979nep9g2wtdwu8mr4gz6m4kjdpp5zp705km8wys6t2kla',
           txId: '82e75104c2ffcab389fae6a9c87ebbe99e83cd7826d02534e77783b12c62e467',
-          txIndex: 0
+          txIndex: 0,
+          unspend: true
         };
 
         scriptFactory({ ...scriptReferenceRequired })

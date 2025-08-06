@@ -30,6 +30,7 @@ CREATE TABLE IF NOT EXISTS script_references (
     `address` VARCHAR(120) NOT NULL,
     `tx_id` VARCHAR(120) NOT NULL,
     `tx_index` INT NOT NULL,
+    `unspend` BIT NOT NULL,
     `created_at` DATETIME NOT NULL,
     `updated_at` DATETIME NOT NULL
 );
