@@ -3,10 +3,17 @@ import getScripts from './getScripts/getScripts';
 import createScript from './createScript/createScript';
 import deleteScript from './deleteScript/deleteScript';
 import { SequelizeIncludes } from '../types';
+import { ScriptReference } from 'model/sequelize/model/scriptReference/scriptReference';
+import { ScriptService } from './scriptService.types';
 
-export default () => {
+export default (): ScriptService => {
   const includes: SequelizeIncludes = {
-    include: []
+    include: [
+      {
+        model: ScriptReference,
+        as: 'references'
+      }
+    ]
   };
 
   return {

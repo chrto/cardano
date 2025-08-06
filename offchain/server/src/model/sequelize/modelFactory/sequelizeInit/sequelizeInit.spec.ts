@@ -57,7 +57,7 @@ describe('sequelize model', () => {
         expect(ScriptReference.associations.script.associationType).toEqual('BelongsTo');
 
         expect(ScriptReference.associations.script).toHaveProperty('foreignKey');
-        expect(ScriptReference.associations.script.foreignKey).toEqual('script_id');
+        expect(ScriptReference.associations.script.foreignKey).toEqual('scriptId');
 
         expect(ScriptReference.associations.script).toHaveProperty('as');
         expect(ScriptReference.associations.script.as).toEqual('script');

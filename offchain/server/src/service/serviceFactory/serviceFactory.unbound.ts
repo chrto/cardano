@@ -11,6 +11,7 @@ import { PluginSdkService } from './serviceFactory.types';
 import { AuthenticationService } from '../http/authentication/types';
 import { CardanoStorage } from 'storage/cardano/lucid/lucid.types';
 import { CardanoService } from 'service/cardano/lucid/cardanoService.types';
+import { ScriptReferenceService } from 'service/sequelize/scriptReferenceService/scriptReferenceService.types';
 import { ICardanoNodeConfig } from 'web/server/configuration/loader/cardanoNode/cardanoNodeConfig.types';
 import { CardanoKupoService } from 'service/http/kupo/kupoService.types';
 
@@ -18,6 +19,7 @@ export default (
   authenticationServiceFactory: Factory<ISSOConfig, AuthenticationService>,
   userServiceFactory: Fcn<[], UserService>,
   scriptServiceFactory: Fcn<[], ScriptService>,
+  scriptReferenceServiceFactory: Fcn<[], ScriptReferenceService>,
   cardanoServiceFactory: Factory<CardanoStorage, CardanoService>,
   cardanoKupoServiceFactory: Factory<ICardanoNodeConfig, CardanoKupoService>
 ) =>
@@ -29,6 +31,7 @@ export default (
       authenticationService: authenticationServiceFactory(appConfig.sso),
       userService: userServiceFactory(),
       scriptService: scriptServiceFactory(),
+      scriptReferenceService: scriptReferenceServiceFactory(),
       cardanoService: cardanoServiceFactory(cardanoStorage),
       cardanoKupoService: cardanoKupoServiceFactory(appConfig.cardanoNode)
     });
