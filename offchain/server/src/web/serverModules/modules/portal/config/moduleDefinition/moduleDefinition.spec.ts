@@ -11,7 +11,7 @@ import { CurrentUserController } from '../../controllers/currentUser/currentUser
 const USER_CONTROLLER: UserController = { getUserById: null, getUsers: null, updateUser: null, createUser: null, deleteUser: null };
 const CURR_USER_CONTROLLER: CurrentUserController = { getLoggedInUser: null };
 const AUTH_HANDLERS: AuthorizationHandlers = { allAuthenticated: null, isAdministrator: null };
-const SERVICE: PluginSdkService = { sdkStartStop: null, sdkTransaction: null, authenticationService: null, userService: null, scriptService: null, cardanoService: null, cardanoKupoService: null };
+const SERVICE: PluginSdkService = { sdkStartStop: null, sdkTransaction: null, authenticationService: null, userService: null, scriptService: null, scriptReferenceService: null, cardanoService: null, cardanoKupoService: null };
 const MODULE_CONFIG: ModuleConfig<GlobalCOntext> = { moduleDefinition: null, router: null, contextFactory: null };
 
 const EXPECTED_MODULE_DEFINITION: ModuleDef<GlobalCOntext> = {
