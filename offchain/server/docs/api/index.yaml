@@ -189,9 +189,9 @@ components:
           type: string
         description:
           type: string
-        createdAt:
+        created_at:
           $ref: "#/components/schemas/DATE"
-        updatedAt:
+        updated_at:
           $ref: "#/components/schemas/DATE"
 
     # Portal
@@ -213,9 +213,9 @@ components:
         role:
           type: string
           enum: [User, Admin]
-        createdAt:
+        created_at:
           $ref: "#/components/schemas/DATE"
-        updatedAt:
+        updated_at:
           $ref: "#/components/schemas/DATE"
 
   responses:

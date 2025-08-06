@@ -50,9 +50,14 @@ describe('Service', () => {
           it(`Should find scripts in storage and return Either with exact Script array in right side`, () => {
             result.do({
               right: (scripts: Script[]): void => {
+                const scriptItems = scripts[0].get();
                 expect(scripts).toBeArray;
                 expect(scripts[0]).toBeInstanceOf(Script);
-                expect(scripts[0].get()).toStrictEqual(ITEMS);
+                expect(scriptItems).toStrictEqual({
+                  ...ITEMS,
+                  createdAt: scriptItems.createdAt,
+                  updatedAt: scriptItems.updatedAt
+                });
               },
               left: (error: AppError) => fail(`Left side has not been expected: ${error.message}`)
             });

@@ -50,9 +50,14 @@ describe('Service', () => {
           it(`Should find users in storage and return Either with exact User array in right side`, () => {
             result.do({
               right: (users: User[]): void => {
+                const userItems = users[0].get();
                 expect(users).toBeArray;
                 expect(users[0]).toBeInstanceOf(User);
-                expect(users[0].get()).toStrictEqual(ITEMS);
+                expect(userItems).toStrictEqual({
+                  ...ITEMS,
+                  createdAt: userItems.createdAt,
+                  updatedAt: userItems.updatedAt
+                });
               },
               left: (error: AppError) => fail(`Left side has not been expected: ${error.message}`)
             });

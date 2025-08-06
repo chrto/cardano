@@ -44,8 +44,13 @@ describe('Service', () => {
           it(`Should create new script in storage and return Either with Script model in right side`, () => {
             result.do({
               right: (script: Script): void => {
+                const scriptItems = script.get();
                 expect(script).toBeInstanceOf(Script);
-                expect(script.get()).toStrictEqual(ITEMS);
+                expect(scriptItems).toStrictEqual({
+                  ...ITEMS,
+                  createdAt: scriptItems.createdAt,
+                  updatedAt: scriptItems.updatedAt
+                });
               },
               left: (error: AppError) => fail(`Left side has not been expected: ${error.message}`)
             });

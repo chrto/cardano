@@ -6,7 +6,7 @@ import { ScriptRequired, ScriptItems, ScritpCategory } from '../script.types';
 import { PlutusVersion } from 'model/cardano/cardano.types';
 
 describe('sequelize model', () => {
-  describe('user', () => {
+  describe('script', () => {
     describe('factory', () => {
       const UUID: string = 'f923b2c9-ffcf-4a0a-bdc9-a4a4ae2a687e';
       const uuidGenrator: () => string = () => UUID;

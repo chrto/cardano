@@ -1,5 +1,5 @@
-import { Options, Sequelize } from 'sequelize';
 import { EDatabaseDialect } from 'web/server/configuration/loader/database/databaseConfig.types';
+import { Options, Sequelize } from 'sequelize';
 import initScriptModel, { Script } from './scirpt';
 import { ScriptItems, ScritpCategory } from './script.types';
 import { PlutusVersion } from 'model/cardano/cardano.types';
@@ -8,6 +8,7 @@ describe('sequelize model', () => {
   const spiedScriptInit = jest.spyOn(Script, 'init');
   let items: ScriptItems;
   let script: Script;
+
   beforeAll(() => {
     const SEQUELIZE_CONFIG: Options = {
       dialect: EDatabaseDialect.sqlite,
@@ -33,7 +34,7 @@ describe('sequelize model', () => {
   });
 
   describe('script', () => {
-    it('Should init User model', () => {
+    it('Should init Script model', () => {
       expect(spiedScriptInit).toHaveBeenCalled();
     });
 
@@ -60,7 +61,7 @@ describe('sequelize model', () => {
       expect(script).toHaveProperty('updatedAt');
     });
 
-    it('Should update user items', () => {
+    it('Should update script items', () => {
       script.setAttributes({
         category: ScritpCategory.FortyTwo,
         title: 'FortyTwo PPP',

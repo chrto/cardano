@@ -62,8 +62,8 @@ ScriptResponse:
               category: FortyTwo
               title: "FortyTwo Untyped"
               description: "Required redeemer is 42!"
-              createdAt: "2019-06-04T10:17:08.706Z"
-              updatedAt: "2019-06-04T10:17:08.707Z"
+              created_at: "2019-06-04T10:17:08.706Z"
+              updated_at: "2019-06-04T10:17:08.707Z"
 
 ScriptListResponse:
   description: A list of Cardano Script
@@ -80,16 +80,16 @@ ScriptListResponse:
             category: Gift
             title: Gift
             description: "Everybody can spend this.."
-            createdAt: "2019-06-04T10:17:08.706Z"
-            updatedAt: "2019-06-04T10:17:08.707Z"
+            created_at: "2019-06-04T10:17:08.706Z"
+            updated_at: "2019-06-04T10:17:08.707Z"
           - id: e59382ba-3733-4257-9ce5-43358dd73b73
             type: PlutusV2
             script: 581f581d01000022232632498cd5ce24810b6974206275726e7321212100120011
             category: Burn
             title: Burn
             description: "Nobody can spend this.."
-            createdAt: "2019-06-04T10:17:08.706Z"
-            updatedAt: "2019-06-04T10:17:08.707Z"
+            created_at: "2019-06-04T10:17:08.706Z"
+            updated_at: "2019-06-04T10:17:08.707Z"
 
 ScriptCreateResponse:
   description: Script resource detail
@@ -105,8 +105,8 @@ ScriptCreateResponse:
               category: FortyTwo
               title: "FortyTwo Untyped"
               description: "Required redeemer is 42!"
-              createdAt: "2019-06-04T10:17:08.706Z"
-              updatedAt: "2019-06-04T10:17:08.707Z"
+              created_at: "2019-06-04T10:17:08.706Z"
+              updated_at: "2019-06-04T10:17:08.707Z"
 
 # Portal
 UserResponse:
@@ -123,8 +123,8 @@ UserResponse:
               email: joe.doe@company.com
               active: true
               role: User
-              createdAt: "2019-06-04T10:17:08.706Z"
-              updatedAt: "2019-06-04T10:17:08.707Z"
+              created_at: "2019-06-04T10:17:08.706Z"
+              updated_at: "2019-06-04T10:17:08.707Z"
 
 CreateUserResponse:
   description: Portal User resource detail
@@ -140,8 +140,8 @@ CreateUserResponse:
               email: jack.black@company.com
               active: true
               role: User
-              createdAt: "2019-06-04T10:17:08.706Z"
-              updatedAt: "2019-06-04T10:17:08.707Z"
+              created_at: "2019-06-04T10:17:08.706Z"
+              updated_at: "2019-06-04T10:17:08.707Z"
 
 UserListResponse:
   description: A list of Portal User
@@ -158,16 +158,16 @@ UserListResponse:
             email: joe.doe@company.com
             active: true
             role: User
-            createdAt: "2019-06-04T10:17:08.706Z"
-            updatedAt: "2019-06-04T10:17:08.707Z"
+            created_at: "2019-06-04T10:17:08.706Z"
+            updated_at: "2019-06-04T10:17:08.707Z"
           - id: 897bd86c-feda-4c17-ab09-20959550899b
             firstName: Admin
             lastName: Adminovitch
             email: admin.adminovic@company.com
             active: true
             role: Admin
-            createdAt: "2019-06-04T10:17:08.706Z"
-            updatedAt: "2019-06-04T10:17:08.707Z"
+            created_at: "2019-06-04T10:17:08.706Z"
+            updated_at: "2019-06-04T10:17:08.707Z"
 
 UserInfoResponse:
   description: Current user inforamation.
@@ -183,8 +183,8 @@ UserInfoResponse:
               email: joe.doe@company.com
               active: true
               role: User
-              createdAt: "2019-06-04T10:17:08.706Z"
-              updatedAt: "2019-06-04T10:17:08.707Z"
+              created_at: "2019-06-04T10:17:08.706Z"
+              updated_at: "2019-06-04T10:17:08.707Z"
 
 # Errors 40x
 40x_UnauthenticatedErrorBearer:

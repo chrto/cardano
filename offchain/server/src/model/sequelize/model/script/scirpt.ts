@@ -35,7 +35,8 @@ export default (sequelize: Sequelize): typeof Script =>
       },
       script: {
         type: DataTypes.STRING(),
-        allowNull: false
+        allowNull: false,
+        unique: 'uq_scripts_script'
       },
       category: {
         type: DataTypes.STRING(15),
@@ -46,11 +47,24 @@ export default (sequelize: Sequelize): typeof Script =>
       },
       title: {
         type: DataTypes.STRING(25),
-        allowNull: false
+        allowNull: false,
+        unique: 'uq_scripts_title'
       },
       description: {
-        type: DataTypes.STRING(100),
+        type: DataTypes.STRING(1000),
         allowNull: true
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        field: 'created_at',
+        defaultValue: new Date()
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        field: 'updated_at',
+        defaultValue: new Date()
       }
     },
     {
