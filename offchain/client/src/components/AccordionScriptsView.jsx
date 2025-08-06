@@ -47,7 +47,7 @@ export default function AccordionScriptsView({ scripts, ref }) {
   });
 
   const scriptToDetail = (script) =>
-    Object.keys(script).filter(key => key !== 'script').map(
+    Object.keys(script).filter(key => key !== 'script' && key !== 'references').map(
       key => ({
         key,
         link: false,
@@ -56,11 +56,27 @@ export default function AccordionScriptsView({ scripts, ref }) {
       })
     )
 
+  const scriptRefToDetail = (scriptRef) =>
+    scriptRef.map(ref => ({
+      key: ref.id,
+      link: false,
+      select: false,
+      data: [`${ref.txId}#${ref.txIndex}`, ref.address]
+    }))
+
   const selectScript = (scriptId) => {
     selectedScript === scriptId
       ? setSelectedScript(null)
       : setSelectedScript(scriptId)
   }
+
+  const getScriptAddress = async script =>
+    getData(`cardano/script/address?type=${script.type}&script=${script.script}`)
+      .then(({ address }) => address)
+      .catch(e => {
+        console.error(`Can not fetch script address for script ${script.script} from server!\n origin: ${e.message}`)
+        return "...";
+      })
 
   const handleOnDelete = (e) => {
     e.preventDefault();
@@ -81,16 +97,9 @@ export default function AccordionScriptsView({ scripts, ref }) {
     e.preventDefault();
 
     const script = scripts.find(script => script.id === e.target.value);
+
     setScriptDetail({script: script.script})
   }
-
-  const getScriptAddress = async script =>
-    getData(`cardano/script/address?type=${script.type}&script=${script.script}`)
-      .then(({ address }) => address)
-      .catch(e => {
-        console.error(`Can not fetch script address for script ${script.script} from server!\n origin: ${e.message}`)
-        return "...";
-      })
 
   const handleOnDetail = (e) => {
     e.preventDefault();
@@ -216,12 +225,19 @@ export default function AccordionScriptsView({ scripts, ref }) {
         }
         {
           !!scriptDetail && !scriptDetail.script &&
-          <div style={{ height: '70dvh', width: '70dvw' }}>
+          <div style={{ height: '70dvh', width: '80dvw' }}>
+            <div className="partial-content">
               <h2>Script Detail</h2>
               <Table
                 headers={['', '']}
                 values={scriptToDetail(scriptDetail)}
-            />
+              />
+              <h2>Script References</h2>
+              <Table
+                headers={['txRef', 'address']}
+                values={scriptRefToDetail(scriptDetail.references)}
+              />
+            </div>
           </div>
         }
         {
