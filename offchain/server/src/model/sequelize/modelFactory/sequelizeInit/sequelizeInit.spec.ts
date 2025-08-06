@@ -1,36 +1,76 @@
-import { Sequelize } from 'sequelize/types';
+import { Options, Sequelize } from 'sequelize';
+import { EDatabaseDialect } from 'web/server/configuration/loader/database/databaseConfig.types';
 import { InitModels } from './sequelizeInit.types';
 import sequelizeInitUnbound from './sequelizeInit.unbound';
+import initUserModel from '../../model/user/user';
+import initScriptModel, { Script } from '../../model/script/scirpt';
+import initScriptReferenceModel, { ScriptReference } from '../../model/scriptReference/scriptReference';
 
 describe('sequelize model', () => {
   describe('model factory', () => {
     describe('init model', () => {
-      let sequelizeInit: (sequelize: Sequelize) => Sequelize;
       let initModel: InitModels;
-      const sequelize: Sequelize = {} as Sequelize;
+      let sequelize: Sequelize;
+      let result: Sequelize;
 
       beforeAll(() => {
-        initModel = {
-          userModel: jest.fn().mockImplementation((_sequelize: Sequelize): void => null),
-          scriptModel: jest.fn().mockImplementation((_sequelize: Sequelize): void => null)
+        const SEQUELIZE_CONFIG: Options = {
+          dialect: EDatabaseDialect.sqlite,
+          storage: null,
+          logging: false,
+          define: {
+            timestamps: true
+          }
         };
-        sequelizeInit = sequelizeInitUnbound.apply(null, [initModel]);
+        sequelize = new Sequelize(SEQUELIZE_CONFIG);
+
+        initModel = {
+          userModel: jest.fn().mockImplementation(initUserModel),
+          scriptModel: jest.fn().mockImplementation(initScriptModel),
+          scriptReferenceModel: jest.fn().mockImplementation(initScriptReferenceModel)
+        };
+
+        result = sequelizeInitUnbound(initModel)(sequelize);
       });
 
       it('Should init User sequelize model', () => {
-        sequelizeInit(sequelize);
-        expect(initModel.userModel).toHaveBeenCalled();
+        expect(initModel.userModel).toHaveBeenCalledTimes(1);
       });
 
       it('Should init Script sequelize model', () => {
-        sequelizeInit(sequelize);
-        expect(initModel.scriptModel).toHaveBeenCalled();
+        expect(initModel.scriptModel).toHaveBeenCalledTimes(1);
+      });
+
+      it('Should init ScriptReference sequelize model', () => {
+        expect(initModel.scriptReferenceModel).toHaveBeenCalledTimes(1);
       });
 
       it('Should return sequelize instance', () => {
-        const result = sequelizeInit(sequelize);
         expect(result).toBeObject;
         expect(result).toStrictEqual(sequelize);
+      });
+
+      it('ScriptReference should have valid \'script\' associations item', () => {
+        expect(ScriptReference.associations).toHaveProperty('script');
+
+        expect(ScriptReference.associations.script).toHaveProperty('associationType');
+        expect(ScriptReference.associations.script.associationType).toEqual('BelongsTo');
+
+        expect(ScriptReference.associations.script).toHaveProperty('foreignKey');
+        expect(ScriptReference.associations.script.foreignKey).toEqual('script_id');
+
+        expect(ScriptReference.associations.script).toHaveProperty('as');
+        expect(ScriptReference.associations.script.as).toEqual('script');
+      });
+
+      it('ScriptReference should have valid \'script\' associations item', () => {
+        expect(Script.associations).toHaveProperty('references');
+
+        expect(Script.associations.references).toHaveProperty('associationType');
+        expect(Script.associations.references.associationType).toEqual('HasMany');
+
+        expect(Script.associations.references).toHaveProperty('as');
+        expect(Script.associations.references.as).toEqual('references');
       });
     });
   });

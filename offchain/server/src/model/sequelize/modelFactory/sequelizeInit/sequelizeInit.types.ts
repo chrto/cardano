@@ -4,4 +4,5 @@ type ModelInit = (sequelize: Sequelize) => void;
 export interface InitModels {
   userModel: ModelInit;
   scriptModel: ModelInit;
+  scriptReferenceModel: ModelInit;
 }
