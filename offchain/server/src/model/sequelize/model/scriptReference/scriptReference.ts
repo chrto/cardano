@@ -36,7 +36,7 @@ export default (sequelize: Sequelize): typeof ScriptReference =>
       },
       address: {
         type: DataTypes.STRING(120),
-        allowNull: false,
+        allowNull: false
       },
       txId: {
         type: DataTypes.STRING(64),
