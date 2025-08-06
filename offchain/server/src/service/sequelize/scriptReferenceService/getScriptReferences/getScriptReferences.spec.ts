@@ -13,7 +13,7 @@ import { PlutusVersion } from 'model/cardano/cardano.types';
 import { TransactionContext } from 'model/sequelize/modelFactory/modelFactory.types';
 
 const SEQUELIZE_CONFIG: Options = {
-  dialect: EDatabaseDialect.sqlite,
+  dialect: EDatabaseDialect.sqlite
 };
 
 const SCRIPT_REFERENCE_ITEMS: ScriptReferenceItems = {
@@ -37,7 +37,7 @@ const INCLUDES: SequelizeIncludes = {
   include: [
     {
       model: Script,
-      as: 'script',
+      as: 'script'
     }
   ]
 };
@@ -55,7 +55,7 @@ describe('Service', () => {
         let scriptReference: ScriptReference;
 
         beforeAll(async () => {
-          initModel = jest.fn().mockImplementation(_ => { });
+          initModel = jest.fn().mockImplementation(_ => null);
           sequelizeInitUnbound({
             scriptModel: initScriptModel,
             scriptReferenceModel: initScriptReferenceModel,

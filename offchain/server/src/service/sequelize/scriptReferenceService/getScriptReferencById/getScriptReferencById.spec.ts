@@ -56,7 +56,7 @@ describe('Service', () => {
         let scriptReference: ScriptReference;
 
         beforeAll(async () => {
-          initModel = jest.fn().mockImplementation(_ => { });
+          initModel = jest.fn().mockImplementation(_ => null);
           sequelizeInitUnbound({
             scriptModel: initScriptModel,
             scriptReferenceModel: initScriptReferenceModel,
@@ -64,7 +64,6 @@ describe('Service', () => {
           })(new Sequelize(SEQUELIZE_CONFIG));
 
           scriptReference = ScriptReference.build({ ...SCRIPT_REFERENCE_ITEMS, script: SCRIPT_ITEMS }, { ...INCLUDES });
-
 
           findByPk = jest.fn().mockResolvedValue(Either.right<AppError, ScriptReference>(scriptReference));
 

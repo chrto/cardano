@@ -14,7 +14,7 @@ import { TransactionContext } from 'model/sequelize/modelFactory/modelFactory.ty
 import { NotFound } from 'common/httpErrors';
 
 const SEQUELIZE_CONFIG: Options = {
-  dialect: EDatabaseDialect.sqlite,
+  dialect: EDatabaseDialect.sqlite
 };
 
 const SCRIPT_REFERENCE_ITEMS: ScriptReferenceItems = {
@@ -38,7 +38,7 @@ const INCLUDES: SequelizeIncludes = {
   include: [
     {
       model: Script,
-      as: 'script',
+      as: 'script'
     }
   ]
 };
@@ -46,7 +46,6 @@ const INCLUDES: SequelizeIncludes = {
 const WHERE: WhereOptions = { address: 'addr_test1wqag3rt979nep9g2wtdwu8mr4gz6m4kjdpp5zp705km8wys6t2kla' };
 
 const CONTEXT: TransactionContext = { transaction: null };
-
 
 describe('Service', () => {
   describe('Sequelize', () => {
@@ -58,7 +57,7 @@ describe('Service', () => {
         let result: Either<AppError, ScriptReference[]>;
 
         beforeAll(async () => {
-          initModel = jest.fn().mockImplementation(_ => { });
+          initModel = jest.fn().mockImplementation(_ => null);
           sequelizeInitUnbound({
             scriptModel: initScriptModel,
             scriptReferenceModel: initScriptReferenceModel,

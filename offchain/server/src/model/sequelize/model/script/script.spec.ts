@@ -9,7 +9,7 @@ import { ScriptReferenceItems } from '../scriptReference/scriptReference.types';
 import { SequelizeIncludes } from 'service/sequelize/types';
 
 const SEQUELIZE_CONFIG: Options = {
-  dialect: EDatabaseDialect.sqlite,
+  dialect: EDatabaseDialect.sqlite
 };
 
 const SCRIPT_REFERENCE_ITEMS: ScriptReferenceItems = {
@@ -33,7 +33,7 @@ const INCLUDES: SequelizeIncludes = {
   include: [
     {
       model: ScriptReference,
-      as: 'references',
+      as: 'references'
     }
   ]
 };
@@ -44,13 +44,12 @@ describe('sequelize model', () => {
   let script: Script;
 
   beforeAll(() => {
-    initModel = jest.fn().mockImplementation(_ => { });
+    initModel = jest.fn().mockReturnValue(null);
     sequelizeInitUnbound({
       scriptModel: initScriptModel,
       scriptReferenceModel: initScriptReferenceModel,
       userModel: initModel
     })(new Sequelize(SEQUELIZE_CONFIG));
-
 
     script = Script.build({ ...SCRIPT_ITEMS, references: [SCRIPT_REFERENCE_ITEMS] }, { ...INCLUDES });
   });

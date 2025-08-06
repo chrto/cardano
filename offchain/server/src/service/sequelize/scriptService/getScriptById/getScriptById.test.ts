@@ -52,7 +52,7 @@ describe('Service', () => {
         let result: Either<AppError, Script>;
 
         beforeAll(async () => {
-          initModel = jest.fn().mockImplementation(_ => { });
+          initModel = jest.fn().mockImplementation(_ => null);
           sequelizeInitUnbound({
             scriptModel: initScriptModel,
             scriptReferenceModel: initScriptReferenceModel,

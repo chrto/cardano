@@ -14,7 +14,7 @@ import { ScriptReferenceItems } from 'model/sequelize/model/scriptReference/scri
 import appLogger from 'logger/appLogger';
 
 const SEQUELIZE_CONFIG: Options = {
-  dialect: EDatabaseDialect.sqlite,
+  dialect: EDatabaseDialect.sqlite
 };
 
 const SCRIPT_REFERENCE_ITEMS: ScriptReferenceItems = {
@@ -38,7 +38,7 @@ const INCLUDES: SequelizeIncludes = {
   include: [
     {
       model: Script,
-      as: 'script',
+      as: 'script'
     }
   ]
 };
@@ -53,7 +53,7 @@ describe('Service', () => {
         let scriptReference: ScriptReference;
 
         beforeAll(async () => {
-          initModel = jest.fn().mockImplementation(_ => { });
+          initModel = jest.fn().mockImplementation(_ => null);
           sequelizeInitUnbound({
             scriptModel: initScriptModel,
             scriptReferenceModel: initScriptReferenceModel,
@@ -88,7 +88,7 @@ describe('Service', () => {
                   script: {
                     ...SCRIPT_ITEMS,
                     createdAt: scriptReferenceItems.script.createdAt,
-                    updatedAt: scriptReferenceItems.script.updatedAt,
+                    updatedAt: scriptReferenceItems.script.updatedAt
                   }
                 });
               },

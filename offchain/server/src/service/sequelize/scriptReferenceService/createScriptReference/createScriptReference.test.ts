@@ -30,12 +30,12 @@ describe('Service', () => {
         let result: Either<AppError, ScriptReference>;
 
         beforeAll(async () => {
-          initModel = jest.fn().mockImplementation(_ => {});
+          initModel = jest.fn().mockImplementation(_ => null);
           sequelizeInitUnbound({
             scriptModel: initScriptModel,
             scriptReferenceModel: initScriptReferenceModel,
             userModel: initModel
-          })(new Sequelize(SEQUELIZE_CONFIG))
+          })(new Sequelize(SEQUELIZE_CONFIG));
         });
 
         describe('Happy path', () => {

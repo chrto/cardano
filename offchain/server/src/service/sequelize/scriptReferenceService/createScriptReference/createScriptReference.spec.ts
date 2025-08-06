@@ -29,12 +29,12 @@ describe('Service', () => {
         let initModel: jest.Mock<void, [Sequelize]>;
 
         beforeAll(async () => {
-          initModel = jest.fn().mockImplementation(_ => {});
+          initModel = jest.fn().mockImplementation(_ => null);
           sequelizeInitUnbound({
             scriptModel: initScriptModel,
             scriptReferenceModel: initScriptReferenceModel,
             userModel: initModel
-          })(new Sequelize(SEQUELIZE_CONFIG))
+          })(new Sequelize(SEQUELIZE_CONFIG));
 
           scriptReference = ScriptReference.build(SCRIPT_REFERENCE_ITEMS);
 
