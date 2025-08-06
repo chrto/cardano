@@ -232,7 +232,7 @@ export default function AccordionScriptsView({ scripts, ref }) {
                 headers={['', '']}
                 values={scriptToDetail(scriptDetail)}
               />
-              <h2>Script Detail</h2>
+              <h2>Script References</h2>
               <Table
                 headers={['txRef', 'address']}
                 values={scriptRefToDetail(scriptDetail.references)}
