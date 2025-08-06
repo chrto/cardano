@@ -14,7 +14,7 @@ const SCRIPT_CONTROLLER: ScriptController = { getScirptAddress: null, getScriptB
 const TRANSACTION_CONTROLLER: TransactionController = { buildTransaction: null, submitTransaction: null };
 
 const AUTH_HANDLERS: AuthorizationHandlers = { allAuthenticated: null, isAdministrator: null };
-const SERVICE: PluginSdkService = { sdkStartStop: null, sdkTransaction: null, authenticationService: null, userService: null, scriptService: null, cardanoService: null, cardanoKupoService: null };
+const SERVICE: PluginSdkService = { sdkStartStop: null, sdkTransaction: null, authenticationService: null, userService: null, scriptService: null, scriptReferenceService: null, cardanoService: null, cardanoKupoService: null };
 const MODULE_CONFIG: ModuleConfig<CardanoContext> = { moduleDefinition: null, router: null, contextFactory: null };
 
 const EXPECTED_MODULE_DEFINITION: ModuleDef<CardanoContext> = {
