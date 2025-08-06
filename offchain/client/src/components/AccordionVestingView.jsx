@@ -81,30 +81,34 @@ export default function AccordionVestingView({ publicKeyHash, scriptUtxos, scrip
 
   return (
     <form className="accordion-form">
-      <AccordionItem title={"Script"} isOpen={openScriptDetail} onToggle={() => setOpenScriptDetail(!openScriptDetail)}>
-        <ScriptDetail scriptAddress={scriptAddress} selectedScript={selectedScript} />
-      </AccordionItem>
+      <div className="partial-content">
+        <AccordionItem title={"Script"} isOpen={openScriptDetail} onToggle={() => setOpenScriptDetail(!openScriptDetail)}>
+          <ScriptDetail scriptAddress={scriptAddress} selectedScript={selectedScript} />
+        </AccordionItem>
+      </div>
 
-      <AccordionItem title={"Script Utxo's After Deadline (" + scriptUtxos.filter(afterDeadline).length + ")"} isOpen={openIndex === 0} onToggle={() => toggle(0)}>
-        <Table
-          headers={['', 'TxHash', 'TxIdx', 'Deadline', 'Value [Ada]']}
-          values={scriptUtxos.filter(afterDeadline).map(convertMineVestingUTxOs)}
-          selectRow={selectUtxo}
-        />
-      </AccordionItem>
-      <AccordionItem title={"Script Utxo's Before Deadline (" + scriptUtxos.filter(beforeDeadline).length + ")"} isOpen={openIndex === 1} onToggle={() => toggle(1)}>
-        <Table
-          headers={['', 'TxHash', 'TxIdx', 'Deadline', 'Value [Ada]']}
-          values={scriptUtxos.filter(beforeDeadline).map(convertMineVestingUTxOs)}
-          selectRow={selectUtxo}
-        />
-      </AccordionItem>
-      <AccordionItem title={"Script Utxo's with other as beneficiaries (" + scriptUtxos.filter(filterOtherVest).length + ")"} isOpen={openIndex === 2} onToggle={() => toggle(2)}>
-        <Table
-          headers={['TxHash', 'TxIdx', 'Beneficiary', 'Deadline', 'Value [Ada]']}
-          values={scriptUtxos.filter(filterOtherVest).map(convertOthersVestingUTxOs)}
-        />
-      </AccordionItem>
+      <div className="partial-content" >
+        <AccordionItem title={"Script Utxo's After Deadline (" + scriptUtxos.filter(afterDeadline).length + ")"} isOpen={openIndex === 0} onToggle={() => toggle(0)}>
+          <Table
+            headers={['', 'TxHash', 'TxIdx', 'Deadline', 'Value [Ada]']}
+            values={scriptUtxos.filter(afterDeadline).map(convertMineVestingUTxOs)}
+            selectRow={selectUtxo}
+          />
+        </AccordionItem>
+        <AccordionItem title={"Script Utxo's Before Deadline (" + scriptUtxos.filter(beforeDeadline).length + ")"} isOpen={openIndex === 1} onToggle={() => toggle(1)}>
+          <Table
+            headers={['', 'TxHash', 'TxIdx', 'Deadline', 'Value [Ada]']}
+            values={scriptUtxos.filter(beforeDeadline).map(convertMineVestingUTxOs)}
+            selectRow={selectUtxo}
+          />
+        </AccordionItem>
+        <AccordionItem title={"Script Utxo's with other as beneficiaries (" + scriptUtxos.filter(filterOtherVest).length + ")"} isOpen={openIndex === 2} onToggle={() => toggle(2)}>
+          <Table
+            headers={['TxHash', 'TxIdx', 'Beneficiary', 'Deadline', 'Value [Ada]']}
+            values={scriptUtxos.filter(filterOtherVest).map(convertOthersVestingUTxOs)}
+          />
+        </AccordionItem>
+      </div>
     </form>
   );
 }

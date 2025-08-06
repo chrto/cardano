@@ -7,12 +7,12 @@ export default function About({publicKeyHash, walletAddress, walletUtxos}) {
   return (
     <div className="app-container">
       <Navbar />
-      <div className="wallet-content">
+      <div className="partial-content">
         <Wallet publicKeyHash={publicKeyHash} walletAddress={walletAddress} walletUtxos  ={walletUtxos} />
         <AccordionWalletView walletUtxos={walletUtxos} />
       </div>
 
-      <div className="main-content">
+      <div className="partial-content">
         <h1>About Page</h1>
       </div>
     </div>

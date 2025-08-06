@@ -27,7 +27,7 @@ function FormVestingClaim({ publicKeyHash, validatorScript, getSelectedScriptUtx
     }
 
     lucidStorage.then(storage =>
-      storage.buildSpendFromContractTx(validatorScript, utxos, { publicKeyHash, validFrom })
+      storage.buildSpendFromContractTx(utxos, { publicKeyHash, validFrom, script: validatorScript })
         .then(storage.signTx)
         .then(storage.submitTx)
         .then(dispatchData(setTxHash))

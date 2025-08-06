@@ -24,10 +24,10 @@ function FormFortyTwoCollect({ validatorScript, getSelectedScriptUtxos, deselect
       return null;
     }
 
-    const options = { redeemer, redeemerType: 'integer' }
+    const options = { redeemer, redeemerType: 'integer', script: validatorScript }
 
     lucidStorage.then(storage =>
-      storage.buildSpendFromContractTx(validatorScript, utxos, options)
+      storage.buildSpendFromContractTx(utxos, options)
         .then(storage.signTx)
         .then(storage.submitTx)
         .then(dispatchData(setTxHash))

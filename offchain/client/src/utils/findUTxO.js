@@ -1,8 +1,8 @@
+import getOutRefFromUTxOKey from './getOutRefFromUTxOKey';
+
 const findUTxO = (utxos, ref) => {
-  const chunks = ref.split('#');
-  const txId = chunks[0];
-  const txIndex = parseInt(chunks[1]);
-  return utxos.find(utxo => utxo.txId === txId && utxo.txIndex === txIndex)
+  const outRef = getOutRefFromUTxOKey(ref)
+  return utxos.find(utxo => utxo.txId === outRef.txHash && utxo.txIndex === outRef.outputIndex)
 }
 
 export default findUTxO

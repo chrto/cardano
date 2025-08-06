@@ -8,13 +8,13 @@ export default function Home({ publicKeyHash, walletAddress, walletUtxos }) {
   return (
     <div className="app-container">
       <Navbar />
-      <div className="wallet-content">
+      <div className="partial-content">
         <Wallet publicKeyHash={publicKeyHash} walletAddress={walletAddress} walletUtxos  ={walletUtxos} />
         <AccordionWalletView walletUtxos={walletUtxos} />
         <AccordionWalletForm walletUtxos={walletUtxos} />
       </div>
 
-      <div className="main-content">
+      <div className="partial-content">
         <h1>Home Page</h1>
       </div>
     </div>
