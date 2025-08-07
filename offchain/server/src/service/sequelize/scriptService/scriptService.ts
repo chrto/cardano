@@ -5,8 +5,9 @@ import deleteScript from './deleteScript/deleteScript';
 import { SequelizeIncludes } from '../types';
 import { ScriptReference } from 'model/sequelize/model/scriptReference/scriptReference';
 import { ScriptService } from './scriptService.types';
+import { SdkTransaction } from 'model/sequelize/modelFactory/modelFactory.types';
 
-export default (): ScriptService => {
+const scriptService = (sdkTransaction: SdkTransaction): ScriptService => {
   const includes: SequelizeIncludes = {
     include: [
       {
@@ -20,6 +21,8 @@ export default (): ScriptService => {
     getScriptById: getScriptById(includes),
     getScripts: getScripts(includes),
     createScript,
-    deleteScript
+    deleteScript: deleteScript(sdkTransaction )
   };
 };
+
+export default scriptService;
