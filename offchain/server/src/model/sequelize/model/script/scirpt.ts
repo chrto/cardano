@@ -1,6 +1,7 @@
-import { DataTypes, Model, Sequelize } from 'sequelize';
+import { Association, DataTypes, HasManyAddAssociationMixin, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin, HasManyRemoveAssociationsMixin, Model, Sequelize } from 'sequelize';
 import { ScriptItems, ScritpCategory } from './script.types';
 import { PlutusVersion, ScriptType, ScriptTypeExt } from 'model/cardano/cardano.types';
+import { ScriptReference } from '../scriptReference/scriptReference';
 
 export class Script extends Model implements ScriptItems {
   public readonly id!: string;
@@ -15,6 +16,18 @@ export class Script extends Model implements ScriptItems {
   // timestamps!
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
+
+  public getScriptReferences: HasManyGetAssociationsMixin<ScriptReference>;
+  public addScriptReference: HasManyAddAssociationMixin<ScriptReference, string>;
+  public hasScriptReference: HasManyHasAssociationMixin<ScriptReference, string>;
+  public countScriptReference: HasManyCountAssociationsMixin;
+  public createScriptReference: HasManyCreateAssociationMixin<ScriptReference>;
+  public deleteScriptReference: HasManyRemoveAssociationsMixin<ScriptReference, string>;
+  public references?: ScriptReference[];
+
+  public static associations: {
+    references: Association<Script, ScriptReference>;
+  };
 }
 
 export default (sequelize: Sequelize): typeof Script =>
