@@ -1,4 +1,4 @@
-import { DataTypes, Model, Sequelize } from 'sequelize';
+import { Association, BelongsToGetAssociationMixin, BelongsToSetAssociationMixin, DataTypes, Model, Sequelize } from 'sequelize';
 import { ScriptReferenceItems } from './scriptReference.types';
 import { TxHash, TxIndex } from 'model/cardano/cardano.types';
 import { Script } from '../script/scirpt';
@@ -11,11 +11,20 @@ export class ScriptReference extends Model implements ScriptReferenceItems {
   public readonly address!: string;
   public readonly txId!: TxHash;
   public readonly txIndex!: TxIndex;
-  public  unspend!: boolean;
+  public unspend!: boolean;
 
   // timestamps!
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
+
+  // associations
+  public getScript: BelongsToGetAssociationMixin<Script>;
+  public setScript: BelongsToSetAssociationMixin<Script, string>;
+  public script: Script;
+
+  public static associations: {
+    script: Association<ScriptReference, Script>;
+  };
 }
 
 export default (sequelize: Sequelize): typeof ScriptReference =>
