@@ -67,6 +67,7 @@ describe('Web Server', () => {
               scriptFactory = jest.fn().mockReturnValue(Either.right(SCRIPT_ITEMS));
               scriptService = {
                 createScript: jest.fn().mockImplementation(() => createScriptExecutor),
+                createScriptReference: null,
                 deleteScript: null,
                 getScripts: null,
                 getScriptById: null
