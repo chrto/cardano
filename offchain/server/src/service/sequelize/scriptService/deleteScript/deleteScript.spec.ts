@@ -29,7 +29,7 @@ const INCLUDES: SequelizeIncludes = {
   include: [
     {
       model: ScriptReference,
-      as: 'references'
+      as: 'scriptReferences'
     }
   ]
 };
@@ -59,7 +59,7 @@ describe('Service', () => {
             userModel: initModel
           })(new Sequelize(SEQUELIZE_CONFIG));
 
-          script = Script.build({ ...ITEMS, references: [] }, { ...INCLUDES });
+          script = Script.build({ ...ITEMS, scriptReferences: [] }, { ...INCLUDES });
           deleteScriptModel = jest.fn().mockResolvedValue(Either.right<AppError, number>(1));
 
           storage = {

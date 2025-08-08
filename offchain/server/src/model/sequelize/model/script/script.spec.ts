@@ -34,7 +34,7 @@ const INCLUDES: SequelizeIncludes = {
   include: [
     {
       model: ScriptReference,
-      as: 'references'
+      as: 'scriptReferences'
     }
   ]
 };
@@ -52,7 +52,7 @@ describe('sequelize model', () => {
       userModel: initModel
     })(new Sequelize(SEQUELIZE_CONFIG));
 
-    script = Script.build({ ...SCRIPT_ITEMS, references: [SCRIPT_REFERENCE_ITEMS] }, { ...INCLUDES });
+    script = Script.build({ ...SCRIPT_ITEMS, scriptReferences: [SCRIPT_REFERENCE_ITEMS] }, { ...INCLUDES });
   });
 
   describe('script', () => {
@@ -82,9 +82,9 @@ describe('sequelize model', () => {
       expect(script).toHaveProperty('createdAt');
       expect(script).toHaveProperty('updatedAt');
 
-      expect(script).toHaveProperty('references');
-      expect(script['references']).toBeArrayOfSize(1);
-      expect(script['references'][0].id).toBe(SCRIPT_REFERENCE_ITEMS.id);
+      expect(script).toHaveProperty('scriptReferences');
+      expect(script['scriptReferences']).toBeArrayOfSize(1);
+      expect(script['scriptReferences'][0].id).toBe(SCRIPT_REFERENCE_ITEMS.id);
     });
 
     it('Should update script items', () => {

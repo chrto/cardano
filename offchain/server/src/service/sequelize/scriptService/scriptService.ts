@@ -12,7 +12,7 @@ const scriptService = (sdkTransaction: SdkTransaction): ScriptService => {
     include: [
       {
         model: ScriptReference,
-        as: 'references'
+        as: 'scriptReferences'
       }
     ]
   };
