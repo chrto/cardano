@@ -69,6 +69,7 @@ describe('Web Server', () => {
               getScriptsExecutor = jest.fn().mockResolvedValue(Either.right(scripts.filter(script => script.category === req.query.category)));
               scriptService = {
                 getScripts: jest.fn().mockImplementation(() => getScriptsExecutor),
+                createScriptReference: null,
                 getScriptById: null,
                 createScript: null,
                 deleteScript: null

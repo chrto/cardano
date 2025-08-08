@@ -32,7 +32,7 @@ describe('Web Server', () => {
 
                 result = await deleteScriptUnbound
                   ()
-                  ({ deleteScript, createScript: null, getScripts: null, getScriptById: null })
+                  ({ deleteScript, createScript: null, createScriptReference: null, getScripts: null, getScriptById: null })
                   (context, null, null);
               });
 
@@ -70,7 +70,7 @@ describe('Web Server', () => {
 
                   result = await deleteScriptUnbound
                     ()
-                    ({ deleteScript, createScript: null, getScripts: null, getScriptById: null })
+                    ({ deleteScript, createScript: null, createScriptReference: null, getScripts: null, getScriptById: null })
                     (context, null, null);
                 });
 
