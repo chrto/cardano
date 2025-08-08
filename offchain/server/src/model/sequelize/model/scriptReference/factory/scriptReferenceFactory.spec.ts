@@ -14,11 +14,29 @@ describe('sequelize model', () => {
         scriptId: 'f0962fc9-882d-416d-bc08-fed1d5aa3a36',
         address: 'addr_test1wqag3rt979nep9g2wtdwu8mr4gz6m4kjdpp5zp705km8wys6t2kla',
         txId: '82e75104c2ffcab389fae6a9c87ebbe99e83cd7826d02534e77783b12c62e467',
-        txIndex: 0,
-        unspend: true
+        txIndex: 0
       };
 
       it('Should return script reference items in right side', () => {
+        const expected: ScriptReferenceItems = {
+          id: UUID,
+          scriptId: 'f0962fc9-882d-416d-bc08-fed1d5aa3a36',
+          address: 'addr_test1wqag3rt979nep9g2wtdwu8mr4gz6m4kjdpp5zp705km8wys6t2kla',
+          txId: '82e75104c2ffcab389fae6a9c87ebbe99e83cd7826d02534e77783b12c62e467',
+          txIndex: 0,
+          unspend: false
+        };
+
+        scriptFactory({ ...scriptReferenceRequired, unspend: false })
+          .do({
+            right: (items: ScriptReferenceItems) =>
+              expect(items).toStrictEqual(expected),
+            left: (error: AppError) =>
+              fail(`Left side has not been expected: ${error.message}`)
+          });
+      });
+
+      it('Should set unspend item to true and return script reference items in right side', () => {
         const expected: ScriptReferenceItems = {
           id: UUID,
           scriptId: 'f0962fc9-882d-416d-bc08-fed1d5aa3a36',
