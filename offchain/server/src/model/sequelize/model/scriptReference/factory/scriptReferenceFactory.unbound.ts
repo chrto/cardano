@@ -6,5 +6,6 @@ export default (uuidGenrator: () => string) =>
   (scriptReferenceRequired: ScriptReferenceRequired): Either<AppError, ScriptReferenceItems> =>
     Either.right<AppError, ScriptReferenceItems>({
       id: uuidGenrator(),
+      unspend: scriptReferenceRequired.hasOwnProperty('unspend') ? scriptReferenceRequired.unspend : true,
       ...scriptReferenceRequired
     });

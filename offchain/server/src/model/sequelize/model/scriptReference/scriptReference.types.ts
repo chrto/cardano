@@ -8,7 +8,7 @@ export interface ScriptReferenceRequired extends CreationAttributes<ScriptRefere
   address: Address;
   txId: TxHash;
   txIndex: TxIndex;
-  unspend: boolean;
+  unspend?: boolean;
 }
 
 export interface ScriptReferenceItems extends Mandatory<ScriptReferenceRequired> {
