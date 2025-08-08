@@ -64,13 +64,13 @@ describe('sequelize model', () => {
       });
 
       it('ScriptReference should have valid \'script\' associations item', () => {
-        expect(Script.associations).toHaveProperty('references');
+        expect(Script.associations).toHaveProperty('scriptReferences');
 
-        expect(Script.associations.references).toHaveProperty('associationType');
-        expect(Script.associations.references.associationType).toEqual('HasMany');
+        expect(Script.associations.scriptReferences).toHaveProperty('associationType');
+        expect(Script.associations.scriptReferences.associationType).toEqual('HasMany');
 
-        expect(Script.associations.references).toHaveProperty('as');
-        expect(Script.associations.references.as).toEqual('references');
+        expect(Script.associations.scriptReferences).toHaveProperty('as');
+        expect(Script.associations.scriptReferences.as).toEqual('scriptReferences');
       });
     });
   });

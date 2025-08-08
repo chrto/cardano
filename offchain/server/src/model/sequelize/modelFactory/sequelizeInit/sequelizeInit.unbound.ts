@@ -9,8 +9,8 @@ export default (initModel: InitModels) =>
     initModel.scriptModel(sequelize);
     initModel.scriptReferenceModel(sequelize);
 
+    Script.hasMany(ScriptReference, { as: 'scriptReferences' });
     ScriptReference.belongsTo(Script, { as: 'script', foreignKey: 'scriptId' });
-    Script.hasMany(ScriptReference, { as: 'references' });
 
     return sequelize;
   };

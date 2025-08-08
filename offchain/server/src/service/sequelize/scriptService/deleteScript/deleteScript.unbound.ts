@@ -12,12 +12,12 @@ import { Conflict } from 'common/httpErrors';
 import { Fcn } from 'common/types';
 
 const hasNoUnspendRefs = (script: Script): boolean =>
-  script.references.filter((ref: ScriptReference) => ref.unspend).length === 0;
+  script.scriptReferences.filter((ref: ScriptReference) => ref.unspend).length === 0;
 
 const remove = (context: TransactionContext, destroy: Fcn<[DestroyOptions], Promise<Either<AppError, number>>>) =>
   async (script: Script): Promise<Either<AppError, number>> =>
     Promise.resolve(Either.right<AppError, Script>(script))
-      .then(bind(makeSure(hasNoUnspendRefs, new Conflict('This script has unspend references. Can not be deleted!'))))
+      .then(bind(makeSure(hasNoUnspendRefs, new Conflict('This script has unspend ScriptReferences. Can not be deleted!'))))
       .then(asyncBind((script: Script) => destroy({ where: { id: script.id }, ...context })));
 
 export default ({ destroy }: SequelizeStorage<Script>) =>

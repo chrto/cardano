@@ -39,7 +39,7 @@ const INCLUDES: SequelizeIncludes = {
   include: [
     {
       model: ScriptReference,
-      as: 'references'
+      as: 'scriptReferences'
     }
   ]
 };
@@ -63,10 +63,10 @@ describe('Service', () => {
             userModel: initModel
           })(new Sequelize(SEQUELIZE_CONFIG));
 
-          script = Script.build({ ...SCRIPT_ITEMS, references: [SCRIPT_REFERENCE_ITEMS] }, { ...INCLUDES });
+          script = Script.build({ ...SCRIPT_ITEMS, scriptReferences: [SCRIPT_REFERENCE_ITEMS] }, { ...INCLUDES });
           findAll = jest.fn().mockResolvedValue(Either.right<AppError, Script[]>([script]));
 
-          script = Script.build({ ...SCRIPT_ITEMS, references: [SCRIPT_REFERENCE_ITEMS] }, { ...INCLUDES });
+          script = Script.build({ ...SCRIPT_ITEMS, scriptReferences: [SCRIPT_REFERENCE_ITEMS] }, { ...INCLUDES });
 
           await getScriptsUnbound
             ({ create: null, findAll, findOne: null, findAndCountAll: null, findByPk: null, update: null, updateByPk: null, bulkCreate: null, destroy: null })

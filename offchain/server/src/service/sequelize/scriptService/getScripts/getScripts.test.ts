@@ -40,7 +40,7 @@ const INCLUDES: SequelizeIncludes = {
   include: [
     {
       model: ScriptReference,
-      as: 'references'
+      as: 'scriptReferences'
     }
   ]
 };
@@ -65,7 +65,7 @@ describe('Service', () => {
             userModel: initModel
           })(new Sequelize(SEQUELIZE_CONFIG));
 
-          script = Script.build({ ...SCRIPT_ITEMS, references: [SCRIPT_REFERENCE_ITEMS] }, { ...INCLUDES });
+          script = Script.build({ ...SCRIPT_ITEMS, scriptReferences: [SCRIPT_REFERENCE_ITEMS] }, { ...INCLUDES });
         });
 
         describe('Happy path', () => {
@@ -89,10 +89,10 @@ describe('Service', () => {
                   ...SCRIPT_ITEMS,
                   createdAt: scriptItems.createdAt,
                   updatedAt: scriptItems.updatedAt,
-                  references: [{
+                  scriptReferences: [{
                     ...SCRIPT_REFERENCE_ITEMS,
-                    createdAt: scriptItems.references[0].createdAt,
-                    updatedAt: scriptItems.references[0].updatedAt
+                    createdAt: scriptItems.scriptReferences[0].createdAt,
+                    updatedAt: scriptItems.scriptReferences[0].updatedAt
                   }]
                 });
               },
