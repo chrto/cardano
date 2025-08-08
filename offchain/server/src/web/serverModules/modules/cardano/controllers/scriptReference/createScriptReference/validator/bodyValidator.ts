@@ -14,7 +14,7 @@ const BODY_CHECK: Validator<ScriptReferenceBody>[] = [
   check(body => isMissing(body.scriptId) || isUUID(body.scriptId), 'scriptId is not valid UUID'),
   check(body => !isMissing(body.address), 'Missing mandatory property address'),
   check(body => !isMissing(body.txId), 'Missing mandatory property txId'),
-  check(body => !isMissing(body.txIndex), 'Missing mandatory property txIndex'),
+  check(body => !isMissing(body.txIndex), 'Missing mandatory property txIndex')
 ];
 
 export default (body: ScriptReferenceBody): Either<AppError, ScriptReferenceBody> =>

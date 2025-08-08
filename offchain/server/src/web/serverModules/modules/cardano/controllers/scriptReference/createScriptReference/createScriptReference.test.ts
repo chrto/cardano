@@ -93,7 +93,7 @@ describe('Web Server', () => {
                     expect(scriptReference).toStrictEqual({
                       ...SCRIPT_REFERENCE_ITEMS,
                       createdAt: scriptReference.createdAt,
-                      updatedAt: scriptReference.updatedAt,
+                      updatedAt: scriptReference.updatedAt
                     });
 
                   },
