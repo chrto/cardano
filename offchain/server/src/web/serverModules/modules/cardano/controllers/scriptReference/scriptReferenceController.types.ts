@@ -9,5 +9,6 @@ import { ScriptReferenceBody as CreateScriptReferenceBody } from './createScript
 import { ScriptReference } from 'model/sequelize/model/scriptReference/scriptReference';
 
 export interface ScriptReferenceController {
+  getScriptReferenceById: (ctx: Context, req: AppRequest<unknown, RequestImplicits, ExpressQuery>, res: Response) => Promise<Either<AppError, ScriptReference>>;
   createScriptReference: (ctx: Context, req: AppRequest<unknown, RequestImplicits, ExpressQuery, CreateScriptReferenceBody>, res: Response) => Promise<Either<AppError, ScriptReference>>;
 }
