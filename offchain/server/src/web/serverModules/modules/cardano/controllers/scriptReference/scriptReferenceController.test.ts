@@ -15,8 +15,10 @@ describe('Web Server', () => {
 
           it('Happy path', () => {
             expect(controller).toBeObject();
-            expect(Object.keys(controller)).toBeArrayOfSize(1);
+            expect(Object.keys(controller)).toBeArrayOfSize(3);
 
+            expect(controller).toHaveProperty('getScriptReferenceById');
+            expect(controller).toHaveProperty('getScriptReferences');
             expect(controller).toHaveProperty('createScriptReference');
           });
         });
