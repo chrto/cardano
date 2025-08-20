@@ -5,16 +5,18 @@ import { ModuleParams } from '../../paramHandlers/paramHandlers.types';
 import { CardanoModuleControllers } from '../../controllers/controllers.types';
 import { AddressController } from '../../controllers/address/addressController.types';
 import { ScriptController } from '../../controllers/script/scriptController.types';
+import { ScriptReferenceController } from '../../controllers/scriptReference/scriptReferenceController.types';
 import { TransactionController } from '../../controllers/transaction/transactionController.types';
 
 export default (
-  { addressController, scriptController, transactionController }: CardanoModuleControllers,
+  { addressController, scriptController, scriptReferenceController, transactionController }: CardanoModuleControllers,
   { allAuthenticated }: AuthorizationHandlers
 ) =>
   <CTX> (service: PluginSdkService) =>
     (moduleConfig: ModuleConfig<CTX>): ModuleConfig<CTX> => {
       const { getUTxOs, getDetails, getCredentialPayment }: AddressController = addressController(service);
-      const { getScirptAddress, createScript, getScripts, getScriptById, deleteScript }: ScriptController = scriptController(service);
+      const { getScirptAddress, createScript, getScripts, getScriptById, deleteScript, addScriptReference }: ScriptController = scriptController(service);
+      const { getScriptReferences, getScriptReferenceById, createScriptReference }: ScriptReferenceController = scriptReferenceController(service);
       const { buildTransaction, submitTransaction }: TransactionController = transactionController(service);
 
       return {
@@ -64,9 +66,28 @@ export default (
             delete: {
               action: deleteScript,
               authorization: allAuthenticated
+            },
+            post: {
+              action: addScriptReference,
+              authorization: allAuthenticated
             }
           },
-
+          [`/scriptReferences`]: {
+            get: {
+              action: getScriptReferences,
+              authorization: allAuthenticated
+            },
+            post: {
+              action: createScriptReference,
+              authorization: allAuthenticated
+            }
+          },
+          [`/scriptReferences/:${ModuleParams.scriptReferenceId}`]: {
+            get: {
+              action: getScriptReferenceById,
+              authorization: allAuthenticated
+            }
+          },
           [`/transaction/build`]: {
             post: {
               action: buildTransaction,
