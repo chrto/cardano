@@ -10,7 +10,7 @@ import { AddressController } from '../../controllers/address/addressController.t
 import { TransactionController } from '../../controllers/transaction/transactionController.types';
 
 const ADDRESS_CONTROLLER: AddressController = { getUTxOs: null, getDetails: null, getCredentialPayment: null };
-const SCRIPT_CONTROLLER: ScriptController = { getScirptAddress: null, getScriptById: null, getScripts: null, createScript: null, deleteScript: null };
+const SCRIPT_CONTROLLER: ScriptController = { getScirptAddress: null, getScriptById: null, getScripts: null, createScript: null, deleteScript: null, addScriptReference: null };
 const TRANSACTION_CONTROLLER: TransactionController = { buildTransaction: null, submitTransaction: null };
 
 const AUTH_HANDLERS: AuthorizationHandlers = { allAuthenticated: null, isAdministrator: null };

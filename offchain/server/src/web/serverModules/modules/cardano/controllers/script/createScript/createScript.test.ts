@@ -4,8 +4,8 @@ import doer from 'utils/monad/either/do/doer';
 import appLogger from 'logger/appLogger';
 import scriptService from 'service/sequelize/scriptService/scriptService';
 import initScriptModel, { Script } from 'model/sequelize/model/script/scirpt';
-import { User } from 'model/sequelize/model/user/user';
 import { Response } from 'express';
+import { Query as ExpressQuery } from 'express-serve-static-core';
 import { Sequelize, Transaction } from 'sequelize';
 import { DEFAULT_DB_DIALECT } from 'src/defaults';
 import { AppError } from 'common/error';
@@ -20,7 +20,7 @@ import { PlutusVersion } from 'model/cardano/cardano.types';
 import { SdkTransaction } from 'model/sequelize/modelFactory/modelFactory.types';
 import { Either } from 'tsmonad';
 
-type AppReq = AppRequest<User, RequestImplicits, unknown, ScriptBody>;
+type AppReq = AppRequest<unknown, RequestImplicits, ExpressQuery, ScriptBody>;
 const UUID: string = '92b814ed-1aff-46c1-b669-0c9fd2ea81a3';
 const SCRIPT_REQUIRED: ScriptRequired = {
   type: PlutusVersion.PlutusV2,
@@ -57,6 +57,7 @@ describe('Web Server', () => {
             let sequelize: Sequelize;
             let script: Script;
             let createScript;
+
             beforeAll(() => {
               appLogger.error = (_) => appLogger; // disable logger
               sequelize = new Sequelize(null, null, null, { dialect: DEFAULT_DB_DIALECT });
