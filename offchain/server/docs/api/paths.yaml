@@ -91,8 +91,7 @@
 
   post:
     summary: Create new cardano script
-    security:
-      - bearerAuth: []
+    security: []
     description: >-
       Add new scritp into DB
     operationId: createScript
@@ -173,7 +172,135 @@
         $ref: "#/components/responses/40x_Conflict"
       500:
         $ref: "#/components/responses/500_InternalServerError"
+  post:
+    summary: Add new cardano script reference to script
+    security: []
+    description: >-
+      Add new scritp reference into DB
+    operationId: addScriptReference
+    tags: [Cardano]
+    parameters:
+      - $ref: "#/components/parameters/uuid"
+    requestBody:
+      description: ""
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - address
+              - txId
+              - txIndex
+            properties:
+              address:
+                type: string
+                description: cardano address
+              txId:
+                type: string
+                description: Transaction hash
+              txIndex:
+                type: integer
+                format: int32
+                description: Transaction index
+              unspend:
+                type: boolean
+                description: Identify, if UTxO has been already spend, or not. Default is unspend [true].
+            example:
+              address: addr_test1wpqlfqjt8czqmd6dqxrxvdr8tp8gt4a8xg40d6jzs9wx7fg93pm8a
+              txId: 2f7aa1871f675a0bcd00e5ee703038550154f924e4f5fe56a5702a03af269261
+              txIndex: 1
+    responses:
+      201:
+        $ref: "#/components/responses/ScriptReferenceCreateResponse"
+      400:
+        $ref: "#/components/responses/40x_BadRequest"
+      409:
+        $ref: "#/components/responses/40x_Conflict"
+      500:
+        $ref: "#/components/responses/500_InternalServerError"
 
+/cardano/scriptReferences:
+  get:
+    summary: Get scripts references
+    security: []
+    description: >-
+      Receive all script references stored in DB
+    operationId: getScriptReferences
+    tags: [Cardano]
+    parameters:
+      - $ref: "#/components/parameters/cardano_script_id"
+      - $ref: "#/components/parameters/cardano_address"
+      - $ref: "#/components/parameters/cardano_unspend"
+    responses:
+      200:
+        $ref: "#/components/responses/ScriptReferenceListResponse"
+      400:
+        $ref: "#/components/responses/40x_BadRequest"
+      500:
+        $ref: "#/components/responses/500_InternalServerError"
+  post:
+    summary: Create new cardano script reference
+    security: []
+    description: >-
+      Add new scritp reference into DB
+    operationId: createScriptReference
+    tags: [Cardano]
+    requestBody:
+      description: ""
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - address
+              - txId
+              - txIndex
+            properties:
+              address:
+                type: string
+                description: cardano address
+              txId:
+                type: string
+                description: Transaction hash
+              txIndex:
+                type: integer
+                format: int32
+                description: Transaction index
+              unspend:
+                type: boolean
+                description: Identify, if UTxO has been already spend, or not. Default is unspend [true].
+            example:
+              address: addr_test1wpqlfqjt8czqmd6dqxrxvdr8tp8gt4a8xg40d6jzs9wx7fg93pm8a
+              txId: 2f7aa1871f675a0bcd00e5ee703038550154f924e4f5fe56a5702a03af269261
+              txIndex: 1
+    responses:
+      201:
+        $ref: "#/components/responses/ScriptReferenceCreateResponse"
+      400:
+        $ref: "#/components/responses/40x_BadRequest"
+      409:
+        $ref: "#/components/responses/40x_Conflict"
+      500:
+        $ref: "#/components/responses/500_InternalServerError"
+
+/cardano/scriptReferences/{id}:
+  get:
+    summary: List detailed cardano script reference resource
+    security: []
+    operationId: getScriptReference
+    description: Get cardano script reference entity
+    tags: [Cardano]
+    parameters:
+      - $ref: "#/components/parameters/uuid"
+    responses:
+      200:
+        $ref: "#/components/responses/ScriptReferenceResponse"
+      404:
+        $ref: "#/components/responses/40x_NotFound"
+      500:
+        $ref: "#/components/responses/500_InternalServerError"
 # Portal endpoints
 /portal/user/basic-info:
   get:

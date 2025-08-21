@@ -5,8 +5,9 @@ import createUser from './createUser/createUser';
 import updateUser from './updateUser/updateUser';
 import deleteUser from './deleteUser/deleteUser';
 import { SequelizeIncludes } from '../types';
+import { UserService } from './userService.types';
 
-export default () => {
+export default (): UserService => {
   const includes: SequelizeIncludes = {
     include: []
   };

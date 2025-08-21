@@ -70,6 +70,7 @@ describe('Web Server', () => {
               getScriptsExecutor = jest.fn().mockResolvedValue(Either.right(scripts));
               scriptService = {
                 getScripts: jest.fn().mockImplementation(() => getScriptsExecutor),
+                createScriptReference: null,
                 getScriptById: null,
                 createScript: null,
                 deleteScript: null

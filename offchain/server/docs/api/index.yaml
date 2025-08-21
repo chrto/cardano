@@ -67,7 +67,7 @@ components:
       in: query
       name: type
       description: >-
-        Cardano Scirtpt type.
+        Cardano Script type.
       schema:
         type: string
         enum: [PlutusV1, PlutusV2, PlutusV3, Native]
@@ -77,7 +77,7 @@ components:
       in: query
       name: type
       description: >-
-        Cardano Scirtpt type.
+        Cardano Script type.
       schema:
         type: string
         enum: [PlutusV1, PlutusV2, PlutusV3, Native]
@@ -88,11 +88,39 @@ components:
       in: query
       name: category
       description: >-
-        Cardano Scirtpt category.
+        Cardano Script category.
       schema:
         type: string
         enum: [Gift, Burn, FortyTwo, Vesting]
         example: "PlutusV2"
+
+    cardano_script_id:
+      in: query
+      name: scriptId
+      description: >-
+        Cardano Script Id.
+      schema:
+        type: string
+        format: uuid
+        example: "11111111-1111-1111-1111-111111111111"
+
+    cardano_address:
+      in: query
+      name: address
+      description: >-
+        Cardano Address.
+      schema:
+        type: string
+        example: "addr_test1wpqlfqjt8czqmd6dqxrxvdr8tp8gt4a8xg40d6jzs9wx7fg93pm8a"
+
+    cardano_unspend:
+      in: query
+      name: unspend
+      description: >-
+        Cardano UTxO unspend/spend.
+      schema:
+        type: boolean
+        example: true
 
   schemas:
     UUID:
@@ -189,9 +217,34 @@ components:
           type: string
         description:
           type: string
-        createdAt:
+        created_at:
           $ref: "#/components/schemas/DATE"
-        updatedAt:
+        updated_at:
+          $ref: "#/components/schemas/DATE"
+
+    ScriptReference:
+      type: object
+      properties:
+        id:
+          allOf:
+            - $ref: "#/components/schemas/UUID"
+            - description: "Unique identification of the cardano script reference."
+        scriptId:
+          allOf:
+            - $ref: "#/components/schemas/UUID"
+            - description: "Unique identification of the cardano script."
+        address:
+          type: string
+        txId:
+          type: string
+        txIndex:
+          type: integer
+          format: int32
+        unspend:
+          type: boolean
+        created_at:
+          $ref: "#/components/schemas/DATE"
+        updated_at:
           $ref: "#/components/schemas/DATE"
 
     # Portal
@@ -213,9 +266,9 @@ components:
         role:
           type: string
           enum: [User, Admin]
-        createdAt:
+        created_at:
           $ref: "#/components/schemas/DATE"
-        updatedAt:
+        updated_at:
           $ref: "#/components/schemas/DATE"
 
   responses:

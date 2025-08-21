@@ -4,9 +4,9 @@ import doer from 'utils/monad/either/do/doer';
 import appLogger from 'logger/appLogger';
 import scriptService from 'service/sequelize/scriptService/scriptService';
 import initScriptModel, { Script } from 'model/sequelize/model/script/scirpt';
-import { User } from 'model/sequelize/model/user/user';
 import { Response } from 'express';
-import { Sequelize } from 'sequelize';
+import { Query as ExpressQuery } from 'express-serve-static-core';
+import { Sequelize, Transaction } from 'sequelize';
 import { DEFAULT_DB_DIALECT } from 'src/defaults';
 import { AppError } from 'common/error';
 import { AppRequest } from 'web/serverModules/types';
@@ -17,8 +17,10 @@ import scriptFactory from 'model/sequelize/model/script/factory/scriptFactory';
 import sanitizeModel from 'model/sequelize/sanitizeModel/sanitizeModel';
 import { ScriptItems, ScriptRequired, ScritpCategory } from 'model/sequelize/model/script/script.types';
 import { PlutusVersion } from 'model/cardano/cardano.types';
+import { SdkTransaction } from 'model/sequelize/modelFactory/modelFactory.types';
+import { Either } from 'tsmonad';
 
-type AppReq = AppRequest<User, RequestImplicits, unknown, ScriptBody>;
+type AppReq = AppRequest<unknown, RequestImplicits, ExpressQuery, ScriptBody>;
 const UUID: string = '92b814ed-1aff-46c1-b669-0c9fd2ea81a3';
 const SCRIPT_REQUIRED: ScriptRequired = {
   type: PlutusVersion.PlutusV2,
@@ -35,6 +37,14 @@ const SCRIPT_ITEMS: ScriptItems = {
   ...SCRIPT_REQUIRED
 };
 
+const TRANSACTION = {} as Transaction;
+
+const SDK_TRANSACTION: SdkTransaction = {
+  begin: () => Promise.resolve(TRANSACTION),
+  commitOrRollback: (_tx: Transaction) => <T> (valOrErr: Either<AppError, T>) => Promise.resolve(valOrErr),
+  rollback: (_tx: Transaction) => (err: AppError) => Promise.reject(err)
+};
+
 describe('Web Server', () => {
   describe('Modules', () => {
     describe('Caredano', () => {
@@ -47,6 +57,7 @@ describe('Web Server', () => {
             let sequelize: Sequelize;
             let script: Script;
             let createScript;
+
             beforeAll(() => {
               appLogger.error = (_) => appLogger; // disable logger
               sequelize = new Sequelize(null, null, null, { dialect: DEFAULT_DB_DIALECT });
@@ -58,8 +69,8 @@ describe('Web Server', () => {
               };
 
               createScript = createScriptUnbound
-                .apply(null, [bodyValidator, scriptFactory, sanitizeModel])
-                .apply(null, [scriptService()]);
+                (bodyValidator, scriptFactory, sanitizeModel)
+                (scriptService(SDK_TRANSACTION));
             });
 
             describe('Happy paty', () => {

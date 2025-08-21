@@ -6,8 +6,8 @@ CREATE TABLE IF NOT EXISTS users (
     `email` VARCHAR(50) NOT NULL,
     `active` TINYINT(1) NOT NULL DEFAULT 1,
     `role` VARCHAR(10) NOT NULL DEFAULT 'User' check (role in ('Admin', 'User')),
-    `createdAt` DATETIME NOT NULL,
-    `updatedAt` DATETIME NOT NULL,
+    `created_at` DATETIME NOT NULL,
+    `updated_at` DATETIME NOT NULL,
     constraint uq_users_email UNIQUE (email)
 );
 
@@ -17,8 +17,20 @@ CREATE TABLE IF NOT EXISTS scripts (
     `script` VARCHAR NOT NULL,
     `category` VARCHAR(15) NOT NULL check (category in ('Burn', 'Gift', 'FortyTwo', 'Vesting', 'Unknown')),
     `title` TINYINT(25) NOT NULL,
-    `description` TINYINT(100),
-    `createdAt` DATETIME NOT NULL,
-    `updatedAt` DATETIME NOT NULL,
-    constraint uq_scripts_script UNIQUE (script)
+    `description` TINYINT(1000),
+    `created_at` DATETIME NOT NULL,
+    `updated_at` DATETIME NOT NULL,
+    constraint uq_scripts_script UNIQUE (script),
+    constraint uq_scripts_title UNIQUE (title)
+);
+
+CREATE TABLE IF NOT EXISTS script_references (
+    `id` UUID PRIMARY KEY NOT NULL,
+	`script_id` UUID NOT NULL,
+    `address` VARCHAR(120) NOT NULL,
+    `tx_id` VARCHAR(120) NOT NULL,
+    `tx_index` INT NOT NULL,
+    `unspend` BIT NOT NULL,
+    `created_at` DATETIME NOT NULL,
+    `updated_at` DATETIME NOT NULL
 );

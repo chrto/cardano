@@ -1,8 +1,9 @@
 import deleteScriptUnbound from './deleteScript.unbound';
 import appLogger from 'logger/appLogger';
+import sequelizeInitUnbound from 'model/sequelize/modelFactory/sequelizeInit/sequelizeInit.unbound';
+import initScriptReferenceModel from 'model/sequelize/model/scriptReference/scriptReference';
 import initScriptModel, { Script } from 'model/sequelize/model/script/scirpt';
-import { Sequelize } from 'sequelize';
-import { DEFAULT_DB_DIALECT } from 'src/defaults';
+import { Options, Sequelize, Transaction } from 'sequelize';
 import { Context } from '../../../context/context.types';
 import { Either } from 'tsmonad';
 import { AppError } from 'common/error';
@@ -10,6 +11,14 @@ import { DeletedScript } from './deleteScript.types';
 import { ScriptItems, ScritpCategory } from 'model/sequelize/model/script/script.types';
 import { PlutusVersion } from 'model/cardano/cardano.types';
 import scriptService from 'service/sequelize/scriptService/scriptService';
+import { SdkTransaction } from 'model/sequelize/modelFactory/modelFactory.types';
+import { SequelizeIncludes } from 'service/sequelize/types';
+import { ScriptReference } from 'model/sequelize/model/scriptReference/scriptReference';
+import { EDatabaseDialect } from 'web/server/configuration/loader/database/databaseConfig.types';
+
+const SEQUELIZE_CONFIG: Options = {
+  dialect: EDatabaseDialect.sqlite
+};
 
 const ITEMS: ScriptItems = {
   id: 'f923b2c9-ffcf-4a0a-bdc9-a4a4ae2a687e',
@@ -20,23 +29,43 @@ const ITEMS: ScriptItems = {
   description: 'Example of gift script from PPP'
 };
 
+const INCLUDES: SequelizeIncludes = {
+  include: [
+    {
+      model: ScriptReference,
+      as: 'scriptReferences'
+    }
+  ]
+};
+
+const TRANSACTION = {} as Transaction;
+
+const SDK_TRANSACTION: SdkTransaction = {
+  begin: () => Promise.resolve(TRANSACTION),
+  commitOrRollback: (_tx: Transaction) => <T> (valOrErr: Either<AppError, T>) => Promise.resolve(valOrErr),
+  rollback: (_tx: Transaction) => (err: AppError) => Promise.reject(err)
+};
+
 describe('Web Server', () => {
   describe('Modules', () => {
     describe('Cardano', () => {
       describe('controller', () => {
         describe('script controller', () => {
           describe('delete script by id', () => {
-            let sequelize: Sequelize;
+            let initModel: jest.Mock<void, [Sequelize]>;
             let script: Script;
             let context: Context;
             let result: Either<AppError, DeletedScript>;
 
             beforeAll(async () => {
               appLogger.error = (_) => appLogger; // disable logger
-
-              sequelize = new Sequelize(null, null, null, { dialect: DEFAULT_DB_DIALECT });
-              initScriptModel(sequelize);
-              script = Script.build(ITEMS);
+              initModel = jest.fn().mockImplementation(_ => null);
+              sequelizeInitUnbound({
+                scriptModel: initScriptModel,
+                scriptReferenceModel: initScriptReferenceModel,
+                userModel: initModel
+              })(new Sequelize(SEQUELIZE_CONFIG));
+              script = Script.build({ ...ITEMS, scriptReferences: [] }, { ...INCLUDES });
             });
 
             describe('Happy path', () => {
@@ -47,7 +76,7 @@ describe('Web Server', () => {
 
                 result = await deleteScriptUnbound
                   ()
-                  (scriptService())
+                  (scriptService(SDK_TRANSACTION))
                   (context, null, null);
               });
 
@@ -55,7 +84,7 @@ describe('Web Server', () => {
                 expect(Script.destroy)
                   .toHaveBeenCalledTimes(1);
                 expect(Script.destroy)
-                  .toHaveBeenCalledWith({ where: { id: script.id }, ...{} });
+                  .toHaveBeenCalledWith({ where: { id: script.id }, transaction: TRANSACTION });
               });
 
               it(`Should return Either with exact object in right side`, () => {
@@ -80,7 +109,7 @@ describe('Web Server', () => {
 
                   result = await deleteScriptUnbound
                     ()
-                    (scriptService())
+                    (scriptService(SDK_TRANSACTION))
                     (context, null, null);
                 });
 

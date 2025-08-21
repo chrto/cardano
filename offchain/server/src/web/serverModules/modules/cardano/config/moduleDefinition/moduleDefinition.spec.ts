@@ -8,13 +8,15 @@ import { PluginSdkService } from 'service/serviceFactory/serviceFactory.types';
 import { ModuleDef } from 'web/serverModules/configuration/routes/register/registerRoutes.types';
 import { AddressController } from '../../controllers/address/addressController.types';
 import { TransactionController } from '../../controllers/transaction/transactionController.types';
+import { ScriptReferenceController } from '../../controllers/scriptReference/scriptReferenceController.types';
 
 const ADDRESS_CONTROLLER: AddressController = { getUTxOs: null, getDetails: null, getCredentialPayment: null };
-const SCRIPT_CONTROLLER: ScriptController = { getScirptAddress: null, getScriptById: null, getScripts: null, createScript: null, deleteScript: null };
+const SCRIPT_CONTROLLER: ScriptController = { getScirptAddress: null, getScriptById: null, getScripts: null, createScript: null, deleteScript: null, addScriptReference: null };
+const SCRIPT_REFERENCE_CONTROLLER: ScriptReferenceController = { getScriptReferences: null, getScriptReferenceById: null, createScriptReference: null };
 const TRANSACTION_CONTROLLER: TransactionController = { buildTransaction: null, submitTransaction: null };
 
 const AUTH_HANDLERS: AuthorizationHandlers = { allAuthenticated: null, isAdministrator: null };
-const SERVICE: PluginSdkService = { sdkStartStop: null, sdkTransaction: null, authenticationService: null, userService: null, scriptService: null, cardanoService: null, cardanoKupoService: null };
+const SERVICE: PluginSdkService = { sdkStartStop: null, sdkTransaction: null, authenticationService: null, userService: null, scriptService: null, scriptReferenceService: null, cardanoService: null, cardanoKupoService: null };
 const MODULE_CONFIG: ModuleConfig<CardanoContext> = { moduleDefinition: null, router: null, contextFactory: null };
 
 const EXPECTED_MODULE_DEFINITION: ModuleDef<CardanoContext> = {
@@ -61,6 +63,27 @@ const EXPECTED_MODULE_DEFINITION: ModuleDef<CardanoContext> = {
     delete: {
       action: SCRIPT_CONTROLLER.deleteScript,
       authorization: AUTH_HANDLERS.allAuthenticated
+    },
+    post: {
+      action: SCRIPT_CONTROLLER.addScriptReference,
+      authorization: AUTH_HANDLERS.allAuthenticated
+    }
+  },
+
+  [`/scriptReferences`]: {
+    get: {
+      action: SCRIPT_REFERENCE_CONTROLLER.getScriptReferences,
+      authorization: AUTH_HANDLERS.allAuthenticated
+    },
+    post: {
+      action: SCRIPT_REFERENCE_CONTROLLER.createScriptReference,
+      authorization: AUTH_HANDLERS.allAuthenticated
+    }
+  },
+  [`/scriptReferences/:scriptReferenceId`]: {
+    get: {
+      action: SCRIPT_REFERENCE_CONTROLLER.getScriptReferenceById,
+      authorization: AUTH_HANDLERS.allAuthenticated
     }
   },
 
@@ -88,6 +111,7 @@ describe('Modules', () => {
         beforeAll(() => {
           controllers.addressController = jest.fn().mockReturnValue(ADDRESS_CONTROLLER);
           controllers.scriptController = jest.fn().mockReturnValue(SCRIPT_CONTROLLER);
+          controllers.scriptReferenceController = jest.fn().mockReturnValue(SCRIPT_REFERENCE_CONTROLLER);
           controllers.transactionController = jest.fn().mockReturnValue(TRANSACTION_CONTROLLER);
 
           result = moduleDefinitionUnbound

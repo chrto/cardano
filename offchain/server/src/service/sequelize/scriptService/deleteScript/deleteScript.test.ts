@@ -1,13 +1,18 @@
 import deleteScriptUnbound from './deleteScript.unbound';
 import { AppError } from 'common/error';
+import sequelizeInitUnbound from 'model/sequelize/modelFactory/sequelizeInit/sequelizeInit.unbound';
+import initScriptReferenceModel from 'model/sequelize/model/scriptReference/scriptReference';
 import initScriptModel, { Script } from 'model/sequelize/model/script/scirpt';
-import { DestroyOptions, Options, Sequelize } from 'sequelize';
+import { DestroyOptions, Options, Sequelize, Transaction } from 'sequelize';
 import { Either } from 'tsmonad';
 import { EDatabaseDialect } from 'web/server/configuration/loader/database/databaseConfig.types';
 import { NotFound } from 'common/httpErrors';
 import { ScriptItems, ScritpCategory } from 'model/sequelize/model/script/script.types';
 import { PlutusVersion } from 'model/cardano/cardano.types';
 import { SequelizeStorage } from 'storage/sequelize/factory/sequelizeStorage.types';
+import { SdkTransaction } from 'model/sequelize/modelFactory/modelFactory.types';
+import { SequelizeIncludes } from 'service/sequelize/types';
+import { ScriptReference } from 'model/sequelize/model/scriptReference/scriptReference';
 
 const SEQUELIZE_CONFIG: Options = {
   dialect: EDatabaseDialect.sqlite
@@ -22,18 +27,42 @@ const ITEMS: ScriptItems = {
   description: 'Example of gift script from PPP'
 };
 
+const INCLUDES: SequelizeIncludes = {
+  include: [
+    {
+      model: ScriptReference,
+      as: 'scriptReferences'
+    }
+  ]
+};
+
+const TRANSACTION = {} as Transaction;
+
+const SDK_TRANSACTION: SdkTransaction = {
+  begin: () => Promise.resolve(TRANSACTION),
+  commitOrRollback: (_tx: Transaction) => <T> (valOrErr: Either<AppError, T>) => Promise.resolve(valOrErr),
+  rollback: (_tx: Transaction) => (err: AppError) => Promise.reject(err)
+};
+
 describe('Service', () => {
   describe('Sequelize', () => {
     describe('Script Service', () => {
       describe(`Delete script`, () => {
         let deleteScriptModel: jest.Mock<Promise<Either<AppError, number>>, [DestroyOptions]>;
+        let initModel: jest.Mock<void, [Sequelize]>;
         let script: Script;
         let storage: SequelizeStorage<Script>;
         let result: Either<AppError, number>;
 
         beforeAll(async () => {
-          initScriptModel(new Sequelize(SEQUELIZE_CONFIG));
-          script = Script.build(ITEMS);
+          initModel = jest.fn().mockImplementation(_ => null);
+          sequelizeInitUnbound({
+            scriptModel: initScriptModel,
+            scriptReferenceModel: initScriptReferenceModel,
+            userModel: initModel
+          })(new Sequelize(SEQUELIZE_CONFIG));
+
+          script = Script.build({ ...ITEMS, scriptReferences: [] }, { ...INCLUDES });
         });
 
         describe('Happy path', () => {
@@ -54,8 +83,10 @@ describe('Service', () => {
 
             result = await deleteScriptUnbound
               (storage)
-              ()
+              (SDK_TRANSACTION)
+              ({ transaction: TRANSACTION })
               (script);
+
           });
 
           it(`Should delete script from storage and return Either with count in right side`, () => {
@@ -74,7 +105,8 @@ describe('Service', () => {
             deleteScriptModel = jest.fn().mockResolvedValue(Either.left<AppError, Script>(appError));
             result = await deleteScriptUnbound
               ({ ...storage, destroy: deleteScriptModel })
-              ()
+              (SDK_TRANSACTION)
+              ({ transaction: TRANSACTION })
               (script);
           });
 

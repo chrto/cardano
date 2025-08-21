@@ -1,6 +1,7 @@
-import { DataTypes, Model, Sequelize } from 'sequelize';
+import { Association, DataTypes, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin, HasManyRemoveAssociationsMixin, Model, Sequelize } from 'sequelize';
 import { ScriptItems, ScritpCategory } from './script.types';
 import { PlutusVersion, ScriptType, ScriptTypeExt } from 'model/cardano/cardano.types';
+import { ScriptReference } from '../scriptReference/scriptReference';
 
 export class Script extends Model implements ScriptItems {
   public readonly id!: string;
@@ -15,6 +16,17 @@ export class Script extends Model implements ScriptItems {
   // timestamps!
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
+
+  public getScriptReferences: HasManyGetAssociationsMixin<ScriptReference>;
+  public hasScriptReference: HasManyHasAssociationMixin<ScriptReference, string>;
+  public countScriptReference: HasManyCountAssociationsMixin;
+  public createScriptReference: HasManyCreateAssociationMixin<ScriptReference>;
+  public deleteScriptReference: HasManyRemoveAssociationsMixin<ScriptReference, string>;
+  public scriptReferences?: ScriptReference[];
+
+  public static associations: {
+    scriptReferences: Association<Script, ScriptReference>;
+  };
 }
 
 export default (sequelize: Sequelize): typeof Script =>
@@ -35,7 +47,8 @@ export default (sequelize: Sequelize): typeof Script =>
       },
       script: {
         type: DataTypes.STRING(),
-        allowNull: false
+        allowNull: false,
+        unique: 'uq_scripts_script'
       },
       category: {
         type: DataTypes.STRING(15),
@@ -46,11 +59,24 @@ export default (sequelize: Sequelize): typeof Script =>
       },
       title: {
         type: DataTypes.STRING(25),
-        allowNull: false
+        allowNull: false,
+        unique: 'uq_scripts_title'
       },
       description: {
-        type: DataTypes.STRING(100),
+        type: DataTypes.STRING(1000),
         allowNull: true
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        field: 'created_at',
+        defaultValue: new Date()
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        field: 'updated_at',
+        defaultValue: new Date()
       }
     },
     {
