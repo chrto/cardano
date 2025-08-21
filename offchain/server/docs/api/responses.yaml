@@ -55,6 +55,83 @@ ScriptResponse:
       schema:
         allOf:
           - $ref: "#/components/schemas/Script"
+          - type: object
+            properties:
+              scriptReferences:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ScriptReference"
+          - example:
+              id: 63a080e2-dc50-4771-a145-93ef6ec24cbe
+              type: PlutusV2
+              script: 49480100002221200101
+              category: Gift
+              title: Gift
+              description: "Everybody can spend this.."
+              created_at: "2019-06-04T10:17:08.706Z"
+              updated_at: "2019-06-04T10:17:08.707Z"
+              scriptReferences:
+                - id: 2f1b5aa2-2b37-4785-9205-30f467205868
+                  scriptId: 63a080e2-dc50-4771-a145-93ef6ec24cbe
+                  address: addr_test1wqag3rt979nep9g2wtdwu8mr4gz6m4kjdpp5zp705km8wys6t2kla
+                  txId: 82e75104c2ffcab389fae6a9c87ebbe99e83cd7826d02534e77783b12c62e467
+                  txIndex: 1
+                  unspend: true
+                  created_at: "2019-06-04T10:17:08.706Z"
+                  updated_at: "2019-06-04T10:17:08.707Z"
+
+
+ScriptListResponse:
+  description: A list of Cardano Script
+  content:
+    application/json:
+      schema:
+        type: array
+        items:
+          allOf:
+            - $ref: "#/components/schemas/Script"
+            - type: object
+              properties:
+                scriptReferences:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/ScriptReference"
+
+        example:
+          - id: 63a080e2-dc50-4771-a145-93ef6ec24cbe
+            type: PlutusV2
+            script: 49480100002221200101
+            category: Gift
+            title: Gift
+            description: "Everybody can spend this.."
+            created_at: "2019-06-04T10:17:08.706Z"
+            updated_at: "2019-06-04T10:17:08.707Z"
+            scriptReferences:
+              - id: 2f1b5aa2-2b37-4785-9205-30f467205868
+                scriptId: 63a080e2-dc50-4771-a145-93ef6ec24cbe
+                address: addr_test1wqag3rt979nep9g2wtdwu8mr4gz6m4kjdpp5zp705km8wys6t2kla
+                txId: 82e75104c2ffcab389fae6a9c87ebbe99e83cd7826d02534e77783b12c62e467
+                txIndex: 1
+                unspend: true
+                created_at: "2019-06-04T10:17:08.706Z"
+                updated_at: "2019-06-04T10:17:08.707Z"
+          - id: e59382ba-3733-4257-9ce5-43358dd73b73
+            type: PlutusV2
+            script: 581f581d01000022232632498cd5ce24810b6974206275726e7321212100120011
+            category: Burn
+            title: Burn
+            description: "Nobody can spend this.."
+            created_at: "2019-06-04T10:17:08.706Z"
+            updated_at: "2019-06-04T10:17:08.707Z"
+            scriptReferences: []
+
+ScriptCreateResponse:
+  description: Script resource detail
+  content:
+    application/json:
+      schema:
+        allOf:
+          - $ref: "#/components/schemas/ScriptReference"
           - example:
               id: a469934b-a50c-4159-8295-f1e07d17e64c
               type: PlutusV2
@@ -65,46 +142,96 @@ ScriptResponse:
               created_at: "2019-06-04T10:17:08.706Z"
               updated_at: "2019-06-04T10:17:08.707Z"
 
-ScriptListResponse:
-  description: A list of Cardano Script
+ScriptReferenceResponse:
+  description: Script Reference resource detail
+  content:
+    application/json:
+      schema:
+        allOf:
+          - $ref: "#/components/schemas/ScriptReference"
+          - type: object
+            properties:
+              script:
+                $ref: "#/components/schemas/Script"
+          - example:
+              id: 63a080e2-dc50-4771-a145-93ef6ec24cbe
+              scriptId: b579934b-a50c-4159-8295-f1e07d17e75d
+              address: addr_test1wpqlfqjt8czqmd6dqxrxvdr8tp8gt4a8xg40d6jzs9wx7fg93pm8a
+              txId: 2f7aa1871f675a0bcd00e5ee703038550154f924e4f5fe56a5702a03af269261
+              txIndex: 1
+              created_at: "2019-06-04T10:17:08.706Z"
+              updated_at: "2019-06-04T10:17:08.707Z"
+              Script:
+                id: b579934b-a50c-4159-8295-f1e07d17e75d
+                type: PlutusV2
+                script: 58385836010000322225335333573466ebc008dd4240a82440042440022008264c649319ab9c49010b6578706563746564203432000041200101
+                category: FortyTwo
+                title: "FortyTwo Untyped"
+                description: "Required redeemer is 42!"
+                created_at: "2019-06-04T10:17:08.706Z"
+                updated_at: "2019-06-04T10:17:08.707Z"
+
+ScriptReferenceListResponse:
+  description: A list of Cardano Script References
   content:
     application/json:
       schema:
         type: array
         items:
-          $ref: "#/components/schemas/Script"
+          allOf:
+            - $ref: "#/components/schemas/ScriptReference"
+            - type: object
+              properties:
+                script:
+                  $ref: "#/components/schemas/Script"
         example:
           - id: 63a080e2-dc50-4771-a145-93ef6ec24cbe
-            type: PlutusV2
-            script: 49480100002221200101
-            category: Gift
-            title: Gift
-            description: "Everybody can spend this.."
+            scriptId: b579934b-a50c-4159-8295-f1e07d17e75d
+            address: addr_test1wpqlfqjt8czqmd6dqxrxvdr8tp8gt4a8xg40d6jzs9wx7fg93pm8a
+            txId: 2f7aa1871f675a0bcd00e5ee703038550154f924e4f5fe56a5702a03af269261
+            txIndex: 1
             created_at: "2019-06-04T10:17:08.706Z"
             updated_at: "2019-06-04T10:17:08.707Z"
-          - id: e59382ba-3733-4257-9ce5-43358dd73b73
-            type: PlutusV2
-            script: 581f581d01000022232632498cd5ce24810b6974206275726e7321212100120011
-            category: Burn
-            title: Burn
-            description: "Nobody can spend this.."
-            created_at: "2019-06-04T10:17:08.706Z"
-            updated_at: "2019-06-04T10:17:08.707Z"
-
-ScriptCreateResponse:
-  description: Script resource detail
-  content:
-    application/json:
-      schema:
-        allOf:
-          - $ref: "#/components/schemas/Script"
-          - example:
-              id: a469934b-a50c-4159-8295-f1e07d17e64c
+            Script:
+              id: b579934b-a50c-4159-8295-f1e07d17e75d
               type: PlutusV2
               script: 58385836010000322225335333573466ebc008dd4240a82440042440022008264c649319ab9c49010b6578706563746564203432000041200101
               category: FortyTwo
               title: "FortyTwo Untyped"
               description: "Required redeemer is 42!"
+              created_at: "2019-06-04T10:17:08.706Z"
+              updated_at: "2019-06-04T10:17:08.707Z"
+          - id: e59382ba-3733-4257-9ce5-43358dd73b73
+            scriptId: b579934b-a50c-4159-8295-f1e07d17e75d
+            address: addr_test1wpqlfqjt8czqmd6dqxrxvdr8tp8gt4a8xg40d6jzs9wx7fg93pm8a
+            txId: 2f7aa1871f675a0bcd00e5ee703038550154f924e4f5fe56a5702a03af269261
+            txIndex: 5
+            created_at: "2019-06-04T10:17:08.706Z"
+            updated_at: "2019-06-04T10:17:08.707Z"
+            Script:
+              id: b579934b-a50c-4159-8295-f1e07d17e75d
+              type: PlutusV2
+              script: 58385836010000322225335333573466ebc008dd4240a82440042440022008264c649319ab9c49010b6578706563746564203432000041200101
+              category: FortyTwo
+              title: "FortyTwo Untyped"
+              description: "Required redeemer is 42!"
+              created_at: "2019-06-04T10:17:08.706Z"
+              updated_at: "2019-06-04T10:17:08.707Z"
+
+ScriptReferenceCreateResponse:
+  description: Script Reference resource detail
+  content:
+    application/json:
+      schema:
+        allOf:
+          - $ref: "#/components/schemas/ScriptReference"
+          - example:
+              id: a469934b-a50c-4159-8295-f1e07d17e64c
+              scriptId: b579934b-a50c-4159-8295-f1e07d17e75d
+              address: addr_test1wpqlfqjt8czqmd6dqxrxvdr8tp8gt4a8xg40d6jzs9wx7fg93pm8a
+              txId: 2f7aa1871f675a0bcd00e5ee703038550154f924e4f5fe56a5702a03af269261
+              txIndex: 1
+              unspend: true
               created_at: "2019-06-04T10:17:08.706Z"
               updated_at: "2019-06-04T10:17:08.707Z"
 
