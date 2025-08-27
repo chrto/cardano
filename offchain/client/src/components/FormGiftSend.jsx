@@ -7,7 +7,7 @@ import dispatchData from '../utils/dispatchData';
 
 function FormGiftSend({ scriptAddress, getSelectedWalletUtxos, deselectWalletUtxos }) {
   const [formData, setFormData] = useState({ giftValue: 3 });
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [error, setError] = useState(null);
   const [txHash, setTxHash] = useState(null);
 
   const handleChange = (e) => {
@@ -33,7 +33,7 @@ function FormGiftSend({ scriptAddress, getSelectedWalletUtxos, deselectWalletUtx
         .then(storage.signTx)
         .then(storage.submitTx)
         .then(dispatchData(setTxHash))
-        .catch(dispatchData(setErrorMessage))
+        .catch(dispatchData(setError))
         .finally(() => {
           deselectWalletUtxos();
           setFormData({ ...formData, giftValue: 3 });
@@ -51,7 +51,7 @@ function FormGiftSend({ scriptAddress, getSelectedWalletUtxos, deselectWalletUtx
   const handleCloseModal = (e) => {
     e.preventDefault();
 
-    setErrorMessage(null)
+    setError(null)
     setTxHash(null)
   }
 
@@ -67,7 +67,7 @@ function FormGiftSend({ scriptAddress, getSelectedWalletUtxos, deselectWalletUtx
         <button type="button" onClick={handleReset}>Reset</button>
       </div>
 
-      <Modal isOpen={!!txHash || !!errorMessage} isError={!!errorMessage} onClose={handleCloseModal}>
+      <Modal isOpen={!!txHash || !!error} isError={!!error} onClose={handleCloseModal}>
         {
           !!txHash
             ? <div>
@@ -77,7 +77,7 @@ function FormGiftSend({ scriptAddress, getSelectedWalletUtxos, deselectWalletUtx
               </div>
             : <div>
                 <h2>Transaction has been failed.</h2>
-                {!!errorMessage && errorMessage.split("\\n").map(line => <p>{line}</p> )}
+                {!!error && !! error.message ? error.message.split("\\n").map(line => <p>{line}</p>) : <p>{error}</p>}
               </div>
         }
       </Modal>

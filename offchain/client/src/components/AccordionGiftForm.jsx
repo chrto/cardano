@@ -5,7 +5,7 @@ import FormGiftSend from './FormGiftSend';
 import FormGiftCollect from './FormGiftCollect';
 import ChoiceScriptVersion from './ChoiceScriptVersion';
 
-export default function AccordionGiftForm({ scriptAddress, handleChoice, selected, scripts, getSelectedWalletUtxos, deselectWalletUtxos, getSelectedScriptUtxos, deselectScriptUtxos } ) {
+export default function AccordionGiftForm({ scriptAddress, handleChoice, selected, scripts, getSelectedWalletUtxos, deselectWalletUtxos, getSelectedScriptUtxos, getReferenceUtxo, deselect } ) {
   const [openIndex, setOpenIndex] = useState(null);
   const [openSelectScript, setOpenSelectScript] = useState(true);
 
@@ -30,7 +30,7 @@ export default function AccordionGiftForm({ scriptAddress, handleChoice, selecte
       </AccordionItem>
 
       <AccordionItem title="Collect Gift" isOpen={openIndex === 1} onToggle={() => toggle(1)}>
-        <FormGiftCollect validatorScript={validatorScript} getSelectedScriptUtxos={getSelectedScriptUtxos} deselectScriptUtxos={deselectScriptUtxos} />
+        <FormGiftCollect validatorScript={validatorScript} getSelectedScriptUtxos={getSelectedScriptUtxos} getReferenceUtxo={getReferenceUtxo} deselect={deselect} />
       </AccordionItem>
     </form>
   );

@@ -83,7 +83,6 @@ LucidStorage.prototype.buildSpendFromContractTx = async function ( utxos, option
     transaction.attachSpendingValidator(script);
   }
 
-  console.log(scriptRefUTxO)
   if (!!scriptRefUTxO) {
     transaction.readFrom([scriptRefUTxO])
   }
