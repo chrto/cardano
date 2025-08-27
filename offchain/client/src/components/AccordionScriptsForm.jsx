@@ -4,7 +4,7 @@ import AccordionItem from './AccordionItem';
 import FormScriptCreate from './FormScriptCreate';
 import FormScriptDeploy from './FormScriptDeploy';
 
-export default function AccordionScriptsForm({ getSelectedScript, deselectScript}) {
+export default function AccordionScriptsForm({ getSelectedScript, deselectScript, getSelectedWalletUtxos, deselectWalletUtxos }) {
   const [openIndex, setOpenIndex] = useState(null);
 
   const toggle = (index) => {
@@ -20,6 +20,8 @@ export default function AccordionScriptsForm({ getSelectedScript, deselectScript
         <FormScriptDeploy
           getSelectedScript={getSelectedScript}
           deselectScript={deselectScript}
+          getSelectedWalletUtxos={getSelectedWalletUtxos}
+          deselectWalletUtxos={deselectWalletUtxos}
         />
       </AccordionItem>
     </form>

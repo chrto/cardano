@@ -24,7 +24,12 @@
 }
 
 .table-box tr {
+  color: var(--text-color);
   background-color: var(--background-color);
+}
+
+.table-box tr[data-mute="true"] {
+  color: var(--text-color-muted);
 }
 
 .table-box th,
@@ -64,7 +69,8 @@
 }
 
 .table-link {
-  color: var(--text-color);
+  /* color: var(--text-color); */
+  color: inherit;
   text-decoration: none;
 }
 

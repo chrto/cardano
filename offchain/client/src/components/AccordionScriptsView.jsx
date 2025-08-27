@@ -47,7 +47,7 @@ export default function AccordionScriptsView({ scripts, ref }) {
   });
 
   const scriptToDetail = (script) =>
-    Object.keys(script).filter(key => key !== 'script' && key !== 'references').map(
+    Object.keys(script).filter(key => key !== 'script' && key !== 'scriptReferences').map(
       key => ({
         key,
         link: false,
@@ -59,9 +59,10 @@ export default function AccordionScriptsView({ scripts, ref }) {
   const scriptRefToDetail = (scriptRef) =>
     scriptRef.map(ref => ({
       key: ref.id,
-      link: false,
+      link: true,
       select: false,
-      data: [`${ref.txId}#${ref.txIndex}`, ref.address]
+      mute: !ref.unspend,
+      data: [ref.txId, ref.txIndex, ref.address]
     }))
 
   const selectScript = (scriptId) => {
@@ -105,6 +106,7 @@ export default function AccordionScriptsView({ scripts, ref }) {
     e.preventDefault();
 
     const script = scripts.find(script => script.id === e.target.value);
+
     getScriptAddress(script)
       .then(address => setScriptDetail({...script, script: null, address}))
   }
@@ -229,23 +231,23 @@ export default function AccordionScriptsView({ scripts, ref }) {
             <div className="partial-content">
               <h2>Script Detail</h2>
               <Table
-                headers={['', '']}
+                headers={['Key', 'Value']}
                 values={scriptToDetail(scriptDetail)}
               />
               <h2>Script References</h2>
               <Table
-                headers={['txRef', 'address']}
-                values={scriptRefToDetail(scriptDetail.references)}
+                headers={['Hash', 'Index', 'Address']}
+                values={scriptRefToDetail(scriptDetail.scriptReferences)}
               />
             </div>
           </div>
         }
         {
           !!scriptDetail && !!scriptDetail.script &&
-        <div>
-          <h2>Script CBOR</h2>
-              <textarea style={{ height: '50dvh', width: '60dvw'}} type='text' name="cbor" value={scriptDetail.script}></textarea>
-        </div>
+          <div>
+            <h2>Script CBOR</h2>
+                <textarea style={{ height: '50dvh', width: '60dvw'}} type='text' name="cbor" value={scriptDetail.script}></textarea>
+          </div>
         }
       </Modal>
     </form>
