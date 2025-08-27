@@ -5,6 +5,8 @@ Accept: application/json
 
 {
   "rollback_to": {
-    "slot_no": "{{$dotenv ROLLBACK_SLOT_NO}}",
-  }
+    "slot_no": {{$dotenv ROLLBACK_SLOT_NO}},
+    "header_hash": "{{$dotenv ROLLBACK_HEADER_HASH}}"
+  },
+  "limit": "unsafe_allow_beyond_safe_zone"
 }
