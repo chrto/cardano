@@ -9,7 +9,7 @@ import utxoToLucid from '../utils/utxoToLucid';
 
 function FormScriptDeploy({ getSelectedScript, deselectScript, getSelectedWalletUtxos, deselectWalletUtxos }) {
   const [formData, setFormData] = useState({ address: ''});
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [error, setError] = useState(null);
   const [txHash, setTxHash] = useState(null);
   const [refId, setRefId] = useState(null);
 
@@ -25,14 +25,14 @@ function FormScriptDeploy({ getSelectedScript, deselectScript, getSelectedWallet
     const utxos = getSelectedWalletUtxos().map(utxoToLucid)
 
     if (!script) {
-      setErrorMessage({
+      setError({
         message: 'Build',
         details: 'Script has not been selected!'
       })
       return null
     }
     if (!address) {
-      setErrorMessage({
+      setError({
         message: 'Build',
         details: 'Address has not been selected!'
       })
@@ -59,7 +59,7 @@ function FormScriptDeploy({ getSelectedScript, deselectScript, getSelectedWallet
         .then(storeDeployment(script, address))
         .then(ref => ref.id)
         .then(dispatchData(setRefId))
-        .catch(dispatchData(setErrorMessage))
+        .catch(dispatchData(setError))
     )
   };
 
@@ -94,7 +94,7 @@ function FormScriptDeploy({ getSelectedScript, deselectScript, getSelectedWallet
   const handleCloseModal = (e) => {
     e.preventDefault();
 
-    setErrorMessage(null)
+    setError(null)
     setTxHash(null)
     setRefId(null)
   }
@@ -112,13 +112,18 @@ function FormScriptDeploy({ getSelectedScript, deselectScript, getSelectedWallet
         <button type="button" onClick={handleReset}>Reset</button>
       </div>
 
-      <Modal isOpen={!!errorMessage || !!txHash} isError={!!errorMessage} onClose={handleCloseModal}>
+      <Modal isOpen={!!error || !!txHash} isError={!!error} onClose={handleCloseModal}>
         {
-          !!errorMessage &&
+          !!error &&
             <div>
               <h2>Transaction has been failed.</h2>
-              {!!errorMessage.message && <p>{ errorMessage.message}</p>}
-              {!!errorMessage.details && <p>{ errorMessage.details}</p>}
+              {
+                !!error.message
+                  ? !!error.details
+                    ? <div><p>{error.message}</p><p>{error.details}</p></div>
+                    : <p>{error.message}</p>
+                  : <p>error</p>
+              }
             </div>
         }
         {

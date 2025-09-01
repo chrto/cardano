@@ -8,7 +8,7 @@ import getData from '../utils/getDataFromServer';
 
 export default function AccordionScriptsView({ scripts, ref }) {
   const [openIndex, setOpenIndex] = useState(0);
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [error, setError] = useState(null);
   const [data, setData] = useState(null);
   const [scriptDetail, setScriptDetail] = useState(null);
   const [selectedScript, setSelectedScript] = useState(null);
@@ -87,11 +87,7 @@ export default function AccordionScriptsView({ scripts, ref }) {
         title: 'Script has been deleted.',
         message: `Script id: ${data.removedScriptId}`
       }))
-      .catch(e => setErrorMessage({
-        title: 'Script has not been deleted!',
-        message: e.message,
-        details: e.details
-      }))
+      .catch(setError)
   }
 
   const handleOnCbor = (e) => {
@@ -113,7 +109,7 @@ export default function AccordionScriptsView({ scripts, ref }) {
 
   const handleCloseModal = (e) => {
     e.preventDefault();
-    setErrorMessage(null)
+    setError(null)
     setData(null)
     setScriptDetail(null)
   }
@@ -209,7 +205,7 @@ export default function AccordionScriptsView({ scripts, ref }) {
       />
       </AccordionItem>
 
-      <Modal isOpen={!!data || !!errorMessage || !!scriptDetail} isError={!!errorMessage} onClose={handleCloseModal}>
+      <Modal isOpen={!!data || !!error || !!scriptDetail} isError={!!error} onClose={handleCloseModal}>
         {
           !!data &&
             <div>
@@ -218,11 +214,16 @@ export default function AccordionScriptsView({ scripts, ref }) {
           </div>
         }
         {
-          !!errorMessage &&
+          !!error &&
             <div>
-              <h2>{errorMessage.title}</h2>
-              <p>{errorMessage.message}</p>
-              <p>{errorMessage.details}</p>
+              <h2>Script has not been deleted!</h2>
+              {
+                !!error.message
+                  ? !!error.details
+                    ? <div><p>{error.message}</p><p>{error.details}</p></div>
+                    : <p>{error.message}</p>
+                  : <p>error</p>
+              }
             </div>
         }
         {
