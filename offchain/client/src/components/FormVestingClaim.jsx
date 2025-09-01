@@ -5,10 +5,12 @@ import lucidStorage from '../utils/lucid/storage';
 import Modal from './Modal';
 import dispatchData from '../utils/dispatchData';
 import getLocalDateTimeValue from '../utils/time/getLocalDateTimeValue';
+import getKeyUTxO from '../utils/getKeyUTxO';
+import getOutRefFromUTxOKey from '../utils/getOutRefFromUTxOKey';
 
-function FormVestingClaim({ publicKeyHash, validatorScript, getSelectedScriptUtxos, deselectScriptUtxos }) {
+function FormVestingClaim({ publicKeyHash, validatorScript, getSelectedScriptUtxos, getReferenceUtxo, deselect }) {
   const [formData, setFormData] = useState({ validFrom: getLocalDateTimeValue() });
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [error, setError] = useState(null);
   const [txHash, setTxHash] = useState(null);
 
   const handleChange = (e) => {
@@ -18,28 +20,54 @@ function FormVestingClaim({ publicKeyHash, validatorScript, getSelectedScriptUtx
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const utxos = getSelectedScriptUtxos().map(utxoToLucid)
     const validFrom = Date.parse(formData.validFrom)
 
+    const utxos = getSelectedScriptUtxos().map(utxoToLucid)
     if (utxos.length === 0) {
-      setErrorMessage("No UTxO has been selected!");
+      setError("No UTxO has been selected!");
       return null;
     }
 
+    const references = utxos.filter(utxo => !!utxo.scriptHash).map(getKeyUTxO)
+    if (references.length > 0) {
+      setError(`Reference Script UTxOs has been selected to spend.\n[${references.join(', ')}]\nThis feature is not supported, Workig hard!`);
+      return null;
+    }
+
+    const referenceKey = getReferenceUtxo()
+
     lucidStorage.then(storage =>
-      storage.buildSpendFromContractTx(utxos, { publicKeyHash, validFrom, script: validatorScript })
-        .then(storage.signTx)
-        .then(storage.submitTx)
-        .then(dispatchData(setTxHash))
-        .catch(e => {
-          setErrorMessage(e.message)
-        })
+      !!referenceKey
+        ? storage.getUTxOsByOutRef([getOutRefFromUTxOKey(referenceKey)])
+            .then(utxoRefs => !!utxoRefs && utxoRefs.length>0
+              ? Promise.resolve(utxoRefs[0])
+              : Promise.reject(`UTxO at ${referenceKey} has not been found!`)
+            )
+            .then(utxoRef => !!utxoRef.scriptRef
+              ? Promise.resolve(utxoRef)
+              : Promise.reject(`UTxO at ${referenceKey} has no script reference!`)
+            )
+            .then(scriptRefUTxO => storage.buildSpendFromContractTx(utxos, { publicKeyHash, validFrom, scriptRefUTxO }))
+            .then(storage.signTx)
+            .then(storage.submitTx)
+            .then(dispatchData(setTxHash))
+            .then(() => {
+              resetForms()
+            })
+            .catch(dispatchData(setError))
+        : storage.buildSpendFromContractTx(utxos, { publicKeyHash, validFrom, script: validatorScript })
+            .then(storage.signTx)
+            .then(storage.submitTx)
+            .then(dispatchData(setTxHash))
+            .catch(e => {
+              setError(e.message)
+            })
     )
   };
 
   const resetForms = () => {
     setFormData({...formData, validFrom: getLocalDateTimeValue() })
-    deselectScriptUtxos()
+    deselect()
   }
 
   const handleReset = (e) => {
@@ -50,7 +78,7 @@ function FormVestingClaim({ publicKeyHash, validatorScript, getSelectedScriptUtx
   const handleCloseModal = (e) => {
     e.preventDefault();
 
-    setErrorMessage(null)
+    setError(null)
     setTxHash(null)
   }
 
@@ -65,7 +93,7 @@ function FormVestingClaim({ publicKeyHash, validatorScript, getSelectedScriptUtx
         <button type="button" onClick={handleReset}>Reset</button>
       </div>
 
-      <Modal isOpen={!!txHash || !!errorMessage} isError={!!errorMessage} onClose={handleCloseModal}>
+      <Modal isOpen={!!txHash || !!error} isError={!!error} onClose={handleCloseModal}>
         {
           !!txHash
             ? <div>
@@ -75,7 +103,7 @@ function FormVestingClaim({ publicKeyHash, validatorScript, getSelectedScriptUtx
             </div>
             : <div>
               <h2>Transaction has been failed.</h2>
-              <p>{errorMessage}</p>
+              {!!error && !! error.message ? error.message.split("\\n").map(line => <p>{line}</p>) : <p>{error}</p>}
               </div>
         }
       </Modal>

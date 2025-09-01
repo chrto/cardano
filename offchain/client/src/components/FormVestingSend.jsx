@@ -8,7 +8,7 @@ import getLocalDateTimeValue from '../utils/time/getLocalDateTimeValue';
 
 function FormVestingSend({ scriptAddress, getSelectedWalletUtxos, deselectWalletUtxos }) {
   const [formData, setFormData] = useState({ valueAda: 3, beneficiary: '', deadline: getLocalDateTimeValue() });
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [error, setError] = useState(null);
   const [txHash, setTxHash] = useState(null);
 
   const handleChange = (e) => {
@@ -24,7 +24,7 @@ function FormVestingSend({ scriptAddress, getSelectedWalletUtxos, deselectWallet
     const deadline = BigInt(Date.parse(formData.deadline))
     const beneficiary = formData.beneficiary
     if (!beneficiary) {
-      setErrorMessage('Beneficiary missing!')
+      setError('Beneficiary missing!')
       return null;
     }
 
@@ -42,7 +42,7 @@ function FormVestingSend({ scriptAddress, getSelectedWalletUtxos, deselectWallet
         .then(storage.signTx)
         .then(storage.submitTx)
         .then(dispatchData(setTxHash))
-        .catch(dispatchData(setErrorMessage))
+        .catch(dispatchData(setError))
         .finally(() => {
           deselectWalletUtxos();
         })
@@ -58,7 +58,7 @@ function FormVestingSend({ scriptAddress, getSelectedWalletUtxos, deselectWallet
   const handleCloseModal = (e) => {
     e.preventDefault();
 
-    setErrorMessage(null)
+    setError(null)
     setTxHash(null)
   }
 
@@ -80,7 +80,7 @@ function FormVestingSend({ scriptAddress, getSelectedWalletUtxos, deselectWallet
         <button type="button" onClick={handleReset}>Reset</button>
       </div>
 
-      <Modal isOpen={!!txHash || !!errorMessage} isError={!!errorMessage} onClose={handleCloseModal}>
+      <Modal isOpen={!!txHash || !!error} isError={!!error} onClose={handleCloseModal}>
         {
           !!txHash
             ? <div>
@@ -90,7 +90,7 @@ function FormVestingSend({ scriptAddress, getSelectedWalletUtxos, deselectWallet
               </div>
             : <div>
                 <h2>Transaction has been failed.</h2>
-                {!!errorMessage && errorMessage.split("\\n").map(line => <p>{line}</p> )}
+                {!!error && !! error.message ? error.message.split("\\n").map(line => <p>{line}</p>) : <p>{error}</p>}
               </div>
         }
       </Modal>
