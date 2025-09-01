@@ -4,10 +4,12 @@ import utxoToLucid from '../utils/utxoToLucid';
 import lucidStorage from '../utils/lucid/storage';
 import Modal from './Modal';
 import dispatchData from '../utils/dispatchData';
+import getKeyUTxO from '../utils/getKeyUTxO';
+import getOutRefFromUTxOKey from '../utils/getOutRefFromUTxOKey';
 
-function FormFortyTwoCollect({ validatorScript, getSelectedScriptUtxos, deselectScriptUtxos }) {
+function FormFortyTwoCollect({ validatorScript, getSelectedScriptUtxos, getReferenceUtxo, deselect }) {
   const [formData, setFormData] = useState({ redeemerValue: 0 });
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [error, setError] = useState(null);
   const [txHash, setTxHash] = useState(null);
 
   const handleChange = (e) => {
@@ -18,30 +20,53 @@ function FormFortyTwoCollect({ validatorScript, getSelectedScriptUtxos, deselect
     e.preventDefault();
 
     const redeemer = Number(formData.redeemerValue)
+
     const utxos = getSelectedScriptUtxos().map(utxoToLucid)
     if (utxos.length === 0) {
-      setErrorMessage("No UTxO has been selected!");
+      setError("No UTxO has been selected!");
       return null;
     }
 
-    const options = { redeemer, redeemerType: 'integer', script: validatorScript }
+    const references = utxos.filter(utxo => !!utxo.scriptHash).map(getKeyUTxO)
+    if (references.length > 0) {
+      setError(`Reference Script UTxOs has been selected to spend.\n[${references.join(', ')}]\nThis feature is not supported, Workig hard!`);
+      return null;
+    }
+
+    const referenceKey = getReferenceUtxo()
 
     lucidStorage.then(storage =>
-      storage.buildSpendFromContractTx(utxos, options)
-        .then(storage.signTx)
-        .then(storage.submitTx)
-        .then(dispatchData(setTxHash))
-        .then(() => {
-          resetForms()
-        })
-        .catch(e => {
-          setErrorMessage(e.message)
-        })
+      !!referenceKey
+        ? storage.getUTxOsByOutRef([getOutRefFromUTxOKey(referenceKey)])
+            .then(utxoRefs => !!utxoRefs && utxoRefs.length>0
+              ? Promise.resolve(utxoRefs[0])
+              : Promise.reject(`UTxO at ${referenceKey} has not been found!`)
+            )
+            .then(utxoRef => !!utxoRef.scriptRef
+              ? Promise.resolve(utxoRef)
+              : Promise.reject(`UTxO at ${referenceKey} has no script reference!`)
+            )
+            .then(scriptRefUTxO => storage.buildSpendFromContractTx(utxos, { redeemer, redeemerType: 'integer', scriptRefUTxO }))
+            .then(storage.signTx)
+            .then(storage.submitTx)
+            .then(dispatchData(setTxHash))
+            .then(() => {
+              resetForms()
+            })
+          .catch(dispatchData(setError))
+        : storage.buildSpendFromContractTx(utxos, { redeemer, redeemerType: 'integer', script: validatorScript })
+          .then(storage.signTx)
+          .then(storage.submitTx)
+          .then(dispatchData(setTxHash))
+          .then(() => {
+            resetForms()
+          })
+         .catch(dispatchData(setError))
     )
   };
 
   const resetForms = () => {
-    deselectScriptUtxos()
+    deselect()
     setFormData({ ...formData, redeemerValue: 0 });
   }
 
@@ -53,7 +78,7 @@ function FormFortyTwoCollect({ validatorScript, getSelectedScriptUtxos, deselect
   const handleCloseModal = (e) => {
     e.preventDefault();
 
-    setErrorMessage(null)
+    setError(null)
     setTxHash(null)
   }
 
@@ -68,7 +93,7 @@ function FormFortyTwoCollect({ validatorScript, getSelectedScriptUtxos, deselect
         <button type="button" onClick={handleReset}>Reset</button>
       </div>
 
-      <Modal isOpen={!!txHash || !!errorMessage} isError={!!errorMessage} onClose={handleCloseModal}>
+      <Modal isOpen={!!txHash || !!error} isError={!!error} onClose={handleCloseModal}>
         {
           !!txHash
             ? <div>
@@ -78,7 +103,7 @@ function FormFortyTwoCollect({ validatorScript, getSelectedScriptUtxos, deselect
             </div>
             : <div>
                 <h2>Transaction has been failed.</h2>
-                {!!errorMessage && errorMessage.split("\\n").map(line => <p>{line}</p> )}
+                {!!error && !! error.message ? error.message.split("\\n").map(line => <p>{line}</p>) : <p>{error}</p>}
               </div>
         }
       </Modal>

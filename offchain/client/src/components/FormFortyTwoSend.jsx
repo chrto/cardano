@@ -7,7 +7,7 @@ import dispatchData from '../utils/dispatchData';
 
 function FormFortyTwoSend({ scriptAddress, getSelectedWalletUtxos, deselectWalletUtxos }) {
   const [formData, setFormData] = useState({ valueAda: 3 });
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [error, setError] = useState(null);
   const [txHash, setTxHash] = useState(null);
 
   const handleChange = (e) => {
@@ -30,7 +30,7 @@ function FormFortyTwoSend({ scriptAddress, getSelectedWalletUtxos, deselectWalle
         .then(storage.signTx)
         .then(storage.submitTx)
         .then(dispatchData(setTxHash))
-        .catch(dispatchData(setErrorMessage))
+        .catch(dispatchData(setError))
         .finally(() => {
           deselectWalletUtxos();
           setFormData({...formData, valueAda: 3})
@@ -48,7 +48,7 @@ function FormFortyTwoSend({ scriptAddress, getSelectedWalletUtxos, deselectWalle
   const handleCloseModal = (e) => {
     e.preventDefault();
 
-    setErrorMessage(null)
+    setError(null)
     setTxHash(null)
   }
 
@@ -63,7 +63,7 @@ function FormFortyTwoSend({ scriptAddress, getSelectedWalletUtxos, deselectWalle
         <button type="button" onClick={handleReset}>Reset</button>
       </div>
 
-      <Modal isOpen={!!txHash || !!errorMessage} isError={!!errorMessage} onClose={handleCloseModal}>
+      <Modal isOpen={!!txHash || !!error} isError={!!error} onClose={handleCloseModal}>
         {
           !!txHash
             ? <div>
@@ -73,7 +73,7 @@ function FormFortyTwoSend({ scriptAddress, getSelectedWalletUtxos, deselectWalle
               </div>
             : <div>
                 <h2>Transaction has been failed.</h2>
-                {!!errorMessage && errorMessage.split("\\n").map(line => <p>{line}</p> )}
+                {!!error && !! error.message ? error.message.split("\\n").map(line => <p>{line}</p>) : <p>{error}</p>}
               </div>
         }
       </Modal>
