@@ -9,10 +9,12 @@ import useSafeInterval from '../utils/useSafeInterval';
 import getData from '../utils/getDataFromServer';
 import dispatchData from '../utils/dispatchData';
 import AccordionScriptsForm from '../components/AccordionScriptsForm';
+import getKeyUTxO from '../utils/getKeyUTxO';
 
 const { apiRefreshDelay } = require("../config.json");
 
 function Scripts({ publicKeyHash, walletAddress, walletUtxos }) {
+  const walletViewRef = useRef(null);
   const scriptViewRef = useRef(null);
 
   const [scripts, setScripts] = useState([]);
@@ -47,27 +49,36 @@ function Scripts({ publicKeyHash, walletAddress, walletUtxos }) {
     scriptViewRef.current?.deselect();
   }
 
+  const getSelectedWalletUtxos = () => {
+    const selected = walletViewRef.current?.getSelected();
+    return walletUtxos.filter(utxo => selected.has(getKeyUTxO(utxo)))
+  }
+
+  const deselectWalletUtxos = () => {
+    walletViewRef.current?.deselect();
+  }
+
   return (
     <div className="app-container">
       <Navbar />
       <div className="partial-content">
-        <Wallet publicKeyHash={publicKeyHash} walletAddress={walletAddress} walletUtxos  ={walletUtxos} />
-        <AccordionWalletView walletUtxos={walletUtxos} />
+        <Wallet publicKeyHash={publicKeyHash} walletAddress={walletAddress} walletUtxos={walletUtxos} />
+        <AccordionWalletView walletUtxos={walletUtxos} ref={walletViewRef} />
         <AccordionWalletForm walletUtxos={walletUtxos} />
       </div>
       <div className="partial-content">
         <AccordionScriptsForm
           getSelectedScript={getSelectedScript}
           deselectScript={deselectScript}
+          getSelectedWalletUtxos={getSelectedWalletUtxos}
+          deselectWalletUtxos={deselectWalletUtxos}
         />
       </div>
-      <div className="view-panel">
-        <div className="partial-content" >
-          <AccordionScriptsView
-            scripts={scripts}
-            ref={scriptViewRef}
-          />
-        </div>
+      <div className="partial-content" >
+        <AccordionScriptsView
+          scripts={scripts}
+          ref={scriptViewRef}
+        />
       </div>
     </div>
   );

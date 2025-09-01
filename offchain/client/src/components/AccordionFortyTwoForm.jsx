@@ -5,7 +5,7 @@ import FormFortyTwoSend from './FormFortyTwoSend';
 import FormFortyTwoCollect from './FormFortyTwoCollect';
 import ChoiceScriptVersion from './ChoiceScriptVersion';
 
-export default function AccordionFortyTwoForm({ scriptAddress, handleChoice, selected, scripts, getSelectedWalletUtxos, deselectWalletUtxos, getSelectedScriptUtxos, deselectScriptUtxos } ) {
+export default function AccordionFortyTwoForm({ scriptAddress, handleChoice, selected, scripts, getSelectedWalletUtxos, deselectWalletUtxos, getSelectedScriptUtxos, getReferenceUtxo, deselect } ) {
   const [openIndex, setOpenIndex] = useState(null);
   const [openSelectScript, setOpenSelectScript] = useState(true);
 
@@ -31,7 +31,7 @@ export default function AccordionFortyTwoForm({ scriptAddress, handleChoice, sel
       </AccordionItem>
 
       <AccordionItem title="Collect FortyTwo" isOpen={openIndex === 1} onToggle={() => toggle(1)}>
-        <FormFortyTwoCollect validatorScript={validatorScript} getSelectedScriptUtxos={getSelectedScriptUtxos} deselectScriptUtxos={deselectScriptUtxos} />
+        <FormFortyTwoCollect validatorScript={validatorScript} getSelectedScriptUtxos={getSelectedScriptUtxos} getReferenceUtxo={getReferenceUtxo} deselect={deselect} />
       </AccordionItem>
     </form>
   );

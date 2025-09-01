@@ -1,12 +1,12 @@
 
-PUT  {{$dotenv PROVIDER_NODE_KUPO_URL}}/patterns/{{$dotenv CARDANO_VESTING_ADDRESS}} HTTP/1.1
+PUT  {{$dotenv PROVIDER_NODE_KUPO_URL}}/patterns/{{$dotenv CARDANO_GIFT_ADDRESS}} HTTP/1.1
 Content-Type: application/json
 Accept: application/json
 
 {
   "rollback_to": {
-    "slot_no": 55814394,
-    "header_hash": "bdd4baa2c81d0500a695f836332193ea06c2ce364e585057142220fc0782144c"
+    "slot_no": {{$dotenv ROLLBACK_SLOT_NO}},
+    "header_hash": "{{$dotenv ROLLBACK_HEADER_HASH}}"
   },
   "limit": "unsafe_allow_beyond_safe_zone"
 }

@@ -5,7 +5,7 @@ import FormVestingSend from './FormVestingSend';
 import FormVestingClaim from './FormVestingClaim';
 import ChoiceScriptVersion from './ChoiceScriptVersion';
 
-export default function AccordionVestingForm({ scriptAddress, handleChoice, selected, scripts, publicKeyHash, getSelectedWalletUtxos, deselectWalletUtxos, getSelectedScriptUtxos, deselectScriptUtxos} ) {
+export default function AccordionVestingForm({ scriptAddress, handleChoice, selected, scripts, publicKeyHash, getSelectedWalletUtxos, deselectWalletUtxos, getSelectedScriptUtxos, getReferenceUtxo, deselect} ) {
   const [openIndex, setOpenIndex] = useState(null);
   const [openSelectScript, setOpenSelectScript] = useState(true);
 
@@ -31,7 +31,7 @@ export default function AccordionVestingForm({ scriptAddress, handleChoice, sele
       </AccordionItem>
 
       <AccordionItem title="Claim" isOpen={openIndex === 1} onToggle={() => toggle(1)}>
-        <FormVestingClaim publicKeyHash={publicKeyHash} validatorScript={ validatorScript } getSelectedScriptUtxos={getSelectedScriptUtxos} deselectScriptUtxos={deselectScriptUtxos} />
+        <FormVestingClaim publicKeyHash={publicKeyHash} validatorScript={ validatorScript } getSelectedScriptUtxos={getSelectedScriptUtxos} getReferenceUtxo={getReferenceUtxo} deselect={deselect} />
       </AccordionItem>
     </form>
   );

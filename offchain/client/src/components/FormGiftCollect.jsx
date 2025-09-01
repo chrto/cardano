@@ -5,48 +5,47 @@ import lucidStorage from '../utils/lucid/storage';
 import Modal from './Modal';
 import dispatchData from '../utils/dispatchData';
 import getOutRefFromUTxOKey from '../utils/getOutRefFromUTxOKey';
+import getKeyUTxO from '../utils/getKeyUTxO';
 
-function FormGiftCollect({ validatorScript, getSelectedScriptUtxos, deselectScriptUtxos}) {
-  const [errorMessage, setErrorMessage] = useState(null);
+function FormGiftCollect({ validatorScript, getSelectedScriptUtxos, getReferenceUtxo, deselect}) {
+  const [error, setError] = useState(null);
   const [txHash, setTxHash] = useState(null);
-  const [formData, setFormData] = useState({ scriptRef: '' });
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const utxos = getSelectedScriptUtxos().map(utxoToLucid)
     if (utxos.length === 0) {
-      setErrorMessage("No UTxO has been selected!");
+      setError("No UTxO has been selected!");
       return null;
     }
 
+    const references = utxos.filter(utxo => !!utxo.scriptHash).map(getKeyUTxO)
+    if (references.length > 0) {
+      setError(`Reference Script UTxOs has been selected to spend.\n[${references.join(', ')}]\nThis feature is not supported, Workig hard!`);
+      return null;
+    }
+
+    const referenceKey = getReferenceUtxo()
     lucidStorage.then(storage =>
-      formData.scriptRef !== ''
-        ? storage.getUTxOsByOutRef([getOutRefFromUTxOKey(formData.scriptRef)])
+      !!referenceKey
+        ? storage.getUTxOsByOutRef([getOutRefFromUTxOKey(referenceKey)])
             .then(utxoRefs => !!utxoRefs && utxoRefs.length>0
-              ? Promise.resolve(utxoRefs)
-              : Promise.reject(`UTxO at ${formData.scriptRef} has not been found!`)
-            )
-            .then(utxoRefs => utxoRefs.length === 1
               ? Promise.resolve(utxoRefs[0])
-              : Promise.reject(`Expected exactly one UTxO at ${formData.scriptRef}!`)
+              : Promise.reject(`UTxO at ${referenceKey} has not been found!`)
             )
             .then(utxoRef => !!utxoRef.scriptRef
               ? Promise.resolve(utxoRef)
-              : Promise.reject(`UTxO at ${formData.scriptRef} has no script reference!`)
+              : Promise.reject(`UTxO at ${referenceKey} has no script reference!`)
             )
-            .then(utxoRef => storage.buildSpendFromContractTx(utxos, { scriptRefUTxO: utxoRef }))
+            .then(scriptRefUTxO => storage.buildSpendFromContractTx(utxos, { scriptRefUTxO }))
             .then(storage.signTx)
             .then(storage.submitTx)
             .then(dispatchData(setTxHash))
             .then(() => {
               resetForms()
             })
-          .catch(dispatchData(setErrorMessage))
+          .catch(dispatchData(setError))
         : storage.buildSpendFromContractTx(utxos, { script: validatorScript })
           .then(storage.signTx)
           .then(storage.submitTx)
@@ -54,13 +53,12 @@ function FormGiftCollect({ validatorScript, getSelectedScriptUtxos, deselectScri
           .then(() => {
             resetForms()
           })
-          .catch(dispatchData(setErrorMessage))
+          .catch(dispatchData(setError))
     )
   };
 
   const resetForms = () => {
-    deselectScriptUtxos()
-    setFormData({ scriptRef: '' });
+    deselect()
   }
 
   const handleReset = (e) => {
@@ -71,22 +69,18 @@ function FormGiftCollect({ validatorScript, getSelectedScriptUtxos, deselectScri
   const handleCloseModal = (e) => {
     e.preventDefault();
 
-    setErrorMessage(null)
+    setError(null)
     setTxHash(null)
   }
 
   return (
     <div className="form">
-      <div className="inputs">
-        <label>{"Reference to script (Optional):"}</label>
-        <input type="text" name="scriptRef" value={formData.scriptRef} onChange={handleChange} />
-      </div>
       <div className="buttons">
         <button type="button" onClick={handleSubmit}>Submit</button>
         <button type="button" onClick={handleReset}>Reset</button>
       </div>
 
-      <Modal isOpen={!!txHash || !!errorMessage} isError={!!errorMessage} onClose={handleCloseModal}>
+      <Modal isOpen={!!txHash || !!error} isError={!!error} onClose={handleCloseModal}>
         {
           !!txHash
           ? <div>
@@ -96,7 +90,7 @@ function FormGiftCollect({ validatorScript, getSelectedScriptUtxos, deselectScri
             </div>
             : <div>
                 <h2>Transaction has been failed.</h2>
-                {!!errorMessage && errorMessage.split("\\n").map(line => <p>{line}</p> )}
+                {!!error && !! error.message && error.message.split("\\n").map(line => <p>{line}</p> )}
               </div>
         }
       </Modal>

@@ -8,7 +8,7 @@ import getData from '../utils/getDataFromServer';
 
 export default function AccordionScriptsView({ scripts, ref }) {
   const [openIndex, setOpenIndex] = useState(0);
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [error, setError] = useState(null);
   const [data, setData] = useState(null);
   const [scriptDetail, setScriptDetail] = useState(null);
   const [selectedScript, setSelectedScript] = useState(null);
@@ -47,7 +47,7 @@ export default function AccordionScriptsView({ scripts, ref }) {
   });
 
   const scriptToDetail = (script) =>
-    Object.keys(script).filter(key => key !== 'script' && key !== 'references').map(
+    Object.keys(script).filter(key => key !== 'script' && key !== 'scriptReferences').map(
       key => ({
         key,
         link: false,
@@ -59,9 +59,10 @@ export default function AccordionScriptsView({ scripts, ref }) {
   const scriptRefToDetail = (scriptRef) =>
     scriptRef.map(ref => ({
       key: ref.id,
-      link: false,
+      link: true,
       select: false,
-      data: [`${ref.txId}#${ref.txIndex}`, ref.address]
+      mute: !ref.unspend,
+      data: [ref.txId, ref.txIndex, ref.address]
     }))
 
   const selectScript = (scriptId) => {
@@ -86,11 +87,7 @@ export default function AccordionScriptsView({ scripts, ref }) {
         title: 'Script has been deleted.',
         message: `Script id: ${data.removedScriptId}`
       }))
-      .catch(e => setErrorMessage({
-        title: 'Script has not been deleted!',
-        message: e.message,
-        details: e.details
-      }))
+      .catch(setError)
   }
 
   const handleOnCbor = (e) => {
@@ -105,13 +102,14 @@ export default function AccordionScriptsView({ scripts, ref }) {
     e.preventDefault();
 
     const script = scripts.find(script => script.id === e.target.value);
+
     getScriptAddress(script)
       .then(address => setScriptDetail({...script, script: null, address}))
   }
 
   const handleCloseModal = (e) => {
     e.preventDefault();
-    setErrorMessage(null)
+    setError(null)
     setData(null)
     setScriptDetail(null)
   }
@@ -207,7 +205,7 @@ export default function AccordionScriptsView({ scripts, ref }) {
       />
       </AccordionItem>
 
-      <Modal isOpen={!!data || !!errorMessage || !!scriptDetail} isError={!!errorMessage} onClose={handleCloseModal}>
+      <Modal isOpen={!!data || !!error || !!scriptDetail} isError={!!error} onClose={handleCloseModal}>
         {
           !!data &&
             <div>
@@ -216,11 +214,16 @@ export default function AccordionScriptsView({ scripts, ref }) {
           </div>
         }
         {
-          !!errorMessage &&
+          !!error &&
             <div>
-              <h2>{errorMessage.title}</h2>
-              <p>{errorMessage.message}</p>
-              <p>{errorMessage.details}</p>
+              <h2>Script has not been deleted!</h2>
+              {
+                !!error.message
+                  ? !!error.details
+                    ? <div><p>{error.message}</p><p>{error.details}</p></div>
+                    : <p>{error.message}</p>
+                  : <p>error</p>
+              }
             </div>
         }
         {
@@ -229,23 +232,23 @@ export default function AccordionScriptsView({ scripts, ref }) {
             <div className="partial-content">
               <h2>Script Detail</h2>
               <Table
-                headers={['', '']}
+                headers={['Key', 'Value']}
                 values={scriptToDetail(scriptDetail)}
               />
               <h2>Script References</h2>
               <Table
-                headers={['txRef', 'address']}
-                values={scriptRefToDetail(scriptDetail.references)}
+                headers={['Hash', 'Index', 'Address']}
+                values={scriptRefToDetail(scriptDetail.scriptReferences)}
               />
             </div>
           </div>
         }
         {
           !!scriptDetail && !!scriptDetail.script &&
-        <div>
-          <h2>Script CBOR</h2>
-              <textarea style={{ height: '50dvh', width: '60dvw'}} type='text' name="cbor" value={scriptDetail.script}></textarea>
-        </div>
+          <div>
+            <h2>Script CBOR</h2>
+                <textarea style={{ height: '50dvh', width: '60dvw'}} type='text' name="cbor" value={scriptDetail.script}></textarea>
+          </div>
         }
       </Modal>
     </form>

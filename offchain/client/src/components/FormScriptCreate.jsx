@@ -6,7 +6,7 @@ import dispatchData from '../utils/dispatchData';
 
 function FormScriptCreate() {
   const [formData, setFormData] = useState({ type: 'PlutusV2', title: '', script: '', category: 'Gift', description: '' });
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [error, setError] = useState(null);
   const [result, setResult] = useState(null);
 
   const handleChange = (e) => {
@@ -18,7 +18,7 @@ function FormScriptCreate() {
 
     postDataToServer(`cardano/scripts`, formData)
       .then(dispatchData(setResult))
-      .catch(dispatchData(setErrorMessage))
+      .catch(dispatchData(setError))
   };
 
   const handleReset = (e) => {
@@ -29,7 +29,7 @@ function FormScriptCreate() {
   const handleCloseModal = (e) => {
     e.preventDefault();
 
-    setErrorMessage(null)
+    setError(null)
     setResult(null)
   }
 
@@ -67,7 +67,7 @@ function FormScriptCreate() {
         <button type="button" onClick={handleReset}>Reset</button>
       </div>
 
-      <Modal isOpen={!!result || !!errorMessage} isError={!!errorMessage} onClose={handleCloseModal}>
+      <Modal isOpen={!!result || !!error} isError={!!error} onClose={handleCloseModal}>
         {
           !!result
             ? <div>
@@ -78,9 +78,14 @@ function FormScriptCreate() {
               <p>{ result.description }</p>
               </div>
             : <div>
-                <h2>Transaction has been failed.</h2>
-              {!!errorMessage && <p>{ errorMessage.message}</p>}
-              {!!errorMessage && <p>{ errorMessage.details}</p>}
+              <h2>Transaction has been failed.</h2>
+              {
+                !!error.message
+                  ? !!error.details
+                    ? <div><p>{error.message}</p><p>{error.details}</p></div>
+                    : <p>{error.message}</p>
+                  : <p>error</p>
+              }
               </div>
         }
       </Modal>

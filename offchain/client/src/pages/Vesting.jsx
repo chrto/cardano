@@ -97,7 +97,9 @@ function Vesting({ publicKeyHash, walletAddress, walletUtxos }) {
     return scriptUtxos.filter(utxo => selected.has(getKeyUTxO(utxo)))
   }
 
-  const deselectScriptUtxos = () => {
+  const getReferenceUtxo = () => scriptViewRef.current?.getReference();
+
+  const deselect = () => {
     scriptViewRef.current?.deselect();
   }
 
@@ -120,7 +122,8 @@ function Vesting({ publicKeyHash, walletAddress, walletUtxos }) {
               getSelectedWalletUtxos={getSelectedWalletUtxos}
               deselectWalletUtxos={deselectWalletUtxos}
               getSelectedScriptUtxos={getSelectedScriptUtxos}
-              deselectScriptUtxos={deselectScriptUtxos}
+              getReferenceUtxo={getReferenceUtxo}
+              deselect={deselect}
             />
           </aside>
           <div className="view-panel">
