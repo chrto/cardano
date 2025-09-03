@@ -7,6 +7,7 @@ module VestingUtils where
 import                           Plutus.V2.Ledger.Api     (PubKeyHash (PubKeyHash, getPubKeyHash), Validator, POSIXTime (POSIXTime), Address (addressCredential), Credential (PubKeyCredential, ScriptCredential), ValidatorHash)
 import qualified                 Vesting
 import qualified                 VestingParametrized
+import qualified                 VestingParametrizedTwo
 
 import                           Utils                    (writeValidatorToFile, validatorTestnetAddressBech32
                                                             , validatorMainnetAddressBech32, printDataToJSON
@@ -125,31 +126,7 @@ saveVestingRedeemer = writeDataToFile "./assets/unit.json" ()
 saveVestingParametrized :: FilePath -> VestingParametrized.VestingParams -> IO ()
 saveVestingParametrized outFile = saveValidator outFile . VestingParametrized.validator
 
--- saveVestingParametrizedFor :: String -> String -> IO ()
--- saveVestingParametrizedFor beneficiary deadline = do
---   pkhOrErr <- pubKeyHashStringFromVkeyFile vKeyPath
---   let timeOrErr = posixTimeFromIso8601OrErr deadline
---       paramsOrErr = buildVestingParams <$> pkhOrErr <*> timeOrErr
---   saveParametrized paramsOrErr
---     where
---       vKeyPath :: FilePath
---       vKeyPath = "./../../keys/" ++ beneficiary ++ ".vkey"
-
---       outPath :: FilePath
---       outPath = "./assets/" ++ beneficiary ++ "VestingParametrized.plutus"
-
---       saveParametrized :: Either String VestingParametrized.VestingParams -> IO ()
---       saveParametrized (Right params) = saveVestingParametrized outPath params
---       saveParametrized (Left error)    = print error
-
---       buildVestingParams :: String -> POSIXTime -> VestingParametrized.VestingParams
---       buildVestingParams pkh time = VestingParametrized.VestingParams
---         {
---           VestingParametrized.beneficiary = toPubKeyHash pkh
---           , VestingParametrized.deadline = time
---         }
-
---- >>> getVestingDatum' "addr_test1wpmcnpr36xj..yjq2ldypjzs630u48" "2025-02-16T12:03:17Z"
--- Nothing
-
+-- Parametrized Vesting
+saveVestingParametrizedTwo :: FilePath -> PubKeyHash -> POSIXTime -> IO ()
+saveVestingParametrizedTwo outFile pkh deadline = saveValidator outFile $ VestingParametrizedTwo.validator pkh deadline
 
