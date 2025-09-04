@@ -69,15 +69,18 @@ function FormScriptCreate() {
 
       <Modal isOpen={!!result || !!error} isError={!!error} onClose={handleCloseModal}>
         {
-          !!result
-            ? <div>
-                <h2>Script has been added into DB.</h2>
-              <p>{ result.type }</p>
-              <p>{ result.category }</p>
-              <p>{ result.title }</p>
-              <p>{ result.description }</p>
-              </div>
-            : <div>
+          !!result &&
+            <div>
+              <h2>Script has been added into DB.</h2>
+              <p>{result.type}</p>
+              <p>{result.category}</p>
+              <p>{result.title}</p>
+              <p>{result.description}</p>
+            </div>
+        }
+        {
+          !!error &&
+            <div>
               <h2>Transaction has been failed.</h2>
               {
                 !!error.message
@@ -86,7 +89,7 @@ function FormScriptCreate() {
                     : <p>{error.message}</p>
                   : <p>error</p>
               }
-              </div>
+            </div>
         }
       </Modal>
     </div>
