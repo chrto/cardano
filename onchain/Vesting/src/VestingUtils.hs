@@ -4,20 +4,23 @@
 {-# LANGUAGE LambdaCase #-}
 
 module VestingUtils where
-import                           Plutus.V2.Ledger.Api     (PubKeyHash (PubKeyHash, getPubKeyHash), Validator, POSIXTime (POSIXTime), Address (addressCredential), Credential (PubKeyCredential, ScriptCredential), ValidatorHash)
+import           Plutus.V2.Ledger.Api (Validator, POSIXTime
+                                     , PubKeyHash, Address(addressCredential)
+                                     , Credential(PubKeyCredential, ScriptCredential)
+                                     , ValidatorHash)
 import qualified                 Vesting
 import qualified                 VestingParametrized
 import qualified                 VestingParametrizedTwo
+import qualified                 VestingParametrizedBeneficiary
 
 import                           Utils                    (writeValidatorToFile, validatorTestnetAddressBech32
                                                             , validatorMainnetAddressBech32, printDataToJSON
-                                                            , posixTimeFromIso8601, pubKeyHashStringFromVkeyFile
-                                                            , posixTimeFromIso8601OrErr, tryReadAddress, writeDataToFile, jsonToString, dataToJSON)
+                                                            , posixTimeFromIso8601
+                                                            , tryReadAddress, writeDataToFile, jsonToString, dataToJSON)
 
 import                           Prelude                  (IO, String, (.), ($), (++), (.), (<*>), FilePath
-                                                            , Either(Left, Right), print, Maybe, (>>=), Integer, return, putStrLn)
-import Data.Maybe                                         (fromJust, Maybe (..))
-import PlutusTx.Builtins.Class                            (stringToBuiltinByteString)
+                                                            , Maybe, (>>=), return, putStrLn)
+import Data.Maybe                                         (Maybe (..))
 import           Data.Functor                             ((<$>), (<&>))
 
 -- Common
@@ -130,3 +133,22 @@ saveVestingParametrized outFile = saveValidator outFile . VestingParametrized.va
 saveVestingParametrizedTwo :: FilePath -> PubKeyHash -> POSIXTime -> IO ()
 saveVestingParametrizedTwo outFile pkh deadline = saveValidator outFile $ VestingParametrizedTwo.validator pkh deadline
 
+------------------------------------
+-- Parametrized Vesting Beneficiary
+saveVestingParametrizedBeneficiary :: FilePath -> PubKeyHash -> IO ()
+saveVestingParametrizedBeneficiary outFile = saveValidator outFile . VestingParametrizedBeneficiary.validator
+
+--- >>> saveVestingParametrizedBeneficiary "./assets/vestingParametrizedAliceBeneficiary.plutus" "..."
+
+vestingBeneficiaryTestnetAddressBech32 :: PubKeyHash -> String
+vestingBeneficiaryTestnetAddressBech32 = validatorTestnetAddressBech32 . VestingParametrizedBeneficiary.validator
+--- >>> vestingBeneficiaryTestnetAddressBech32 "..."
+
+vestingBeneficiaryDatumToJson :: POSIXTime -> String
+vestingBeneficiaryDatumToJson  = jsonToString . dataToJSON
+
+printVestingBeneficiaryDatum :: POSIXTime -> IO ()
+printVestingBeneficiaryDatum = printDataToJSON
+
+saveVestingBeneficiaryDatum :: POSIXTime -> IO ()
+saveVestingBeneficiaryDatum = writeDataToFile "./assets/vesting-beneficiary-datum.json"
