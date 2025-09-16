@@ -9,6 +9,8 @@ const VestingDatum = Data.Object({
   deadline: Data.Integer
 })
 
+const VestingParametrizedDatum = Data.Integer();
+
 const IntegerData = Data.Integer();
 
 const getCBORFromData = (data, type) => {
@@ -27,6 +29,14 @@ const getCBORFromData = (data, type) => {
         return Data.to(data, VestingDatum)
       } catch (err) {
         console.error(`Can not convert VestingDatum to CBOR: ${err}`)
+        return null
+      }
+    case 'vestingParametrized':
+      try {
+        // eslint-disable-next-line no-undef
+        return Data.to(data, VestingParametrizedDatum)
+      } catch (err) {
+        console.error(`Can not convert VestingParametrizedDatum to CBOR: ${err}`)
         return null
       }
     default: return DEFAULT_UNIT_CBOR;
@@ -50,6 +60,12 @@ const getDataFromCBOR = (data, type) => {
         return Data.from(data, VestingDatum);
       } catch (err) {
         return null;
+      }
+    case 'vestingParametrized':
+      try {
+        return Data.from(data, VestingParametrizedDatum)
+      } catch (err) {
+        return null
       }
     case 'integer':
       try {
