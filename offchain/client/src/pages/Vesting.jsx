@@ -1,6 +1,7 @@
 import './Page.css'
 import { useEffect, useState, useRef } from 'react';
 import AccordionVestingView from '../components/AccordionVestingView';
+import AccordionVestingParametrizedView from '../components/AccordionVestingParametrizedView';
 import Wallet from '../components/Wallet';
 import AccordionVestingForm from '../components/AccordionVestingForm'
 import AccordionWalletView from '../components/AccordionWalletView';
@@ -127,13 +128,23 @@ function Vesting({ publicKeyHash, walletAddress, walletUtxos }) {
             />
           </aside>
           <div className="view-panel">
-            <AccordionVestingView
-              publicKeyHash={publicKeyHash}
-              scriptUtxos={scriptUtxos}
-              scriptAddress={scriptAddress}
-              selectedScript={selectedScript}
-              ref={scriptViewRef}
-            />
+            {
+              scriptAddress === "addr_test1wp53ycwlfuuylz6ttxcwury3p9ejfsu5tpq3m8d57l7ad8cqpk94v"
+                ? <AccordionVestingView
+                    publicKeyHash={publicKeyHash}
+                    scriptUtxos={scriptUtxos}
+                    scriptAddress={scriptAddress}
+                    selectedScript={selectedScript}
+                    ref={scriptViewRef}
+                  />
+                : <AccordionVestingParametrizedView
+                    scriptUtxos={scriptUtxos}
+                    scriptAddress={scriptAddress}
+                    selectedScript={selectedScript}
+                    ref={scriptViewRef}
+                  />
+            }
+
           </div>
         </div>
       }

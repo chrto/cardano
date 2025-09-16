@@ -8,12 +8,12 @@ import getKeyUTxO from '../utils/getKeyUTxO';
 import dispatchData from '../utils/dispatchData';
 import getData from '../utils/getDataFromServer';
 
-export default function AccordionVestingView({ publicKeyHash, scriptUtxos, scriptAddress, selectedScript, ref }) {
+export default function AccordionVestingParametrizedView({ scriptUtxos, scriptAddress, selectedScript, ref }) {
   const [selectedUtxos, setSelectedUtxos] = useState(new Set([]));
   const [selectedRef, setSelectedRef] = useState(null);
   const [openUtxoIndex, setOpenUtxoIndex] = useState(0);
   const [openScriptIndex, setOpenScriptIndex] = useState(0);
-  const [utxos, setUtxos] = useState({ reference: [], beforeDeadline: [], afterDeadline: [], others: [] });
+  const [utxos, setUtxos] = useState({ reference: [], wrongDatum: [], beforeDeadline: [], afterDeadline: [] });
   const [references, setReferences] = useState([]);
 
   // Expose functions to parent
@@ -46,22 +46,24 @@ export default function AccordionVestingView({ publicKeyHash, scriptUtxos, scrip
     getData(`cardano/scriptReferences?scriptId=${selectedScript.id}`)
       .then(refs => refs.map(ref => ({ txId: ref.txId, txIndex: ref.txIndex, address: ref.address })));
 
-  const sortUtxos = (availableUtxos) => availableUtxos.reduce((acc, utxo) => ({
-    ...acc,
-    ...getBeneficiary(utxo) === publicKeyHash
-      ? Date.now() > getDeadline(utxo)
-        ? { afterDeadline: [...acc.afterDeadline, utxo] }
-        : { beforeDeadline: [...acc.beforeDeadline, utxo] }
-      : !!utxo.scriptHash
+  const sortUtxos = (availableUtxos) => availableUtxos.reduce((acc, utxo) => {
+    const deadline = getDeadline(utxo);
+    return {
+      ...acc,
+      ...!!utxo.scriptHash
         ? { reference: [...acc.reference, utxo] }
-        : { others: [...acc.others, utxo] }
-  }), { reference: [], beforeDeadline: [], afterDeadline: [], others: [] })
+        : !!deadline
+          ? Date.now() > deadline
+            ? { afterDeadline: [...acc.afterDeadline, utxo] }
+            : { beforeDeadline: [...acc.beforeDeadline, utxo] }
+          : { wrongDatum: [...acc.wrongDatum, utxo] }
+    }
+  }, { reference: [], wrongDatum: [], beforeDeadline: [], afterDeadline: [] })
 
-  const getBeneficiary = utxo => datumFromCBOR(utxo.datum, 'vesting')?.beneficiary
   const getDeadline = utxo => {
-    const datum = datumFromCBOR(utxo.datum, 'vesting')
+    const datum = datumFromCBOR(utxo.datum, 'vestingParametrized')
     return !!datum
-      ? Number(datum.deadline)
+      ? Number(datum)
       : null
   }
   const getDeadlineISO = utxo => new Date(getDeadline(utxo)).toISOString()
@@ -74,19 +76,6 @@ export default function AccordionVestingView({ publicKeyHash, scriptUtxos, scrip
       isSelectedUTxO(utxo),
       utxo.txId,
       utxo.txIndex,
-      getDeadlineISO(utxo),
-      Number(utxo.assets.lovelace) / 1000000
-    ]
-  })
-
-  const convertOthersVestingUTxOs = utxo => ({
-    key: getKeyUTxO(utxo),
-    link: true,
-    select: false,
-    data: [
-      utxo.txId,
-      utxo.txIndex,
-      getBeneficiary(utxo),
       getDeadlineISO(utxo),
       Number(utxo.assets.lovelace) / 1000000
     ]
@@ -164,10 +153,11 @@ export default function AccordionVestingView({ publicKeyHash, scriptUtxos, scrip
             selectRow={selectUtxo}
           />
         </AccordionItem>
-        <AccordionItem title={"Script Utxo's with other as beneficiaries (" + utxos.others.length + ")"} isOpen={openUtxoIndex === 2} onToggle={() => toggleUtxo(2)}>
+        <AccordionItem title={"Script Utxo's with wrong datum - Can not be spend (" + utxos.wrongDatum.length + ")"} isOpen={openUtxoIndex === 1} onToggle={() => toggleUtxo(1)}>
           <Table
-            headers={['TxHash', 'TxIdx', 'Beneficiary', 'Deadline', 'Value [Ada]']}
-            values={utxos.others.map(convertOthersVestingUTxOs)}
+            headers={['TxHash', 'TxIdx', 'Value [Lovelace]', 'Value [Ada]']}
+            values={utxos.wrongDatum.map(convertUtxos)}
+            selectRow={selectUtxo}
           />
         </AccordionItem>
       </div>

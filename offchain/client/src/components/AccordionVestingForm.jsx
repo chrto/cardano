@@ -2,6 +2,7 @@ import { useState } from 'react';
 import './AccordionForm.css';
 import AccordionItem from './AccordionItem';
 import FormVestingSend from './FormVestingSend';
+import FormVestingParametrizedSend from './FormVestingParametrizedSend';
 import FormVestingClaim from './FormVestingClaim';
 import ChoiceScriptVersion from './ChoiceScriptVersion';
 
@@ -27,7 +28,10 @@ export default function AccordionVestingForm({ scriptAddress, handleChoice, sele
       }
 
       <AccordionItem title="Vest" isOpen={openIndex === 0} onToggle={() => toggle(0)}>
-        <FormVestingSend scriptAddress={scriptAddress} getSelectedWalletUtxos={getSelectedWalletUtxos} deselectWalletUtxos={deselectWalletUtxos} />
+        {scriptAddress === "addr_test1wp53ycwlfuuylz6ttxcwury3p9ejfsu5tpq3m8d57l7ad8cqpk94v"
+          ? <FormVestingSend scriptAddress={scriptAddress} getSelectedWalletUtxos={getSelectedWalletUtxos} deselectWalletUtxos={deselectWalletUtxos} />
+          : <FormVestingParametrizedSend scriptAddress={scriptAddress} getSelectedWalletUtxos={getSelectedWalletUtxos} deselectWalletUtxos={deselectWalletUtxos} />
+        }
       </AccordionItem>
 
       <AccordionItem title="Claim" isOpen={openIndex === 1} onToggle={() => toggle(1)}>
