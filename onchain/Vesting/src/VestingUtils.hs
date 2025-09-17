@@ -4,24 +4,26 @@
 {-# LANGUAGE LambdaCase #-}
 
 module VestingUtils where
-import           Plutus.V2.Ledger.Api (Validator, POSIXTime
-                                     , PubKeyHash, Address(addressCredential)
-                                     , Credential(PubKeyCredential, ScriptCredential)
-                                     , ValidatorHash)
-import qualified                 Vesting
-import qualified                 VestingParametrized
-import qualified                 VestingParametrizedTwo
-import qualified                 VestingParametrizedBeneficiary
+import                Plutus.V2.Ledger.Api            (Validator, POSIXTime
+                                                      , PubKeyHash (PubKeyHash), Address(addressCredential)
+                                                      , Credential(PubKeyCredential, ScriptCredential)
+                                                      , ValidatorHash, toBuiltin)
+import qualified     Vesting
+import              Plutus.V1.Ledger.Bytes           (bytes, fromHex)
+import qualified     VestingParametrized
+import qualified     VestingParametrizedTwo
+import qualified     VestingParametrizedBeneficiary
 
-import                           Utils                    (writeValidatorToFile, validatorTestnetAddressBech32
-                                                            , validatorMainnetAddressBech32, printDataToJSON
-                                                            , posixTimeFromIso8601
-                                                            , tryReadAddress, writeDataToFile, jsonToString, dataToJSON)
+import               Utils                            (writeValidatorToFile, validatorTestnetAddressBech32
+                                                      , validatorMainnetAddressBech32, printDataToJSON
+                                                      , posixTimeFromIso8601
+                                                      , tryReadAddress, writeDataToFile, jsonToString, dataToJSON)
 
-import                           Prelude                  (IO, String, (.), ($), (++), (.), (<*>), FilePath
-                                                            , Maybe, (>>=), return, putStrLn)
-import Data.Maybe                                         (Maybe (..))
-import           Data.Functor                             ((<$>), (<&>))
+import              Prelude                           (IO, String, (.), ($), (++), (.), (<*>), FilePath
+                                                      , Maybe, Either (Right, Left), (>>=), return, putStrLn)
+import              Data.Maybe                        (Maybe (..))
+import              Data.Functor                      ((<$>), (<&>))
+import              Data.ByteString.Char8             (ByteString, pack, unpack)
 
 -- Common
 saveValidator :: FilePath -> Validator -> IO ()
@@ -45,7 +47,18 @@ pubKeyHashFromAddress address = tryReadAddress address
     . addressCredential
 
 --- >>> pubKeyHashFromAddress "addr_test1vpy494af9z9th4anvcjnp8pxfsyfmkakqshaw6v784qph9qtutwc9"
--- Just 4952d7a9288abbd7b36625309c264c089ddbb6042fd7699e3d401b94
+
+pubKeyHashFromPkh :: String -> Maybe PubKeyHash
+pubKeyHashFromPkh pkh = PubKeyHash . toBuiltin <$> hexOrErr pkh
+  where hexOrErr = bytesFromHex . pack
+
+pubKeyHashFromPkhBS :: ByteString -> Maybe PubKeyHash
+pubKeyHashFromPkhBS pkh = PubKeyHash . toBuiltin <$> bytesFromHex pkh
+
+bytesFromHex :: ByteString -> Maybe ByteString
+bytesFromHex bs = case bytes <$> fromHex bs of
+  Right pkh -> Just pkh
+  Left _ -> Nothing
 
 validatorHashFromAddress :: String -> Maybe ValidatorHash
 validatorHashFromAddress address = tryReadAddress address
@@ -59,15 +72,23 @@ validatorHashFromAddress address = tryReadAddress address
 --- >>> validatorHashFromAddress "addr_test1wqag3rt979nep9g2wtdwu8mr4gz6m4kjdpp5zp705km8wys6t2kla"
 -- Just 3a888d65f16790950a72daee1f63aa05add6d268434107cfa5b67712
 
-getVestingDatum :: String -> String -> Maybe Vesting.VestingDatum
-getVestingDatum address utcIso8601Time =
+getVestingDatumFromPkh :: String -> String -> Maybe Vesting.VestingDatum
+getVestingDatumFromPkh pkh utcIso8601Time =
+  Vesting.VestingDatum <$> pubKeyHashFromPkh pkh <*> posixTimeFromIso8601 utcIso8601Time
+
+getVestingDatumFromPkhBS :: ByteString -> String -> Maybe Vesting.VestingDatum
+getVestingDatumFromPkhBS pkh utcIso8601Time =
+  Vesting.VestingDatum <$> pubKeyHashFromPkhBS pkh <*> posixTimeFromIso8601 utcIso8601Time
+
+getVestingDatumFromAddr :: String -> String -> Maybe Vesting.VestingDatum
+getVestingDatumFromAddr address utcIso8601Time =
   Vesting.VestingDatum <$> pubKeyHashFromAddress address <*> posixTimeFromIso8601 utcIso8601Time
 
---- >>> getVestingDatum "addr_test1vpy494af9z9th4anvcjnp8pxfsyfmkakqshaw6v784qph9qtutwc9" "2025-02-16T12:03:17Z"
+--- >>> getVestingDatumFromAddr "addr_test1vpy494af9z9th4anvcjnp8pxfsyfmkakqshaw6v784qph9qtutwc9" "2025-02-16T12:03:17Z"
 -- Just (VestingDatum {beneficiary = 4952d7a9288abbd7b36625309c264c089ddbb6042fd7699e3d401b94, deadline = POSIXTime {getPOSIXTime = 1739707397000}})
 
-getVestingDatum' :: String -> String -> Maybe Vesting.VestingDatum
-getVestingDatum' address utcIso8601Time =
+getVestingDatumFromAddr' :: String -> String -> Maybe Vesting.VestingDatum
+getVestingDatumFromAddr' address utcIso8601Time =
   pubKeyHashFromAddress address
     >>= (\pkh -> posixTimeFromIso8601 utcIso8601Time
       <&> (\posixTime -> Vesting.VestingDatum {
@@ -76,11 +97,12 @@ getVestingDatum' address utcIso8601Time =
       })
     )
 
---- >>> getVestingDatum' "addr_test1vpy494af9z9th4anvcjnp8pxfsyfmkakqshaw6v784qph9qtutwc9" "2025-02-16T12:03:17Z"
--- Just (VestingDatum {beneficiary = 4952d7a9288abbd7b36625309c264c089ddbb6042fd7699e3d401b94, deadline = POSIXTime {getPOSIXTime = 1739707397000}})
+--- >>> getVestingDatumFromAddr' "addr_test1vpy494af9z9th4anvcjnp8pxfsyfmkakqshaw6v784qph9qtutwc9" "2025-02-16T12:03:17Z"
+-- No instance for (Show VestingDatum)
+--   arising from a use of ‘evalPrint’
 
-getVestingDatum'' :: String -> String -> Maybe Vesting.VestingDatum
-getVestingDatum'' address utcIso8601Time = do
+getVestingDatumFromAddr'' :: String -> String -> Maybe Vesting.VestingDatum
+getVestingDatumFromAddr'' address utcIso8601Time = do
   pkh <- pubKeyHashFromAddress address
   posixTime <- posixTimeFromIso8601 utcIso8601Time
 
@@ -92,7 +114,7 @@ getVestingDatum'' address utcIso8601Time = do
 vestingDatumToJson :: Vesting.VestingDatum -> String
 vestingDatumToJson  = jsonToString . dataToJSON
 
---- >>> vestingDatumToJson <$> getVestingDatum "addr_test1vpy494af9z9th4anvcjnp8pxfsyfmkakqshaw6v784qph9qtutwc9" "2025-02-16T12:03:17Z"
+--- >>> vestingDatumToJson <$> getVestingDatumFromAddr "addr_test1vpy494af9z9th4anvcjnp8pxfsyfmkakqshaw6v784qph9qtutwc9" "2025-02-16T12:03:17Z"
 -- Just "{\n    \"constructor\": 0,\n    \"fields\": [\n        {\n            \"bytes\": \"4952d7a9288abbd7b36625309c264c089ddbb6042fd7699e3d401b94\"\n        },\n        {\n            \"int\": 1739707397000\n        }\n    ]\n}"
 
 vestingRedeemerToJson :: String
@@ -101,30 +123,56 @@ vestingRedeemerToJson = jsonToString $ dataToJSON ()
 --- >>> vestingRedeemerToJson
 -- "{\n    \"constructor\": 0,\n    \"fields\": []\n}"
 
-printVestingDatum :: String -> String -> IO()
-printVestingDatum address utcIso8601Time =
-  case getVestingDatum address utcIso8601Time of
-    Just datum -> printDataToJSON datum
+printVestingDatumFromAddr :: String -> String -> IO()
+printVestingDatumFromAddr address utcIso8601Time =
+  case getVestingDatumFromAddr address utcIso8601Time of
+    Just datum -> printVestingDatum datum
     Nothing -> putStrLn $ "Can not create datum from '" ++ address ++ "' and '" ++ utcIso8601Time ++ "'!"
 
-printVestingDatum' :: Vesting.VestingDatum -> IO ()
-printVestingDatum' = printDataToJSON
+printVestingDatumFromPkh :: String -> String -> IO()
+printVestingDatumFromPkh pkh utcIso8601Time =
+  case getVestingDatumFromPkh pkh utcIso8601Time of
+    Just datum -> printVestingDatum datum
+    Nothing -> putStrLn $ "Can not create datum from '" ++ pkh ++ "' and '" ++ utcIso8601Time ++ "'!"
+
+printVestingDatumFromPkhBS :: ByteString -> String -> IO()
+printVestingDatumFromPkhBS pkh utcIso8601Time =
+  case getVestingDatumFromPkhBS pkh utcIso8601Time of
+    Just datum -> printVestingDatum datum
+    Nothing -> putStrLn $ "Can not create datum from '" ++ unpack pkh ++ "' and '" ++ utcIso8601Time ++ "'!"
+
+printVestingDatum :: Vesting.VestingDatum -> IO ()
+printVestingDatum = printDataToJSON
 
 printVestingRedeemer :: IO()
 printVestingRedeemer = printDataToJSON ()
 
-saveVestingDatum :: String -> String -> IO ()
-saveVestingDatum address utcIso8601Time =
-  case getVestingDatum address utcIso8601Time of
-    Just datum -> writeDataToFile "./assets/vesting-datum.json" datum
+saveVestingDatumFromAddr :: String -> String -> IO ()
+saveVestingDatumFromAddr address utcIso8601Time =
+  case getVestingDatumFromAddr address utcIso8601Time of
+    Just datum -> saveVestingDatum datum
     Nothing -> putStrLn $ "Can not create datum from '" ++ address ++ "' and '" ++ utcIso8601Time ++ "'!"
 
-saveVestingDatum'' :: Vesting.VestingDatum -> IO ()
-saveVestingDatum'' = writeDataToFile "./assets/vesting-datum.json"
+saveVestingDatumFromPkh :: String -> String -> IO ()
+saveVestingDatumFromPkh pkh utcIso8601Time =
+  case getVestingDatumFromPkh pkh utcIso8601Time of
+    Just datum -> saveVestingDatum datum
+    Nothing -> putStrLn $ "Can not create datum from '" ++ pkh ++ "' and '" ++ utcIso8601Time ++ "'!"
+
+saveVestingDatumFromPkhBS :: ByteString -> String -> IO ()
+saveVestingDatumFromPkhBS pkh utcIso8601Time =
+  case getVestingDatumFromPkhBS pkh utcIso8601Time of
+    Just datum -> saveVestingDatum datum
+    Nothing -> putStrLn $ "Can not create datum from '" ++ unpack pkh ++ "' and '" ++ utcIso8601Time ++ "'!"
+
+saveVestingDatum :: Vesting.VestingDatum -> IO ()
+saveVestingDatum = writeDataToFile "./assets/vesting-datum.json"
 
 saveVestingRedeemer :: IO()
 saveVestingRedeemer = writeDataToFile "./assets/unit.json" ()
 
+------------------------------------
+-- save validators
 -- Parametrized Vesting
 saveVestingParametrized :: FilePath -> VestingParametrized.VestingParams -> IO ()
 saveVestingParametrized outFile = saveValidator outFile . VestingParametrized.validator

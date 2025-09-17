@@ -54,6 +54,7 @@ extra-doc-files: CHANGELOG.md
 common common-settings
   build-depends:
     , base               ^>=4.14.3.0
+    , bytestring
     , plutus-ledger-api
     , plutus-tx
     , plutus-tx-plugin
