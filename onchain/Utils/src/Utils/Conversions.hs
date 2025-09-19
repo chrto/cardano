@@ -10,7 +10,10 @@ module Utils.Conversions
     , pubKeyHashFromVkeyFile
     , pubKeyHashStringFromVkeyFile
     , posixTimeFromIso8601OrErr
-    , tryReadAddress) where
+    , tryReadAddress
+    , bytesFromHex
+    , stringFromByteString
+    , stringToByteString) where
 
 import            Plutus.V2.Ledger.Api        (Validator, POSIXTime, Credential (PubKeyCredential, ScriptCredential), StakingCredential (StakingPtr, StakingHash), Address (..), PubKeyHash (PubKeyHash), ValidatorHash (ValidatorHash))
 import            Cardano.Ledger.BaseTypes    (Network (Testnet, Mainnet), TxIx (TxIx), CertIx (CertIx))
@@ -20,6 +23,7 @@ import qualified  Cardano.Ledger.Credential   as Cred
 import qualified  Utils.Serialise             as Utils
 import qualified  Data.Time.Format.ISO8601    as TimeFormat
 import qualified  Data.Time.Clock.POSIX       as TimePosix
+import qualified  Data.ByteString.Char8       as B8
 import            Data.Functor                ((<&>))
 import            Prelude                     (String, Maybe, fromRational
                                                 , toRational, ($), (<$>), (*), (/), (.), round, Num (fromInteger), FilePath, IO, Either (Left, Right), Show (show), otherwise, fromIntegral)
@@ -30,6 +34,7 @@ import            Data.Text                   (pack)
 import            Cardano.Crypto.Hash.Class   (hashToBytes)
 import            PlutusTx.Builtins           (toBuiltin)
 import            Cardano.Ledger.Hashes       (ScriptHash(..))
+import            Plutus.V1.Ledger.Bytes      (bytes, fromHex)
 
 
 validatorAddressBech32 :: Network -> Validator -> String
@@ -132,3 +137,14 @@ tryReadAddress x = case Api.deserialiseAddress Api.AsAddressAny $ pack x of
         }
 --- >>> tryReadAddress "addr_test1wrdk050fs7r9..zmjsxnmud5v8le6vjh6k5jhvchuyj76"
 -- Just (Address {addressCredential = ScriptCredential db67d1e987865a47..d3df1b461ff9d3257d5a92bb3, addressStakingCredential = Nothing})
+
+bytesFromHex :: B8.ByteString -> Maybe B8.ByteString
+bytesFromHex bs = case bytes <$> fromHex bs of
+  Right pkh -> Just pkh
+  Left _    -> Nothing
+
+stringFromByteString :: B8.ByteString -> String
+stringFromByteString = B8.unpack
+
+stringToByteString :: String -> B8.ByteString
+stringToByteString = B8.pack
