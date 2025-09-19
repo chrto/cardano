@@ -19,12 +19,17 @@ pubKeyHashFromAddress address = tryReadAddress address
     PubKeyCredential pkh -> Just pkh
     ScriptCredential _ -> Nothing)
     . addressCredential
-
 --- >>> pubKeyHashFromAddress "addr_test1vpy494af9z9th4anvcjnp8pxfsyfmkakqshaw6v784qph9qtutwc9"
+-- Just 4952d7a9288abbd7b36625309c264c089ddbb6042fd7699e3d401b94
 
 pubKeyHashFromPkh :: String -> Maybe PubKeyHash
 pubKeyHashFromPkh pkh = PubKeyHash . toBuiltin <$> hexOrErr pkh
   where hexOrErr = bytesFromHex . stringToByteString
+--- >>> pubKeyHashFromPkh "4952d7a9288abbd7b36625309c264c089ddbb6042fd7699e3d401b94"
+-- Just 4952d7a9288abbd7b36625309c264c089ddbb6042fd7699e3d401b94
 
 pubKeyHashFromPkhBS :: B8.ByteString -> Maybe PubKeyHash
 pubKeyHashFromPkhBS pkh = PubKeyHash . toBuiltin <$> bytesFromHex pkh
+
+--- >>> pubKeyHashFromPkhBS (stringToByteString "4952d7a9288abbd7b36625309c264c089ddbb6042fd7699e3d401b94")
+-- Just 4952d7a9288abbd7b36625309c264c089ddbb6042fd7699e3d401b94
