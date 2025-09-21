@@ -6,7 +6,9 @@ module Utils.Serialise
     , validatorToScript
     , printDataToJSON
     , jsonToString
-    , dataToJSON) where
+    , dataToJSON
+    , codeToScript
+    , writeCodeToFile) where
 
 import qualified Plutus.V2.Ledger.Api as PlutusV2
 import           Cardano.Api.Shelley (PlutusScript(PlutusScriptSerialised)
@@ -16,6 +18,8 @@ import           Cardano.Api.Shelley (PlutusScript(PlutusScriptSerialised)
                                     , fromPlutusData, writeFileJSON
                                     , prettyPrintJSON
                                     , scriptDataToJsonDetailedSchema)
+import           PlutusTx           (CompiledCode)
+
 import           Data.Aeson (Value)
 import qualified Codec.Serialise as CodecSerialize
 import qualified Data.ByteString.Lazy as BSL
@@ -35,9 +39,17 @@ writeScriptToFile filePath script =
     Left err -> print $ "Script has not been serialised into file" ++ displayError err
     Right () -> putStrLn $ "Serialized script to: " ++ filePath
 
+-- Create file with compiled code
+writeCodeToFile :: FilePath -> CompiledCode a -> IO ()
+writeCodeToFile filePath = writeScriptToFile filePath . codeToScript
+
 -- Serialize validator
 validatorToScript :: PlutusV2.Validator -> PlutusScript PlutusScriptV2
 validatorToScript = serializableToScript
+
+-- Serialize compiled code
+codeToScript :: CompiledCode a -> PlutusScript PlutusScriptV2
+codeToScript = serializableToScript . PlutusV2.fromCompiledCode
 
 serializableToScript :: CodecSerialize.Serialise a => a -> PlutusScript PlutusScriptV2
 serializableToScript = PlutusScriptSerialised
