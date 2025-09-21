@@ -13,15 +13,16 @@ import qualified     VestingParametrized
 import qualified     VestingParametrizedTwo
 import qualified     VestingParametrizedBeneficiary
 
-import               Utils                            (writeValidatorToFile, validatorTestnetAddressBech32
+import               Utils                            (writeValidatorToFile, validatorTestnetAddressBech32, writeCodeToFile
                                                       , validatorMainnetAddressBech32, printDataToJSON, pubKeyHashFromPkh, pubKeyHashFromPkhBS
                                                       , posixTimeFromIso8601, pubKeyHashFromAddress, stringFromByteString
                                                       , tryReadAddress, writeDataToFile, jsonToString, dataToJSON)
 
 import              Prelude                           (IO, String, (.), ($), (++), (.), (<*>), FilePath
-                                                      , Maybe, (>>=), return, putStrLn)
+                                                      , Maybe, (>>=), return, putStrLn, show)
 import              Data.Maybe                        (Maybe (..))
 import              Data.Functor                      ((<$>), (<&>))
+import              Text.Printf                       (printf)
 import qualified    Data.ByteString.Char8 as B8
 
 -- Vesting
@@ -174,3 +175,11 @@ printVestingBeneficiaryDatum = printDataToJSON
 
 saveVestingBeneficiaryDatum :: POSIXTime -> IO ()
 saveVestingBeneficiaryDatum = writeDataToFile "./assets/vesting-beneficiary-datum.json"
+
+-- Vesting validator from Factory
+saveVestingCode :: IO ()
+saveVestingCode = writeCodeToFile "./assets/vestingCode.plutus" VestingParametrizedBeneficiary.vestingCode
+
+saveVestingBeneficiary :: PubKeyHash -> IO ()
+saveVestingBeneficiary pkh = writeValidatorToFile (printf "./assets/vesting-%s.plutus" $ show pkh) $ VestingParametrizedBeneficiary.validatorFactory pkh
+
