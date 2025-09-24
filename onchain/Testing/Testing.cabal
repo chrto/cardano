@@ -71,6 +71,7 @@ library
     import:             common-settings
     exposed-modules:    NegativeRTimed
                         , ExploitableSwapFixInputCheck
+                        , ExploitableSwapFixDatum
     hs-source-dirs:     src
 
 test-suite demo-test
@@ -117,5 +118,12 @@ test-suite exploitableSwapFixInputCheck-unit-test
     type:             exitcode-stdio-1.0
     hs-source-dirs:   test
     main-is:          UTExploitableSwapFixInputCheck.hs
+    build-depends:    Testing
+
+test-suite exploitableSwapFixDatum-unit-test
+    import:           common-settings
+    type:             exitcode-stdio-1.0
+    hs-source-dirs:   test
+    main-is:          UTExploitableSwapFixDatum.hs
     build-depends:    Testing
 
