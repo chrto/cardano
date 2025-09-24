@@ -70,6 +70,7 @@ common common-settings
 library
     import:             common-settings
     exposed-modules:    NegativeRTimed
+                        , ExploitableSwapFixInputCheck
     hs-source-dirs:     src
 
 test-suite demo-test
@@ -109,5 +110,12 @@ test-suite negativeRTimed-property-test
     type:             exitcode-stdio-1.0
     hs-source-dirs:   test
     main-is:          PTNegativeRTimed.hs
+    build-depends:    Testing
+
+test-suite exploitableSwapFixInputCheck-unit-test
+    import:           common-settings
+    type:             exitcode-stdio-1.0
+    hs-source-dirs:   test
+    main-is:          UTExploitableSwapFixInputCheck.hs
     build-depends:    Testing
 
