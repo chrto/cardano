@@ -4,21 +4,22 @@ module Main (main) where
 
 import qualified NegativeRTimed as OnChain
 import           Test.Tasty (defaultMain, testGroup, TestTree)
-import           Prelude (IO, String, (<>))
+import           Prelude (IO, String, (<>), foldl, uncurry)
 import           Plutus.Model (mustFail, testNoErrors, adaValue, defaultBabbage
                              , Run, newUser, TypedValidator(TypedValidator)
                              , toV2, Tx, UserSpend, userSpend, payToScript
                              , DatumMode(HashDatum), spendScript, payToKey, spend, submitTx, waitUntil, utxoAt, currentTimeRad, validateIn, valueAt, logError)
-import           PlutusTx.Prelude ((.), ($), Integer, Eq ((==)), (&&) )
+import           PlutusTx.Prelude ((.), ($), Integer, Eq ((==)), (&&), fst, snd )
 import           Plutus.V2.Ledger.Api (POSIXTime, PubKeyHash, Value, TxOutRef, TxOut (txOutValue))
 import           Control.Monad (replicateM, mapM, unless, (>>=))
+import           Control.Applicative ((<*>))
 import           Data.Functor ((<&>))
 
 main :: IO ()
 main = defaultMain
   $ do
     testGroup
-      "UnitTest Validator"
+      "UnitTest NegativeRTimed Validator"
       [
         testGroup
           "HappyPath"
@@ -79,21 +80,28 @@ lockingTransaction
         buildDatum :: DatumMode OnChain.DeadlineDatum
         buildDatum = HashDatum $ OnChain.MkDeadlineDatum deadline
 
-consumingTransaction :: POSIXTime -> Integer -> PubKeyHash -> TxOutRef -> Value -> Tx
-consumingTransaction deadline redeemer pkh scriptRefUTxO value = spendValidatorUtxo <> spendToPkh
+consumingTransaction :: POSIXTime -> Integer -> PubKeyHash -> [(TxOutRef, TxOut)] -> Tx
+consumingTransaction deadline redeemer pkh scriptRefUTxOs =
+  foldl (<>) spendToPkh  spendValidatorUtxos
   where
     buildDataum :: OnChain.DeadlineDatum
     buildDataum = OnChain.MkDeadlineDatum deadline
 
-    spendValidatorUtxo :: Tx
-    spendValidatorUtxo = spendScript
+    spendToPkh :: Tx
+    spendToPkh = payToKey pkh $ getValue scriptRefUTxOs
+
+    spendValidatorUtxos ::[Tx]
+    spendValidatorUtxos = scriptRefUTxOs <&> fst <&> spendValidatorUtxo
+
+    getValue :: [(TxOutRef, TxOut)] -> Value
+    getValue utxos = foldl (<>) (adaValue 0) $ utxos <&> snd <&> txOutValue
+
+    spendValidatorUtxo :: TxOutRef -> Tx
+    spendValidatorUtxo txOutRef = spendScript
       validatorScript
-      scriptRefUTxO
+      txOutRef
       redeemer
       buildDataum
-
-    spendToPkh :: Tx
-    spendToPkh = payToKey pkh value
 
 ---------------------------------------------------------------------------------------------------
 ------------------------------------- TESTING REDEEMERS -------------------------------------------
@@ -110,12 +118,10 @@ testScript deadline redeemer = do
 
   waitUntil consumeTxAfter            -- wait 1000 ms
 
-  utxos <- utxoAt validatorScript     -- get all utxos sitting at script address
-  let [(ref, out)] = utxos            -- there is only one utxo at script address
-      claimTx = consumingTransaction deadline redeemer pkh_2 ref (txOutValue out)
-  currentTimeRad 100              -- Create time interval with equal radius around current time (it creates interval of [currentTime - rad, currentTime + rad].)
-    >>= (`validateIn` claimTx)    -- Sed valid tx range into script consuming transaction
-    >>= submitTx pkh_2            -- Submit script consuming transaction
+  (currentTimeRad 100 <&> (,)) <*> (utxoAt validatorScript <&> consumingTransaction deadline redeemer pkh_2)
+    >>= uncurry validateIn
+    >>= submitTx pkh_2
+
 
   mapM valueAt [pkh_1, pkh_2]                                       -- get final balances
     <&> (\[v1, v2] -> v1 == adaValue 900 && v2 == adaValue 1100)    -- check if match expected balances
