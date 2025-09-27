@@ -1,7 +1,10 @@
 -- run this test with command:
--- cabal test --test-options=" redeemerInteger-test
+-- 'cabal test --test-options=" redeemerInteger-test'
 -- or
--- cabal test --test-options="--quickcheck-tests 10000" redeemerInteger-test
+-- 'cabal test --test-options="--quickcheck-tests 10000" redeemerInteger-test' to run 10000 test
+-- or
+-- 'cabal test --test-options="--quickcheck-tests 1000 --use-collect-mode True" redeemerInteger-test' to print generated values
+
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE InstanceSigs #-}
 
@@ -21,21 +24,27 @@ import           Plutus.Model (Run, mustFail, testNoErrors, adaValue
                              , userSpend, payToScript, payToKey, spendScript
                              , newUser, spend, submitTx, utxoAt, valueAt
                              , logError, Mock, runMock, initMock)
-import           Test.Tasty (TestTree, defaultMain, testGroup)
+import           Test.Tasty (TestTree, testGroup, defaultMainWithIngredients, defaultIngredients, askOption)
+import           Test.Tasty.Options (IsOption (defaultValue, parseValue, optionName, optionHelp), safeRead, OptionDescription (Option))
 import           Test.Tasty.QuickCheck (testProperty)
+import           Test.Tasty.Ingredients (Ingredient)
+import           Test.Tasty.Ingredients.Basic (includingOptions)
 import           Test.QuickCheck (Testable(property), Property, (==>), collect
                                 , Arbitrary(arbitrary), Gen, choose)
 import           Test.QuickCheck.Monadic (PropertyM, monadic, run, assert)
 import           Data.Function (($), (.))
 import           Data.Monoid ((<>))
 import           Data.Foldable (Foldable(foldl))
-import           Data.Functor ((<&>))
+import           Data.Functor ((<&>), (<$>))
+import           Data.Maybe (Maybe)
 import           Data.String (String)
 import           Data.Tuple (snd, fst)
 import           Data.Eq ((==), Eq((/=)))
 import           Data.Bool ((&&), Bool(..))
-import           Control.Monad (replicateM, Monad((>>=)), mapM, unless, replicateM_)
-import Data.List (replicate)
+import           Data.List (replicate)
+import           Data.Ord (Ord)
+import           Data.Data (Typeable, Proxy (Proxy))
+import           Control.Monad (replicateM, Monad((>>=), return), mapM, unless, replicateM_)
 
 initialMockBalance :: Integer
 initialMockBalance = 10000000
@@ -43,33 +52,52 @@ initialMockBalance = 10000000
 initialUserBalance :: Integer
 initialUserBalance = 1000
 
+newtype UseCollectMode = UseCollectMode Bool
+  deriving (Eq, Ord, Typeable)
+
+instance IsOption UseCollectMode where
+  defaultValue :: UseCollectMode
+  defaultValue = UseCollectMode False
+
+  parseValue :: String -> Maybe UseCollectMode
+  parseValue val = UseCollectMode <$> safeRead val
+  -- parseValue = (<$>) UseCollectMode . safeRead
+
+  optionName = return "use-collect-mode"
+  optionHelp = return "Run tests in collect mode (boolean). Show generated values by QickCheck."
+
 main :: IO ()
-main = defaultMain
-  $ do
-    testGroup
-      "RedeemerUntyped Validator"
-      [ testGroup
-          "UnitTest "
-          [ testGroup
-              "HappyPath"
-              [ happyPath "User 1 locks and user 2 takes with R = 42." $ runUnitTest 1 42 $ adaValue 150
-              , happyPath "User 1 locks 3 transactions and user 2 takes all of them with R = 42." $ runUnitTest 3 42 $ adaValue 150
-              ]
-          , testGroup
-              "ErrorPath"
-              [ errorPath "User 1 locks and user 2 do not takes with R != 41." $ runUnitTest 1 41 $ adaValue 200]
-          ]
-      , testGroup
-          "PropertyTest"
-          [ testGroup
-              "HappyPath"
-              [ testProperty "Anything with 42 redeemer has to pass." $ prop_42Redeemer_pass False]
-          , testGroup
-              "ErrorPath"
-              [ testProperty "Anything but 42 redeemer has to fail." $ prop_WrongRedeemer_fails False]
-          ]
-      ]
+main = defaultMainWithIngredients ingredients tests
   where
+    ingredients :: [Ingredient]
+    ingredients = includingOptions [Option (Proxy :: Proxy UseCollectMode)]:defaultIngredients
+
+    tests :: TestTree
+    tests = askOption $ \(UseCollectMode collectMode) ->
+      testGroup
+        "RedeemerUntyped Validator"
+        [ testGroup
+            "UnitTest "
+            [ testGroup
+                "HappyPath"
+                [ happyPath "User 1 locks and user 2 takes with R = 42." $ runUnitTest 1 42 $ adaValue 150
+                , happyPath "User 1 locks 3 transactions and user 2 takes all of them with R = 42." $ runUnitTest 3 42 $ adaValue 150
+                ]
+            , testGroup
+                "ErrorPath"
+                [ errorPath "User 1 locks and user 2 do not takes with R != 41." $ runUnitTest 1 41 $ adaValue 200]
+            ]
+        , testGroup
+            "PropertyTest"
+            [ testGroup
+                "HappyPath"
+                [ testProperty "Anything with 42 redeemer has to pass." $ prop_42Redeemer_pass collectMode]
+            , testGroup
+                "ErrorPath"
+                [ testProperty "Anything but 42 redeemer has to fail." $ prop_WrongRedeemer_fails collectMode]
+            ]
+        ]
+
     errorPath :: String -> Run a -> TestTree
     errorPath msg = happyPath msg . mustFail
 
