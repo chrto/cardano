@@ -145,3 +145,10 @@ test-suite redeemerBool-test
   hs-source-dirs: test
   main-is:        TRedeemerBool.hs
   build-depends:  TypedValidationScript
+
+test-suite redeemerCustomBool-test
+  import:         common-settings-test
+  type:           exitcode-stdio-1.0
+  hs-source-dirs: test
+  main-is:        TRedeemerCustomBool.hs
+  build-depends:  TypedValidationScript
