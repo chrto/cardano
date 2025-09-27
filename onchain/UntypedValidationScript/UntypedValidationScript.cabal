@@ -101,3 +101,9 @@ test-suite redeemerUntyped-unit-test
   main-is:        UTRedeemerUntyped.hs
   build-depends:  UntypedValidationScript
 
+test-suite redeemerUntyped-test
+  import:         common-settings
+  type:           exitcode-stdio-1.0
+  hs-source-dirs: test
+  main-is:        TRedeemerUntyped.hs
+  build-depends:  UntypedValidationScript
