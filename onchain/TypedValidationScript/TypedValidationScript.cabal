@@ -131,3 +131,10 @@ test-suite redeemerInteger-test
   hs-source-dirs: test
   main-is:        TRedeemerInteger.hs
   build-depends:  TypedValidationScript
+
+test-suite redeemerCustomInteger-test
+  import:         common-settings-test
+  type:           exitcode-stdio-1.0
+  hs-source-dirs: test
+  main-is:        TRedeemerCustomInteger.hs
+  build-depends:  TypedValidationScript
