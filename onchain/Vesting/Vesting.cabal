@@ -85,9 +85,10 @@ library
                     , Vesting
                     , VestingParametrized
                     , VestingParametrizedTwo
+                    , VestingParametrizedBeneficiary
 
   -- Modules included in this library but not exported.
-  other-modules: VestingParametrizedBeneficiary
+  other-modules:
 
   -- LANGUAGE extensions used by modules in this package.
   -- other-extensions:
@@ -120,4 +121,11 @@ test-suite vesting-parametrized-two-test
   type:           exitcode-stdio-1.0
   hs-source-dirs: test
   main-is:        TVestingParametrizedTwo.hs
+  build-depends:  Vesting
+
+test-suite vesting-parametrized-beneficiary-test
+  import:         common-settings-test
+  type:           exitcode-stdio-1.0
+  hs-source-dirs: test
+  main-is:        TVestingParametrizedBeneficiary.hs
   build-depends:  Vesting
