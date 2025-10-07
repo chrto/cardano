@@ -47,7 +47,7 @@ main = defaultMain
 
 -- | Make Run an instance of Testable so we can use it with QuickCheck
 instance Testable a => Testable (Run a) where
-  -- property :: Testable a => Run a -> Property
+  property :: Testable a => Run a -> Property
   property rp = property a
     where
       a = fst $ runMock rp mock
@@ -135,13 +135,11 @@ testScript shouldPass deadline redeemer = do
 
   utxos <- utxoAt validatorScript     -- get all utxos sitting at script address
   let [(oRef, oOut)] = utxos            -- there is only one utxo at script address
-      claimTx =
-        consumingTransaction deadline redeemer pkh_2 oRef (txOutValue oOut)
+      claimTx = consumingTransaction deadline redeemer pkh_2 oRef (txOutValue oOut)
       expectedValue = if shouldPass
                       then adaValue 1100
                       else adaValue 1000
-  currentTimeRad
-    100              -- Create time interval with equal radius around current time (it creates interval of [currentTime - rad, currentTime + rad].)
+  currentTimeRad 100              -- Create time interval with equal radius around current time (it creates interval of [currentTime - rad, currentTime + rad].)
     >>= (`validateIn` claimTx)    -- Sed valid tx range into script consuming transaction
     >>= (\tx -> if shouldPass
                 then submitTx pkh_2 tx

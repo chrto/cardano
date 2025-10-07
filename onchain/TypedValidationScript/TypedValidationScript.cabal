@@ -71,6 +71,8 @@ common common-settings-test
   build-depends:
     , plutus-simple-model
     , tasty
+    , tasty-quickcheck
+    , QuickCheck
 
 library
   -- Import common warning flags.
@@ -121,4 +123,32 @@ test-suite TypedValidationScript-test
   main-is:        Validator.hs
 
   -- Test dependencies.
+  build-depends:  TypedValidationScript
+
+test-suite redeemerInteger-test
+  import:         common-settings-test
+  type:           exitcode-stdio-1.0
+  hs-source-dirs: test
+  main-is:        TRedeemerInteger.hs
+  build-depends:  TypedValidationScript
+
+test-suite redeemerCustomInteger-test
+  import:         common-settings-test
+  type:           exitcode-stdio-1.0
+  hs-source-dirs: test
+  main-is:        TRedeemerCustomInteger.hs
+  build-depends:  TypedValidationScript
+
+test-suite redeemerBool-test
+  import:         common-settings-test
+  type:           exitcode-stdio-1.0
+  hs-source-dirs: test
+  main-is:        TRedeemerBool.hs
+  build-depends:  TypedValidationScript
+
+test-suite redeemerCustomBool-test
+  import:         common-settings-test
+  type:           exitcode-stdio-1.0
+  hs-source-dirs: test
+  main-is:        TRedeemerCustomBool.hs
   build-depends:  TypedValidationScript
